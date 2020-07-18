@@ -1,0 +1,14 @@
+import fileparser.fileread as fr
+import fileparser.TMVOC as tmvoc
+import fileparser.toughreact as toughreact
+
+file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - onecomponent -changeyield - Case1"
+file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Na acetate"
+filetype = 'OUTPUT_ELEME.csv'
+filetype_toughreact = 'kddconc.tec'
+# testcode = fr.FileRead("tough", file, "no")
+testcode = tmvoc.TMVOC("tmvoc", file, filetype)
+testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
+
+print(testcode2.get_times())
+# print(testcode.get_element_data(1e12, 'z'))
