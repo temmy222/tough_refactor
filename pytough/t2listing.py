@@ -1709,8 +1709,8 @@ class toughreact_tecplot(object):
         """Sets up element table structure. Table columns are read from the VARIABLES line in the file.
         Table rows are block names, supplied as a list of strings, or taken from a mulgrid or t2data
         object."""
-        import mulgrids as mg
-        import t2grids as t2g
+        import pytough.mulgrids as mg
+        import pytough.t2grids as t2g
         if isinstance(blocks, mg.mulgrid): blocks = blocks.block_name_list
         elif isinstance(blocks, t2g.t2grid): blocks = [blk.name for blk in  blocks.blocklist]
         if len(blocks) != self._num_blocks:

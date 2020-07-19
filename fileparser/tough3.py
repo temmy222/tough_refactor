@@ -1,5 +1,6 @@
 import csv
 import os
+import utils.utilities as processor
 
 
 class Tough3(object):
@@ -14,6 +15,7 @@ class Tough3(object):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle +  ' for ' + self.simulatortype
 
     def read_file(self):
+        os.chdir(self.filelocation)
         with open(self.filetitle) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
             self.file_as_list = []
@@ -35,9 +37,8 @@ class Tough3(object):
 
     def convert_times_year(self):
         intermediate = self.get_times()
-        timeyear = []
-        for i in range(len(intermediate)):
-            timeyear.append(intermediate[i] / 3.154e+7)
+        firstusage = processor.Utilities()
+        timeyear = firstusage.convert_times_year(intermediate)
         return timeyear
 
     def get_time_index(self):
