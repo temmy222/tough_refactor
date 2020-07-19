@@ -3,6 +3,8 @@ import os
 import pytough.t2listing as toughreact
 import utils.utilitiestoughreact as fileprocessor
 import utils.utilities as processor
+import plotting.plottough as plot
+from collections import OrderedDict
 
 class Toughreact(object):
     def __init__(self, simulatortype, filelocation, filetitle):
@@ -27,6 +29,9 @@ class Toughreact(object):
 
     def get_times(self):
         time_data = self.data.times
+        time_data= list(time_data)
+        value = processor.Utilities()
+        time_data=value.choplist(time_data, 40)
         return time_data
 
     def convert_times_year(self):
@@ -39,4 +44,13 @@ class Toughreact(object):
         grid = self.get_elements()[gridblocknumber]
         mf = self.data.history([(grid, param)])
         timeseries = mf[1]
+        timeseries = list(timeseries)
+        value = processor.Utilities()
+        timeseries=value.choplist(timeseries, 40)
         return timeseries
+
+    def plot_time(self, param, gridblocknumber):
+        result_array = self.get_timeseries_data(param, gridblocknumber)
+        time_year = self.convert_times_year()
+        plotting = plot.PlotTough()
+        plotting.plot_time(param, gridblocknumber, time_year, result_array)

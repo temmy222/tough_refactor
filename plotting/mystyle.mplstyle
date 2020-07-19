@@ -4,15 +4,15 @@
 text.color : (0.2,0.2,0.2)
 
 # AXES
-axes.titlesize : 16
+axes.titlesize : 46
 axes.labelsize : 14
 axes.edgecolor : (0.1,0.1,0.1) #Normalized RGB colours (from 0 to 1 instead of 0 to 255)
 axes.labelcolor : (0.1,0.1,0.1)
-axes.linewidth : 1
+axes.linewidth     : 4.5
 axes.spines.top : False
 axes.spines.right : False
-axes.spines.bottom : True
-axes.spines.left : True
+axes.spines.bottom : False
+axes.spines.left : False
 
 # GRID
 axes.grid : True
@@ -38,5 +38,5 @@ ytick.direction : in
 
 # FIGURE OUTPUT
 figure.figsize  : 7, 5
-figure.dpi : 150
-savefig.dpi : 200
+figure.dpi : 600
+savefig.dpi : 600

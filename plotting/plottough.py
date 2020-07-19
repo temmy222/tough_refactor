@@ -33,12 +33,15 @@ class PlotTough(object):
         # axs.set_ylabel(self.param_label_full(param.upper()))
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
         CONFIG_PATH = os.path.join(ROOT_DIR, 'mystyle.mplstyle')
+        print(CONFIG_PATH)
         plt.style.use(CONFIG_PATH)
+        # plt.style.use('./plotting/mystyle.mplstyle')
         # axs.spines['bottom'].set_linewidth(1.5)
         # axs.spines['left'].set_linewidth(1.5)
         # axs.spines['top'].set_linewidth(0)
         # axs.spines['right'].set_linewidth(0)
         # axs.legend(loc='upper right', borderpad=0.1)
+        plt.tight_layout()
         plt.show()
 
     def plotstyle(self):
