@@ -29,15 +29,15 @@ class Toughreact(object):
 
     def get_times(self):
         time_data = self.data.times
-        time_data= list(time_data)
+        time_data = list(time_data)
         value = processor.Utilities()
-        time_data=value.choplist(time_data, 40)
+        time_data = value.choplist(time_data, 40)
         return time_data
 
     def convert_times_year(self):
         intermediate = self.get_times()
-        firstusage = processor.Utilities()
-        timeyear = firstusage.convert_times_year(intermediate)
+        firstUsage = processor.Utilities()
+        timeyear = firstUsage.convert_times_year(intermediate)
         print('test')
         return timeyear
 
