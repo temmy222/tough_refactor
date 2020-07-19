@@ -38,6 +38,7 @@ class Toughreact(object):
         intermediate = self.get_times()
         firstusage = processor.Utilities()
         timeyear = firstusage.convert_times_year(intermediate)
+        print('test')
         return timeyear
 
     def get_timeseries_data(self, param, gridblocknumber):
