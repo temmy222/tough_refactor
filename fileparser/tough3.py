@@ -1,6 +1,7 @@
 import csv
 import os
 import utils.utilities as processor
+import plotting.plottough as plot
 
 
 class Tough3(object):
@@ -113,3 +114,9 @@ class Tough3(object):
             data.append(results_specific[i][index_param].lstrip())
         final_data = [float(x) for x in data]
         return final_data
+
+    def plot_time(self, param, gridblocknumber):
+        result_array = self.get_timeseries_data(param, gridblocknumber)
+        time_year = self.convert_times_year()
+        plotting = plot.PlotTough()
+        plotting.plot_time(param, gridblocknumber, time_year, result_array)
