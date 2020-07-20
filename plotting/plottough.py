@@ -9,6 +9,7 @@ import random
 from scipy import interpolate
 from scipy.interpolate import griddata
 import fileparser.fileread as input
+import utils.utilities as processor
 
 
 class PlotTough(object):
@@ -30,7 +31,8 @@ class PlotTough(object):
         # axs.plot(time_year, result_array, marker='^', label=self.param_label_full(param.upper()))
         axs.plot(time_year, result_array, marker='^')
         axs.set_xlabel('Time (year)')
-        # axs.set_ylabel(self.param_label_full(param.upper()))
+        parameters = processor.Utilities()
+        axs.set_ylabel(parameters.param_label_full(param.upper()))
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
         CONFIG_PATH = os.path.join(ROOT_DIR, 'mystyle.mplstyle')
         print(CONFIG_PATH)
