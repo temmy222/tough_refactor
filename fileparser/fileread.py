@@ -3,6 +3,7 @@ import os
 # import fileparser.tough3 as tough3
 # import fileparser.toughreact as toughreact
 import plotting.plottough as plot
+import plotting.plotmultitough as multiplot
 
 
 class FileRead(object):
@@ -26,9 +27,13 @@ class FileRead(object):
     def get_simulatortype(self):
         return self.simulatortype
 
-    def plot_time(self, param, gridblocknumber):
-        plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
-        plottest.plotParamWithTime(param, gridblocknumber)
+    def plot_time(self, param, gridblocknumber, style='horizontal'):
+        if isinstance(param, str):
+            plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
+            plottest.plotParamWithTime(param, gridblocknumber)
+        elif isinstance(param, list):
+            plottest = multiplot.PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
+            plottest.multi_time_plot(param, gridblocknumber, style)
 
     def plot_param_with_param(self, param1, param2, gridblocknumber):
         plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)

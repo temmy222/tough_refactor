@@ -18,7 +18,6 @@ import pandas as pd
 
 class PlotTough(object):
     def __init__(self, simulatortype, filelocation, filetitle):
-        welcome = "welcome to plotting routines"
         self.filelocation = filelocation
         os.chdir(self.filelocation)
         self.filetitle = filetitle
