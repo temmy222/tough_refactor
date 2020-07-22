@@ -50,8 +50,8 @@ class Toughreact(object):
         timeseries=value.choplist(timeseries, 40)
         return timeseries
 
-    def plot_time(self, param, gridblocknumber):
-        result_array = self.get_timeseries_data(param, gridblocknumber)
-        time_year = self.convert_times_year()
-        plotting = plot.PlotTough()
-        plotting.plot_time(param, gridblocknumber, time_year, result_array)
+    def get_element_data(self, time, param):
+        self.data.set_time(time)
+        final_data = self.data.element[param]
+        return final_data
+

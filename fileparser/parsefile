@@ -2,6 +2,7 @@ import fileparser.fileread as fr
 import fileparser.TMVOC as tmvoc
 import os
 import fileparser.toughreact as toughreact
+import plotting.plottough as plot
 
 file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - onecomponent -changeyield - Case1"
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Na acetate"
@@ -10,9 +11,12 @@ filetype_toughreact = 'kdd_conc.tec'
 # testcode = fr.FileRead("tough3", file, filetype)
 testcode = fr.FileRead("toughreact", file_toughreact, filetype_toughreact)
 # testcode = tmvoc.TMVOC("tmvoc", file, filetype)
-testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
+# testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
+# plottest = plot.PlotTough("toughreact", file_toughreact, filetype_toughreact)
+# print(plottest.plot_time('pH',0))
 
 # print(testcode2.convert_times_year())
 # print(testcode.get_elements())
 testcode.plot_time('pH',0)
+testcode.plot_param_with_param('pH', 'pH', 0)
 # print(testcode.get_simulatortype())

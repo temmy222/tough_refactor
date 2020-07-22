@@ -115,10 +115,5 @@ class Tough3(object):
         final_data = [float(x) for x in data]
         return final_data
 
-    def plot_time(self, param, gridblocknumber):
-        result_array = self.get_timeseries_data(param, gridblocknumber)
-        time_year = self.convert_times_year()
-        plotting = plot.PlotTough()
-        plotting.plot_time(param, gridblocknumber, time_year, result_array)
 
 
