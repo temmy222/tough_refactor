@@ -19,6 +19,9 @@ class FileRead(object):
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
 
+    def validatefile(self):
+        if type(self.filelocation) != type(self.filetitle):
+            print('Values can either be strings or lists')
 
     def get_simulatortype(self):
         return self.simulatortype
