@@ -2,12 +2,15 @@ import fileparser.fileread as fr
 import fileparser.TMVOC as tmvoc
 import os
 import fileparser.toughreact as toughreact
-import plotting.plottough as plot
+import plotting.plotmultitough as plot
 
 file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - onecomponent -changeyield - Case1"
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Na acetate"
+file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Ca offshore"
+allfiles = [file_toughreact, file_toughreact2]
 filetype = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
+filetypes = [filetype_toughreact, filetype_toughreact]
 testcode = fr.FileRead("toughreact", file_toughreact, filetype_toughreact)
 testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
 testcode3 = fr.FileRead("tmvoc", file, filetype)
@@ -22,5 +25,8 @@ params2 = ['pH', 't_na+', 't_cl-']
 # testcode.plot2D('x', 'z', param1, 5000000000, type='plain')
 # testcode.validatefile()
 # testcode.plot_param_with_param(param1, param2, gridblocknumber)
-testcode.plot_time(params2, gridblocknumber, style = 'vertical')
+# testcode.plot_time(params2, gridblocknumber, style = 'vertical')
+retrieve = plot.PlotMultiTough('toughreact', allfiles, filetypes)
+salo = retrieve.retrieve_multi_data(params2, 0)
+print(salo['pH0'])
 
