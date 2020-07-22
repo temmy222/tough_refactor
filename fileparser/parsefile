@@ -8,19 +8,15 @@ file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - oneco
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Na acetate"
 filetype = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
-# testcode = fr.FileRead("tough3", file, filetype)
 testcode = fr.FileRead("toughreact", file_toughreact, filetype_toughreact)
-# testcode = tmvoc.TMVOC("tmvoc", file, filetype)
 testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
 testcode3 = fr.FileRead("tough3", file, filetype)
-# plottest = plot.PlotTough("toughreact", file_toughreact, filetype_toughreact)
-# print(plottest.plot_time('pH',0))
+param1 = 'Pres'
+param2 = 'X_toluen_N'
+gridblocknumber = 5
 
-print(len(testcode2.get_element_data(2000, 'pH')))
-# print(testcode.get_elements())
-# testcode.plot_time('pH',0)
-# testcode.plot_param_with_param('pH', 'pH', 0)
-# print(testcode2.get_element_data(2000,'X(m)'))
-testcode.plot2D('x', 'z', 'pH', 5000, type='grid')
-# testcode3.plot2D('x', 'z', 'PRES', 5000, type='grid')
-# print(testcode.get_simulatortype())
+
+# testcode3.plot2D('x', 'z', param1, 5000000000, type='grid')
+# testcode3.plot2D('x', 'z', param1, 5000000000, type='plain')
+testcode3.plot_param_with_param(param1, param2, gridblocknumber)
+
