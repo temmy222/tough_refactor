@@ -13,13 +13,16 @@ import utils.utilities as processor
 import fileparser.fileread as fileDetails
 
 
-class PlotTough(object):
-    def __init__(self):
+class PlotTough(fileDetails.FileRead):
+    def __init__(self, simulatortype=None, filelocation=None, filetitle=None):
+        super().__init__(simulatortype, filelocation, filetitle)
         welcome = "welcome to plotting routines"
+        self.filereadparams = fileDetails.FileRead
 
     def plot_time(self, param, gridblocknumber, time_year, result_array):
+        
+        print(self.simulatortype)
 
-        # print(FileRead.get_simulatortype())
         # result_array = self.choplist(result_array)
         # time_year = self.choplist(time_year)
         # plt.plot(time_year,result_array)
@@ -30,6 +33,9 @@ class PlotTough(object):
         # plt.spines['top'].set_linewidth(0.2)
         # plt.spines['right'].set_linewidth(0.2)
         # axs.plot(time_year, result_array, marker='^', label=self.param_label_full(param.upper()))
+        # if simulatortype.lower() == 'tough3' or simulatortype.lower() == 'tmvoc':
+        fig = plt.figure()
+        fig, axs = plt.subplots(1,1)
         axs.plot(time_year, result_array, marker='^')
         axs.set_xlabel('Time (year)')
         parameters = processor.Utilities()

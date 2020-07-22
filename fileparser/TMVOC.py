@@ -1,6 +1,5 @@
 import csv
 
-# import fileparser.fileread as getfileinfo
 import fileparser.tough3 as tough3
 
 
