@@ -111,12 +111,18 @@ class PlotMultiTough(object):
         colors = ['r', 'royalblue', 'g', 'k', 'c', 'm', 'y']
         markers = ["o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P", "*", "h", "H", "+", "x", "X", "D",
                    "d", "|", "_"]
-        j = 0
         kpansa = 0
         counter = 1
-        axs = plt.subplots(3, 2)
-        for number in range(0, len(param)):
-            k = 0
-            for i in range(kpansa, len(dictionary)):
-                axs[number, i].plot(time_year, dictionary[lst[kpansa]], label=labels[k], linewidth=2,
-                         color=colors[k], marker=markers[k])
+        subplot_i = 2
+        k=0
+        subplot_j = 2
+        data_step = len(self.filelocations)-1
+        fig, axs = plt.subplots(subplot_i, subplot_j)
+        for number in range(subplot_i):
+            for i in range(subplot_j):
+                for j in range(len(self.filelocations)):
+                    axs[number, i].plot(time_year, dictionary[lst[kpansa+j]], label=labels[k], linewidth=2,color=colors[j], marker=markers[j])
+                kpansa = kpansa + len(self.filelocations)
+            k = k+1
+        plt.tight_layout()
+        plt.show()

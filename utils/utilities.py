@@ -38,7 +38,9 @@ class Utilities(object):
                       'DEN_N':'NAPL Density ($kg/m^3$)','POR':'Porosity','BIO1':'Biomass Mass Fraction(-)','BIO2':'Biomass Mass Fraction(-)',
                       'X_BENZEN_L':'Mass Fraction of Benzene in Liquid','X_TOLUEN_L':'Mass Fraction of Toluene in Liquid',
                       'X_N-DECA_L': 'Mass Fraction of Decane in Liquid','X_TOLUEN_N':'Mass Fraction of Toluene in NAPL',
-                      'X_TOLUEN_G':'Mass Fraction of Toluene in Gas', 'PH': 'pH', 'T_NA+': 'Concentration of Sodium', 'T_CL-': 'Concentration of Chlorine'}
+                      'X_TOLUEN_G':'Mass Fraction of Toluene in Gas', 'PH': 'pH', 'T_NA+': 'Concentration of Sodium', 'T_CL-': 'Concentration of Chlorine',
+                      'T_CA+2': 'Concentration of Calcium'
+                      }
         return dict_param[param]
 
     def fmt (self, x, pos):
