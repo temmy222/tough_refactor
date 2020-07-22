@@ -112,7 +112,7 @@ class PlotMultiTough(object):
         markers = ["o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P", "*", "h", "H", "+", "x", "X", "D",
                    "d", "|", "_"]
         kpansa = 0
-        counter = 1
+        param_counter = 0
         subplot_i = 2
         k=0
         subplot_j = 2
@@ -121,8 +121,18 @@ class PlotMultiTough(object):
         for number in range(subplot_i):
             for i in range(subplot_j):
                 for j in range(len(self.filelocations)):
-                    axs[number, i].plot(time_year, dictionary[lst[kpansa+j]], label=labels[k], linewidth=2,color=colors[j], marker=markers[j])
+                    axs[number, i].plot(time_year, dictionary[lst[kpansa+j]], label=labels[k], linewidth=2, color=colors[j], marker=markers[j])
+                    axs[number, i].set_ylabel(self.modifier.strip_param(param[param_counter]))
+                    axs[number, i].set_title(self.modifier.param_label_full(param[param_counter].upper()))
+                    axs[number, i].set_xlabel('Time (year)')
+                    axs[number, i].spines['bottom'].set_linewidth(1.5)
+                    axs[number, i].spines['left'].set_linewidth(1.5)
+                    axs[number, i].spines['top'].set_linewidth(0.0)
+                    axs[number, i].spines['right'].set_linewidth(0.0)
                 kpansa = kpansa + len(self.filelocations)
-            k = k+1
+                param_counter = param_counter+1
+            k = k + 1
+
+        plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
         plt.tight_layout()
         plt.show()

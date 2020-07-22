@@ -7,11 +7,14 @@ import plotting.plotmultitough as plot
 file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - onecomponent -changeyield - Case1"
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Na acetate"
 file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Ca offshore"
-allfiles = [file_toughreact, file_toughreact2]
+file_toughreact3 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca injected brine Offshore"
+
+allfiles = [file_toughreact, file_toughreact2, file_toughreact3]
 filetype = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
-filetypes = [filetype_toughreact, filetype_toughreact]
-testcode = fr.FileRead("toughreact", file_toughreact, filetype_toughreact)
+filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
+testcode = fr.FileRead("toughreact", file_toughreact, filetypes)
+testcode = fr.FileRead("toughreact", allfiles, filetype_toughreact)
 testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
 testcode3 = fr.FileRead("tmvoc", file, filetype)
 param1 = 'pH'
@@ -30,7 +33,8 @@ labels = ['first plot', 'second plot']
 retrieve = plot.PlotMultiTough('toughreact', allfiles, filetypes)
 salo = retrieve.retrieve_multi_data(params2, gridblocknumber)
 print(salo)
-retrieve.multi_param_multi_file_plot(params2, gridblocknumber, labels)
+# retrieve.multi_param_multi_file_plot(params2, gridblocknumber, labels)
+testcode.plot_time(params2, gridblocknumber, labels)
 
 
 

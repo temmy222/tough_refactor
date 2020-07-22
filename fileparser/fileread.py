@@ -31,10 +31,11 @@ class FileRead(object):
         if isinstance(param, str):
             plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
             plottest.plotParamWithTime(param, gridblocknumber)
-        elif isinstance(param, list):
+        elif isinstance(param, list) and isinstance(self.filelocation, str):
+            print('yes')
             plottest = multiplot.PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
             plottest.multi_time_plot(param, gridblocknumber, style)
-        elif isinstance(param,list) and isinstance(self.filelocation, list):
+        elif isinstance(param, list) and isinstance(self.filelocation, list):
             plottest = multiplot.PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
             plottest.multi_param_multi_file_plot(param, gridblocknumber, labels, style, width, height)
 

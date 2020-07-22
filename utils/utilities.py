@@ -115,3 +115,12 @@ class Utilities(object):
 
     def orange(self, *args, **kwargs):
         return self.cust_range(*args, **kwargs, include=[True, False])
+
+    def strip_param(self, param):
+        if param.lower() == 'porosity':
+            output = 'Porosity'
+        elif param.startswith("t_"):
+            output = "Total Concentration (mol/L)"
+        elif param.startswith("pH"):
+            output = 'pH'
+        return output
