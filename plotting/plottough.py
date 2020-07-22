@@ -65,7 +65,7 @@ class PlotTough(object):
         # axs.legend(loc='upper right', borderpad=0.1)
         plt.tight_layout()
         plt.show()
-        fig.savefig(param + 'vs' + 'time' + '.png', bbox_inches='tight', dpi=600)
+        fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 

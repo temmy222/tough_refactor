@@ -11,12 +11,12 @@ filetype_toughreact = 'kdd_conc.tec'
 testcode = fr.FileRead("toughreact", file_toughreact, filetype_toughreact)
 testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
 testcode3 = fr.FileRead("tough3", file, filetype)
-param1 = 'Pres'
-param2 = 'X_toluen_N'
+param1 = 'pH'
+param2 = 't_na+'
 gridblocknumber = 5
 
 
-# testcode3.plot2D('x', 'z', param1, 5000000000, type='grid')
-# testcode3.plot2D('x', 'z', param1, 5000000000, type='plain')
-testcode3.plot_param_with_param(param1, param2, gridblocknumber)
+testcode.plot2D('x', 'z', param1, 5000000000, type='grid')
+testcode.plot2D('x', 'z', param1, 5000000000, type='plain')
+testcode.plot_time(param2, gridblocknumber)
 
