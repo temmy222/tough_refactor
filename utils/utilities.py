@@ -11,7 +11,7 @@ class Utilities(object):
             timeyear.append(intermediate[i] / 3.154e+7)
         return timeyear
 
-    def choplist(self,liste,number=40):
+    def choplist (self, liste, number=40):
         if isinstance(liste, list):
             finallist =[]
             finallist.append(liste[0])
@@ -28,7 +28,7 @@ class Utilities(object):
             print('Input must be a list')
         return finallist
 
-    def param_label_full(self, param):
+    def param_label_full (self, param):
         dict_param = {'PRES':'Pressure (Pa)','TEMP':'Temperature ($^o C$)','SAT_G':'Gas Saturation (-)','SAT_L':'Liquid Saturation (-)',
                       'SAT_N':'NAPL Saturation (-)','X_WATER_G':'Water Mass Fraction in Gas (-)','X_AIR_G':'Air Mass Fraction in Gas (-)',
                       'X_WATER_L':'Water Mass Fraction in Liquid (-)','X_AIR_L':'Air Mass Fraction in Liquid (-)','X_WATER_N':'Water Mass Fraction in NAPL (-)',
@@ -40,3 +40,15 @@ class Utilities(object):
                       'X_N-DECA_L': 'Mass Fraction of Decane in Liquid','X_TOLUEN_N':'Mass Fraction of Toluene in NAPL',
                       'X_TOLUEN_G':'Mass Fraction of Toluene in Gas', 'PH':'pH'}
         return dict_param[param]
+
+    def fmt (self, x, pos):
+        a, b = '{:.2e}'.format(x).split('e')
+        b = int(b)
+        return r'${} \times 10^{{{}}}$'.format(a, b)
+
+    def get_number_of_grids(self, input_list):
+        output = set()
+        for x in input_list:
+            output.add(x)
+        output = list(output)
+        return len(output)

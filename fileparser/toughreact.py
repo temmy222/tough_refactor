@@ -55,3 +55,23 @@ class Toughreact(object):
         final_data = self.data.element[param]
         return final_data
 
+    def get_X_data(self, time):
+        return self.get_element_data(time, 'X(m)')
+
+    def get_Y_data(self, time):
+        return self.get_element_data(time, 'Y(m)')
+
+    def get_Z_data(self, time):
+        return self.get_element_data(time, 'Z(m)')
+
+    def get_coord_data(self, direction, timer):
+        if direction.lower() == 'x':
+            value = self.get_X_data(timer)
+        elif direction.lower() == 'y':
+            value = self.get_Y_data(timer)
+        elif direction.lower() == 'z':
+            value = self.get_Z_data(timer)
+        else:
+            print("coordinates can either be X, Y or Z")
+        return value
+

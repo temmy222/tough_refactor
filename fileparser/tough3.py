@@ -115,5 +115,25 @@ class Tough3(object):
         final_data = [float(x) for x in data]
         return final_data
 
+    def get_X_data(self, time):
+        return self.get_element_data(time, 'x')
+
+    def get_Y_data(self, time):
+        return self.get_element_data(time, 'y')
+
+    def get_Z_data(self, time):
+        return self.get_element_data(time, 'z')
+
+    def get_coord_data(self, direction, timer):
+        if direction.lower() == 'x':
+            value = self.get_X_data(timer)
+        elif direction.lower() == 'y':
+            value = self.get_Y_data(timer)
+        elif direction.lower() == 'z':
+            value = self.get_Z_data(timer)
+        else:
+            print("coordinates can either be X, Y or Z")
+        return value
+
 
 

@@ -25,8 +25,17 @@ class FileRead(object):
 
     def plot_time(self, param, gridblocknumber):
         plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
-        print(plottest.plotParamWithTime(param, gridblocknumber))
+        plottest.plotParamWithTime(param, gridblocknumber)
 
     def plot_param_with_param(self, param1, param2, gridblocknumber):
         plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
-        print(plottest.plotParamWithParam(param1, param2, gridblocknumber))
+        plottest.plotParamWithParam(param1, param2, gridblocknumber)
+
+    def plot2D(self, direction1, direction2, param, timer, type='plain'):
+        plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
+        if type == 'plain':
+            plottest.plot2D_one(direction1, direction2, param, timer)
+        elif type == 'grid':
+            plottest.plot2D_withgrid(direction1, direction2, param, timer)
+        else:
+            print('Type can either be plain or gridded')
