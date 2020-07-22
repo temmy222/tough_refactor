@@ -105,7 +105,7 @@ class PlotMultiTough(object):
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, style='horizontal', width=12, height=8):
         fig = plt.figure(figsize=(width, height))
         paralengthdouble = len(param) * 2
-        fileReader = self.read_file()
+        fileReader = self.read_file_multi(self.filelocations[0], self.filetitles[0])
         time_year = fileReader.convert_times_year()
         lst, dictionary = self.retrieve_multi_data(param, gridblocknumber)
         colors = ['r', 'royalblue', 'g', 'k', 'c', 'm', 'y']
@@ -114,9 +114,9 @@ class PlotMultiTough(object):
         j = 0
         kpansa = 0
         counter = 1
-        for number in range(1, len(param) + 1):
-            axs = plt.subplot(3, 2, counter)
+        axs = plt.subplots(3, 2)
+        for number in range(0, len(param)):
             k = 0
             for i in range(kpansa, len(dictionary)):
-                axs.plot(time_year, dictionary[lst[i]], label=labels[k], linewidth=2,
+                axs[number, i].plot(time_year, dictionary[lst[kpansa]], label=labels[k], linewidth=2,
                          color=colors[k], marker=markers[k])

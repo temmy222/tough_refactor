@@ -27,13 +27,17 @@ class FileRead(object):
     def get_simulatortype(self):
         return self.simulatortype
 
-    def plot_time(self, param, gridblocknumber, style='horizontal'):
+    def plot_time(self, param, gridblocknumber, labels=[], style='horizontal', width=12, height=8):
         if isinstance(param, str):
             plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)
             plottest.plotParamWithTime(param, gridblocknumber)
         elif isinstance(param, list):
             plottest = multiplot.PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
             plottest.multi_time_plot(param, gridblocknumber, style)
+        elif isinstance(param,list) and isinstance(self.filelocation, list):
+            plottest = multiplot.PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
+            plottest.multi_param_multi_file_plot(param, gridblocknumber, labels, style, width, height)
+
 
     def plot_param_with_param(self, param1, param2, gridblocknumber):
         plottest = plot.PlotTough(self.simulatortype, self.filelocation, self.filetitle)

@@ -19,6 +19,7 @@ param2 = 't_na+'
 gridblocknumber = 5
 params2 = ['DEN_L', 'sat_N']
 params2 = ['pH', 't_na+', 't_cl-']
+labels = ['first plot', 'second plot']
 
 
 # testcode.plot2D('x', 'z', param1, 5000000000, type='grid')
@@ -28,5 +29,7 @@ params2 = ['pH', 't_na+', 't_cl-']
 # testcode.plot_time(params2, gridblocknumber, style = 'vertical')
 retrieve = plot.PlotMultiTough('toughreact', allfiles, filetypes)
 salo = retrieve.retrieve_multi_data(params2, 0)
-print(salo['pH0'])
+retrieve.multi_param_multi_file_plot(params2, gridblocknumber, labels)
+
+
 
