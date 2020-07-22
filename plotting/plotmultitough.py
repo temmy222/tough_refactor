@@ -77,17 +77,6 @@ class PlotMultiTough(object):
             plt.show()
             fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
-    # def retrieve_multi_data(self, param, gridblocknumber):
-    #     dataStorage = {}
-    #     for file in self.filelocations:
-    #         fileNumber = 0
-    #         for parameter in param:
-    #             fileReader = self.read_file_multi(file, self.filetitles[fileNumber])
-    #             filename = parameter + str(fileNumber)
-    #             dataStorage[filename] = fileReader.get_timeseries_data(parameter, gridblocknumber)
-    #             fileNumber = fileNumber + 1
-    #     return dataStorage
-
     def retrieve_multi_data(self, param, gridblocknumber):
         dataStorage = {}
         fileNames = []
@@ -104,7 +93,6 @@ class PlotMultiTough(object):
 
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, style='horizontal', width=12, height=8):
         fig = plt.figure(figsize=(width, height))
-        paralengthdouble = len(param) * 2
         fileReader = self.read_file_multi(self.filelocations[0], self.filetitles[0])
         time_year = fileReader.convert_times_year()
         lst, dictionary = self.retrieve_multi_data(param, gridblocknumber)
@@ -132,7 +120,8 @@ class PlotMultiTough(object):
                 kpansa = kpansa + len(self.filelocations)
                 param_counter = param_counter+1
             k = k + 1
-
+        # handles, labels = axs[number, i].get_legend_handles_labels()
+        # axs[number, i].legend(handles, labels, loc='lower center', bbox_to_anchor=(-0.1, -0.5), fancybox=False, shadow=False, ncol=4)
         plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
         plt.tight_layout()
         plt.show()

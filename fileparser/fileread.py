@@ -13,7 +13,8 @@ class FileRead(object):
         :type simulatortype: object
         """
         self.filelocation = filelocation
-        os.chdir(self.filelocation)
+        if isinstance(self.filelocation, str):
+            os.chdir(self.filelocation)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
 
