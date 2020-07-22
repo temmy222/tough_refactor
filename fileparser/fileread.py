@@ -5,6 +5,8 @@ import fileparser.toughreact as toughreact
 
 
 class FileRead(object):
+
+    @classmethod
     def __init__(self, simulatortype, filelocation, filetitle):
         """
 
@@ -27,6 +29,9 @@ class FileRead(object):
             filereader = tough3.Tough3(self.simulatortype, self.filelocation, self.filetitle)
         else:
             filereader = toughreact.Toughreact(self.simulatortype, self.filelocation, self.filetitle)
+
+    def get_simulatortype(self):
+        return self.simulatortype
 
     def plot_time(self, param, gridblocknumber):
         self.filereader.plot_time(param, gridblocknumber)

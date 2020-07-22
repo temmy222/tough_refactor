@@ -10,6 +10,7 @@ from scipy import interpolate
 from scipy.interpolate import griddata
 import fileparser.fileread as input
 import utils.utilities as processor
+import fileparser.fileread as fileDetails
 
 
 class PlotTough(object):
@@ -17,8 +18,8 @@ class PlotTough(object):
         welcome = "welcome to plotting routines"
 
     def plot_time(self, param, gridblocknumber, time_year, result_array):
-        fig = plt.figure()
-        fig, axs = plt.subplots(1, 1)
+
+        # print(FileRead.get_simulatortype())
         # result_array = self.choplist(result_array)
         # time_year = self.choplist(time_year)
         # plt.plot(time_year,result_array)
