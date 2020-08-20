@@ -93,7 +93,7 @@ class PlotTough(object):
         data1 = griddata((X, Z), data, (xi, yi), method='nearest')
         # cs2 = plt.contourf (xi,yi,data1,800,extend='neither',cmap='coolwarm')
         cs2 = plt.contourf(xi, yi, data1, 800, cmap='coolwarm', vmin=min(data), vmax=max(data))
-      #  ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
+        #  ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
         # c = ax.pcolor(xi, yi, data, cmap='RdBu')
         vmin = min(data)
         if vmin < 1 or vmin > 1000:
@@ -102,7 +102,7 @@ class PlotTough(object):
             cbar = fig.colorbar(cs2, pad=0.01)
         cbar.ax.set_ylabel(self.modifier.param_label_full(param.upper()), fontsize=12)
         ticklabs = cbar.ax.get_yticklabels()
-      #  ticklabs.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
+        #  ticklabs.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
         cbar.ax.set_yticklabels(ticklabs, fontsize=12)
         plt.xlabel('Horizontal Distance(m)', fontsize=12)
         plt.ylabel('Vertical Depth (m)', fontsize=12)
@@ -112,7 +112,7 @@ class PlotTough(object):
         plt.show()
         fig.savefig('2D plain' + str(timer) + param + '.png', bbox_inches='tight', dpi=600)
 
-    def plot2D_withgrid(self, direction1, direction2,  param, timer):
+    def plot2D_withgrid(self, direction1, direction2, param, timer):
         fileReader = self.read_file()
         fig, ax = plt.subplots(1, 1)
         X = fileReader.get_coord_data(direction1, timer)
@@ -132,7 +132,7 @@ class PlotTough(object):
         cs2 = plt.imshow(np.reshape(data, newshape=(Ztotal, Xtotal)), cmap='coolwarm', interpolation='none')
         ax = plt.gca()
         # Major ticks
-        x_tick = np.arange(0, Xtotal, 4)
+        x_tick = np.arange(0, Xtotal, 1)
         z_tick = np.arange(0, Ztotal, 1)
         Z_array = np.asarray(Z)
         Z_array = np.abs(Z_array)
@@ -141,25 +141,33 @@ class PlotTough(object):
         num_tick_z = len(z_tick)
         ax.set_yticks(z_tick)
         # Labels for major ticks
-        tick_x = max(X)-min(X)
-        tick_z = max(Z)-min(Z)
-        ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x/(num_tick_x-1)), 2), fontsize=8)
-        ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z/(num_tick_z-1)), 2), fontsize=8)
+        tick_x = max(X) - min(X)
+        tick_z = max(Z) - min(Z)
+        if max(X) < 1 or max(Z) < 1:
+            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 4), fontsize=8)
+            ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 4),
+                               fontsize=8)
+        else:
+            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 2), fontsize=8)
+            ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 2),
+                               fontsize=8)
         # Minor ticks
-        ax.set_xticks(np.arange(-.5, Xtotal, 1), minor=True);
-        ax.set_yticks(np.arange(-.5, Ztotal, 1), minor=True);
+        ax.set_xticks(np.arange(-.5, Xtotal, 1), minor=True)
+        ax.set_yticks(np.arange(-.5, Ztotal, 1), minor=True)
         # Gridlines based on minor ticks
         ax.grid(which='minor', color='k', linestyle='-', linewidth=1)
         cbar = fig.colorbar(cs2, ax=ax, pad=0.2, orientation="horizontal")
         # cbar.ax.set_ylabel(param,fontsize=8)
-        cbar.ax.set_title(param, fontsize=8)
-        cbar.ax.tick_params(labelsize=8)
-        cbar.ax.locator_params(nbins=7)
-        plt.xlabel('Horizontal Distance(m)', fontsize=8)
-        plt.ylabel('Vertical Depth (m)', fontsize=8)
+        cbar.ax.set_title(param, fontsize=12)
+        cbar.ax.tick_params(labelsize=12)
+        cbar.ax.locator_params(nbins=5)
+        cbar.ax.ticklabel_format(useOffset=False, style='plain')
+        plt.xticks(rotation=90)
+        plt.xlabel('Horizontal Distance(m)', fontsize=12)
+        plt.ylabel('Vertical Depth (m)', fontsize=12)
         plt.tight_layout()
         plt.show()
-        fig.savefig('Grid' + str(timer) + param +'.png', bbox_inches='tight', dpi=600)
+        fig.savefig('Grid' + str(timer) + param + '.png', bbox_inches='tight', dpi=600)
 
     def plotstyle(self):
         axs.spines['bottom'].set_linewidth(1.5)
