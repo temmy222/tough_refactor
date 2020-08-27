@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from fileparser import tough3, toughreact
+from fileparser.toughreact import MultiToughReact
 
 
 class PlotMultiTough(object):
@@ -125,3 +126,4 @@ class PlotMultiTough(object):
         plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
         plt.tight_layout()
         plt.show()
+
