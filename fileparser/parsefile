@@ -27,5 +27,8 @@ test = PlotMulti('toughreact', allfiles, filetypes, params2)
 legend = ['first plot', 'second plot', 'third plot']
 test.test_multi_plot(0, legend)
 
+plotting = PlotTough('toughreact', file_toughreact, filetype_toughreact)
+plotting.plotParamWithTime(params2[0], 43)
+
 
 
