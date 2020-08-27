@@ -126,7 +126,7 @@ class ToughReact(object):
         z_layers = self.getNumberOfLayers('z')
         data_array = []
         for i in range(0, z_layers):
-            data_array.append(element_data[line_number-1])
+            data_array.append(element_data[line_number - 1])
             line_number = line_number + x_layers
         return data_array
 
@@ -165,22 +165,24 @@ class ToughReact(object):
 
 
 class MultiToughReact(object):
-    def __init__(self, simulator_type, file_location, file_title):
+    def __init__(self, simulator_type, file_location, file_title, prop):
         assert isinstance(file_location, list)
         assert isinstance(file_title, list)
+        assert isinstance(prop, list)
         self.file_location = file_location
         self.file_title = file_title
         self.simulator_type = simulator_type
+        self.prop = prop
 
     def __repr__(self):
         return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
 
-    def retrieve_data_multi_timeseries(self, grid_block_number, prop):
+    def retrieve_data_multi_timeseries(self, grid_block_number):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
-            result_data = tough_data.get_timeseries_data(prop[i], grid_block_number)
+            result_data = tough_data.get_timeseries_data(self.prop[i], grid_block_number)
             time_data = tough_data.convert_times_year()
             time_data_label = 'time' + str(i)
             result_data_label = 'result' + str(i)
@@ -188,35 +190,43 @@ class MultiToughReact(object):
             data_table[result_data_label] = result_data
         return data_table
 
-    def retrieve_data_multi_file_fixed_time(self, direction, prop, time):
+    def retrieve_data_multi_file_fixed_time(self, direction, time):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
             x_data = tough_data.get_coord_data(direction, time)
-            result_data = tough_data.get_element_data(time, prop[i])
+            result_data = tough_data.get_element_data(time, self.prop[i])
             x_data_label = 'x' + str(i)
             result_data_label = 'result' + str(i)
             data_table[x_data_label] = pd.Series(x_data)
             data_table[result_data_label] = pd.Series(result_data)
-            print(tough_data.getXDepthData(1, prop[i], time))
+            print(tough_data.getXDepthData(1, self.prop[i], time))
         return data_table
 
-    def retrieve_data_multi_file_fixed_time_layer(self, direction, prop, time, layer_num):
+    def retrieve_data_multi_file_fixed_time_layer(self, direction, time, layer_num):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
             x_data = tough_data.get_coord_data(direction, time)
-            result_data = tough_data.getLayerData(direction, layer_num, time, prop[i])
+            result_data = tough_data.getLayerData(direction, layer_num, time, self.prop[i])
             x_data_label = 'x' + str(i)
             result_data_label = 'result' + str(i)
             data_table[x_data_label] = pd.Series(x_data)
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
-    def getMultiElementData(self, grid_block_number,prop):
+    def getMultiElementData(self, grid_block_number):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
-            tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
-            pass
+            for j in range(0, len(self.prop)):
+                os.chdir(self.file_location[i])
+                tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
+                result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
+                time_data = tough_data.convert_times_year()
+                time_data_label = self.prop[j] + 'time' + str(i) + str(j)
+                result_data_label = self.prop[j] + 'result' + str(i) + str(j)
+                data_table[time_data_label] = time_data
+                data_table[result_data_label] = result_data
+        return data_table
