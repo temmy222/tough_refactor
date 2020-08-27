@@ -214,3 +214,9 @@ class MultiToughReact(object):
             data_table[x_data_label] = pd.Series(x_data)
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
+
+    def getMultiElementData(self, grid_block_number,prop):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
+            pass

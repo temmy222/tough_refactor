@@ -15,7 +15,7 @@ class PlotMulti(object):
         self.props = props
         self.modifier = Utilities()
 
-    def test_multi_plot(self, grid_block_number):
+    def test_multi_plot(self, grid_block_number, legend):
         multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles)
         data = multi_tough.retrieve_data_multi_timeseries(grid_block_number, self.props)
         prop_index = 0
@@ -27,6 +27,7 @@ class PlotMulti(object):
                 axs.plot(x_data, y_data, marker='^')
                 axs.set_xlabel('Time (year)')
                 axs.set_ylabel(self.props[prop_index])
+                axs.legend(legend)
                 prop_index = prop_index + 1
             plt.tight_layout()
             plt.show()

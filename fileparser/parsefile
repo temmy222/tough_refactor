@@ -24,7 +24,8 @@ params2 = ['pH', 'pH', 'pH']
 labels = ['first plot', 'second plot']
 
 test = PlotMulti('toughreact', allfiles, filetypes, params2)
-test.test_multi_plot(0)
+legend = ['first plot', 'second plot', 'third plot']
+test.test_multi_plot(0, legend)
 
 
 
