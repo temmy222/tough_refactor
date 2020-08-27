@@ -3,10 +3,12 @@ import os
 import pytough.t2listing as toughreact
 import utils.utilitiestoughreact as fileprocessor
 import utils.utilities as processor
+import pandas as pd
 import plotting.plottough as plot
 from collections import OrderedDict
 
-class Toughreact(object):
+
+class ToughReact(object):
     def __init__(self, simulatortype, filelocation, filetitle):
         self.filelocation = filelocation
         os.chdir(self.filelocation)
@@ -15,7 +17,7 @@ class Toughreact(object):
         self.data = toughreact.toughreact_tecplot(self.filetitle, self.get_elements())
 
     def __repr__(self):
-        return 'Results from ' + self.filelocation + ' in ' + self.filetitle +  ' for ' + self.simulatortype
+        return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
 
     def get_elements(self):
         tre1 = fileprocessor.UtilitiesToughreact(self.filelocation, 'CONNE')
@@ -25,7 +27,6 @@ class Toughreact(object):
         with open('test.txt') as f:
             grid_blocks = f.read().splitlines()
         return grid_blocks
-
 
     def get_times(self):
         time_data = self.data.times
@@ -47,7 +48,7 @@ class Toughreact(object):
         timeseries = mf[1]
         timeseries = list(timeseries)
         value = processor.Utilities()
-        timeseries=value.choplist(timeseries, 40)
+        timeseries = value.choplist(timeseries, 40)
         return timeseries
 
     def get_element_data(self, time, param):
@@ -75,3 +76,27 @@ class Toughreact(object):
             print("coordinates can either be X, Y or Z")
         return value
 
+
+class MultiToughReact(object):
+    def __init__(self, simulator_type, file_location, file_title):
+        assert isinstance(file_location, list)
+        assert isinstance(file_title, list)
+        self.file_location = file_location
+        self.file_title = file_title
+        self.simulator_type = simulator_type
+
+    def __repr__(self):
+        return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
+
+    def retrieve_data_multi_time(self, grid_block_number, prop):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
+            os.chdir(self.file_location[i])
+            result_data = tough_data.get_timeseries_data(prop[i], grid_block_number)
+            time_data = tough_data.convert_times_year()
+            time_data_label = 'time' + str(i)
+            result_data_label = 'result' + str(i)
+            data_table[time_data_label] = time_data
+            data_table[result_data_label] = result_data
+        return data_table

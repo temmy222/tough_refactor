@@ -1,11 +1,8 @@
-import fileparser.fileread as fr
-import fileparser.TMVOC as tmvoc
-import os
-import fileparser.toughreact as toughreact
-import plotting.plotmultitough as plot
+from fileparser.fileread import FileRead
+from fileparser.toughreact import ToughReact, MultiToughReact
 from plotting.plottough import PlotTough
 
-file = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\chen-5\test - onecomponent -changeyield - Case1"
+file = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
 file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Ca offshore"
 file_toughreact3 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca injected brine Offshore"
@@ -14,16 +11,19 @@ allfiles = [file_toughreact, file_toughreact2, file_toughreact3]
 filetype = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
 filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
-testcode = fr.FileRead("toughreact", file_toughreact, filetypes)
-testcode = fr.FileRead("toughreact", allfiles, filetypes)
-testcode2 = toughreact.Toughreact("toughreact", file_toughreact, filetype_toughreact)
-testcode3 = fr.FileRead("tmvoc", file, filetype)
+testcode = FileRead("toughreact", file_toughreact, filetypes)
+testcode = FileRead("toughreact", allfiles, filetypes)
+testcode2 = ToughReact("toughreact", file_toughreact, filetype_toughreact)
+testcode3 = FileRead("tmvoc", file, filetype)
 param1 = 'pH'
 param2 = 't_na+'
 gridblocknumber = 5
 params2 = ['DEN_L', 'sat_N']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
+params2 = ['pH', 't_na+', 't_cl-']
 labels = ['first plot', 'second plot']
+test = MultiToughReact('toughreact', allfiles, filetypes)
+data = test.retrieve_data_multi_time(0, params2)
 
 # testcode2.plot2D('x', 'z', param1, 5000000000, type='grid')
 # testcode.plot2D('x', 'z', param1, 5000000000, type='plain')
@@ -32,7 +32,8 @@ labels = ['first plot', 'second plot']
 # testcode.plot_time(params2, gridblocknumber, style = 'vertical')
 # retrieve = plot.PlotMultiTough('toughreact', allfiles, filetypes)
 plotting = PlotTough('toughreact', file_toughreact, filetype_toughreact)
-plotting.plot2D_withgrid('x', 'z', param1, 200000000)
+plotting.plot2D_withgrid('x', 'z', param1, 100)
+plotting.plotParamWithTime(param1, 43)
 # salo = retrieve.retrieve_multi_data(params2, gridblocknumber)
 # print(salo)
 # # retrieve.multi_param_multi_file_plot(params2, gridblocknumber, labels)

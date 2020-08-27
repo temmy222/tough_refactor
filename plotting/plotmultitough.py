@@ -18,7 +18,7 @@ class PlotMultiTough(object):
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
             fileReader = tough3.Tough3(self.simulatortype, self.filelocations, self.filetitles)
         else:
-            fileReader = toughreact.Toughreact(self.simulatortype, self.filelocations, self.filetitles)
+            fileReader = toughreact.ToughReact(self.simulatortype, self.filelocations, self.filetitles)
         return fileReader
 
     def read_file_multi(self, file, filetitle):
@@ -26,7 +26,7 @@ class PlotMultiTough(object):
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
             fileReader = tough3.Tough3(self.simulatortype, file, filetitle)
         else:
-            fileReader = toughreact.Toughreact(self.simulatortype, file, filetitle)
+            fileReader = toughreact.ToughReact(self.simulatortype, file, filetitle)
         return fileReader
 
     def multi_time_plot(self, param, gridblocknumber, style='horizontal'):
