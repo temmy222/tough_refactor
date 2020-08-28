@@ -24,14 +24,14 @@ labels = ['first plot', 'second plot']
 
 test = PlotMulti('toughreact', allfiles, filetypes, params2)
 legend = ['first plot', 'second plot', 'third plot', 'fourth plot']
-# test.test_multi_plot(0, legend)
-
-#
-# plotting = PlotTough('toughreact', file_toughreact, filetype_toughreact)
-# plotting.plotParamWithTime(params2[0], 43)
+data = testcode2.getLayerData('z', 7, 2000, 'pH')
+data2 = testcode2.get_unique_coord_data('x', 2000)
 
 
-class_data = MultiToughReact('toughreact', allfiles, filetypes, params2)
-data = class_data.getMultiElementData(0)
+plottough = PlotTough('toughreact', file_toughreact, filetype_toughreact)
+plottough.plotParamWithLayer('x', 'z', 'pH', 3, 2000)
 
-test.plotMultiElementMultiFile(0, legend)
+# class_data = MultiToughReact('toughreact', allfiles, filetypes, params2)
+# data = class_data.getMultiElementData(0)
+
+

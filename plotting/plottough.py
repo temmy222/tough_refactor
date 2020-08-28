@@ -63,6 +63,19 @@ class PlotTough(object):
             plt.show()
             fig.savefig(param2 + ' vs ' + param1 + '.png', bbox_inches='tight', dpi=600)
 
+    def plotParamWithLayer(self, directionXAxis, directionYAxis, param, layer_num, time):
+        with plt.style.context('mystyle'):
+            fileReader = self.read_file()
+            y_data = fileReader.getLayerData(directionYAxis, layer_num, time, param)
+            x_data = fileReader.get_unique_coord_data(directionXAxis, time)
+            fig, axs = plt.subplots(1, 1)
+            axs.plot(x_data, y_data, marker='^')
+            axs.set_xlabel('Distance in the ' + directionXAxis + ' direction (m)')
+            axs.set_ylabel(self.modifier.param_label_full(param.upper()))
+            plt.tight_layout()
+            plt.show()
+
+
     def plot2D_one(self, direction1, direction2, param, timer):
         fileReader = self.read_file()
         fig, ax = plt.subplots(1, 1)
