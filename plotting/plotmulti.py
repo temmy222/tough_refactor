@@ -43,26 +43,22 @@ class PlotMulti(object):
             start_point = 0
             prop_index = 0
             initial_length = len(self.props) * 2
-            for number in range(1, len(self.props) + 1):
+            for number in range(1, len(self.props)):
                 axs = plt.subplot(3, 2, plot_counter)
-                k = 0
+                legend_index = 0
                 for i in range(start_point, initial_length, 2):
                     x_data = data.iloc[:, i]
                     y_data = data.iloc[:, i + 1]
-                    print(x_data[0], y_data[0])
-                    axs.plot(x_data, y_data, marker='^')
+                    axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
                     axs.set_xlabel('Time (year)')
                     axs.set_ylabel(self.props[prop_index])
-                    axs.legend(legend)
+                    legend_index = legend_index + 1
                 plot_counter = plot_counter + 1
                 start_point = start_point + (len(self.props) * 2)
                 initial_length = initial_length + (len(self.props) * 2)
                 prop_index = prop_index + 1
-            plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
             handles, labels = axs.get_legend_handles_labels()
-            axs.legend(handles, labels, loc='lower center', bbox_to_anchor=(-0.3, -0.9), fancybox=False, shadow=False,
-                       ncol=4)
-            plt.tight_layout()
+            plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
             plt.show()
             fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
@@ -77,20 +73,27 @@ class PlotMulti(object):
             prop_index = 0
             for number in range(1, len(self.props) + 1):
                 axs = plt.subplot(3, 2, plot_counter)
-                k = 0
+                legend_index = 0
                 for i in range(start_point, len(data.columns), (len(self.props) * 2)):
                     x_data = data.iloc[:, i]
                     y_data = data.iloc[:, i + 1]
-                    axs.plot(x_data, y_data, marker='^', label=legend[prop_index])
+                    axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
                     axs.set_xlabel('Time (year)')
                     axs.set_ylabel(self.props[prop_index])
+                    legend_index = legend_index + 1
                 plot_counter = plot_counter + 1
                 start_point = start_point + 2
                 prop_index = prop_index + 1
             handles, labels = axs.get_legend_handles_labels()
-            # plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
-            # plt.setp(axs.get_legend().get_texts(), fontsize='12')
-            axs.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, -0.45), ncol=4)
+            plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
             fig.tight_layout()
             plt.show()
             fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+
+    def plotMultiElementMultiFile(self, grid_block_number, legend, plot_kind='property'):
+        if plot_kind.lower() == 'property':
+            self.plotMultiElementMultiFilePerProp(grid_block_number, legend)
+        elif plot_kind.lower() == 'file':
+            self.plotMultiElementMultiFilePerFile(grid_block_number, legend)
+        else:
+            print('Plot kind can either be property or file')
