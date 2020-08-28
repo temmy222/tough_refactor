@@ -1,6 +1,7 @@
 import csv
 import os
 import utils.utilities as processor
+import pandas as pd
 import plotting.plottough as plot
 
 
@@ -13,7 +14,7 @@ class Tough3(object):
         self.file_as_list = []
 
     def __repr__(self):
-        return 'Results from ' + self.filelocation + ' in ' + self.filetitle +  ' for ' + self.simulatortype
+        return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
 
     def read_file(self):
         os.chdir(self.filelocation)
@@ -135,5 +136,167 @@ class Tough3(object):
             print("coordinates can either be X, Y or Z")
         return value
 
+    def getUniqueXData(self, timer):
+        ori_array = self.get_coord_data('x', timer)
+        indices_array = []
+        for i in range(0, len(ori_array)):
+            try:
+                if ori_array[i] > ori_array[i + 1]:
+                    indices_array.append(i)
+                else:
+                    continue
+            except:
+                pass
+        output_data = ori_array[0:indices_array[0] + 1]
+        return output_data
+
+    def getXStartPoints(self, timer):
+        ori_array = self.get_coord_data('x', timer)
+        indices_array = []
+        for i in range(0, len(ori_array)):
+            try:
+                if ori_array[i] > ori_array[i + 1]:
+                    indices_array.append(i)
+                else:
+                    continue
+            except:
+                pass
+        output_data = ori_array[0:indices_array[0] + 1]
+        return indices_array
+
+    def getUniqueYData(self, timer):
+        ori_array = self.get_coord_data('y', timer)
+        output = list(set(ori_array))
+        return output
+
+    def getUniqueZData(self, timer):
+        ori_array = self.get_coord_data('z', timer)
+        output = list(set(ori_array))
+        return output
+
+    def getNumberOfLayers(self, direction):
+        if direction.lower() == 'x':
+            array = self.getUniqueXData(0)
+        elif direction.lower() == 'y':
+            array = self.getUniqueYData(0)
+        elif direction.lower() == 'z':
+            array = self.getUniqueZData(0)
+        else:
+            print("coordinates can either be X, Y or Z")
+        number = len(array)
+        return number
+
+    def getZLayerData(self, layer_number, param, timer):
+        x_start = self.getXStartPoints(timer)
+        z_data = self.get_element_data(timer, param)
+        total_grid_in_z = self.getNumberOfLayers('z')
+        if layer_number > 1:
+            begin_index = x_start[layer_number - 2] + 1
+        else:
+            begin_index = 0
+        if layer_number < total_grid_in_z:
+            end_index = x_start[layer_number - 1] + 1
+        else:
+            end_index = 50
+        output = z_data[begin_index:end_index]
+        return output
+
+    def getXDepthData(self, line_number, param, timer):
+        element_data = self.get_element_data(timer, param)
+        x_layers = self.getNumberOfLayers('x')
+        z_layers = self.getNumberOfLayers('z')
+        data_array = []
+        for i in range(0, z_layers):
+            data_array.append(element_data[line_number - 1])
+            line_number = line_number + x_layers
+        return data_array
+
+    def getLayerData(self, direction, layer_number, timer, param):
+        number_of_layers = self.getNumberOfLayers(direction)
+        if layer_number > number_of_layers:
+            raise ValueError("The specified layer is more than the number of layers in the model")
+        else:
+            if direction.lower() == 'z':
+                data_array = self.getZLayerData(layer_number, param, timer)
+            elif direction.lower() == 'x':
+                data_array = self.getXDepthData(layer_number, param, timer)
+        return data_array
+
+    def get_unique_coord_data(self, direction, timer):
+        if direction.lower() == 'x':
+            value = self.getUniqueXData(timer)
+        elif direction.lower() == 'y':
+            value = self.getUniqueYData(timer)
+        elif direction.lower() == 'z':
+            value = self.getUniqueZData(timer)
+        else:
+            print("coordinates can either be X, Y or Z")
+        return value
 
 
+class MultiTough3(object):
+    def __init__(self, simulator_type, file_location, file_title, prop):
+        assert isinstance(file_location, list)
+        assert isinstance(file_title, list)
+        assert isinstance(prop, list)
+        self.file_location = file_location
+        self.file_title = file_title
+        self.simulator_type = simulator_type
+        self.prop = prop
+
+    def __repr__(self):
+        return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
+
+    def retrieve_data_multi_timeseries(self, grid_block_number):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
+            os.chdir(self.file_location[i])
+            result_data = tough_data.get_timeseries_data(self.prop[i], grid_block_number)
+            time_data = tough_data.convert_times_year()
+            time_data_label = 'time' + str(i)
+            result_data_label = 'result' + str(i)
+            data_table[time_data_label] = time_data
+            data_table[result_data_label] = result_data
+        return data_table
+
+    def retrieve_data_multi_file_fixed_time(self, direction, time):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
+            os.chdir(self.file_location[i])
+            x_data = tough_data.get_coord_data(direction, time)
+            result_data = tough_data.get_element_data(time, self.prop[i])
+            x_data_label = 'x' + str(i)
+            result_data_label = 'result' + str(i)
+            data_table[x_data_label] = pd.Series(x_data)
+            data_table[result_data_label] = pd.Series(result_data)
+            print(tough_data.getXDepthData(1, self.prop[i], time))
+        return data_table
+
+    def retrieve_data_multi_file_fixed_time_layer(self, direction, time, layer_num):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
+            os.chdir(self.file_location[i])
+            x_data = tough_data.get_coord_data(direction, time)
+            result_data = tough_data.getLayerData(direction, layer_num, time, self.prop[i])
+            x_data_label = 'x' + str(i)
+            result_data_label = 'result' + str(i)
+            data_table[x_data_label] = pd.Series(x_data)
+            data_table[result_data_label] = pd.Series(result_data)
+        return data_table
+
+    def getMultiElementData(self, grid_block_number):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            for j in range(0, len(self.prop)):
+                os.chdir(self.file_location[i])
+                tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
+                result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
+                time_data = tough_data.convert_times_year()
+                time_data_label = self.prop[j] + 'time' + str(i) + str(j)
+                result_data_label = self.prop[j] + 'result' + str(i) + str(j)
+                data_table[time_data_label] = time_data
+                data_table[result_data_label] = result_data
+        return data_table

@@ -117,11 +117,15 @@ class ToughReact(object):
     def getZLayerData(self, layer_number, param, timer):
         x_start = self.getXStartPoints(timer)
         z_data = self.get_element_data(timer, param)
+        total_grid_in_z = self.getNumberOfLayers('z')
         if layer_number > 1:
             begin_index = x_start[layer_number - 2] + 1
         else:
             begin_index = 0
-        end_index = x_start[layer_number - 1] + 1
+        if layer_number < total_grid_in_z:
+            end_index = x_start[layer_number - 1] + 1
+        else:
+            end_index = 50
         output = z_data[begin_index:end_index]
         return output
 

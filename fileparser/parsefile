@@ -1,4 +1,5 @@
 from fileparser.fileread import FileReadSingle, FileReadMultiple
+from fileparser.tough3 import Tough3
 from fileparser.toughreact import ToughReact, MultiToughReact
 from plotting.plotmultifiles import PlotMultiFiles
 from plotting.plotmultitough import PlotMultiTough
@@ -6,22 +7,33 @@ from plotting.plottough import PlotTough
 
 file = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
 file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
-file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Ca offshore"
-file_toughreact3 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca injected brine Offshore"
+file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca " \
+                   r"Onshore flux with Ca offshore "
+file_toughreact3 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of " \
+                   r"Mexico Shale Cement Flow - Ca injected brine Offshore "
+file_tmvoc = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one component\biodegradation"
+file_tmvoc2 = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one component\no biodegradation"
 
-allfiles = [file_toughreact, file_toughreact2, file_toughreact3]
-filetype = 'OUTPUT_ELEME.csv'
+all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
+all_tmvoc_files = [file_tmvoc, file_tmvoc]
+filetype_tmvoc = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
-filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
+all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
+all_tmvoc_filetypes = [filetype_tmvoc, filetype_tmvoc]
 
-params2 = ['DEN_L', 'sat_N']
+params_tmvoc = ['DEN_L', 'sat_N']
+params_tmvoc_multi = ['DEN_L', 'sat_N', 'X_Toluen_L', 'X_AIR_L']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params3 = ['pH', 't_h2o']
 labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
 
-testcodemultitoughreact = FileReadMultiple("toughreact", allfiles, filetypes, params2)
+testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
-testcode3tmvoc = FileReadSingle("tmvoc", file, filetype)
+testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
+testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
+
+
+testcodemultitmvoc.plotTime(5, labels)
 
 

@@ -50,7 +50,7 @@ class FileReadSingle(object):
         elif type == 'grid':
             plottest.plot2D_withgrid(direction1, direction2, param, timer)
         else:
-            print('Type can either be plain or gridded')
+            print('Type can either be plain or grid')
 
 
 class FileReadMultiple(object):

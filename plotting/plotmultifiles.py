@@ -1,3 +1,4 @@
+from fileparser.tough3 import MultiTough3
 from fileparser.toughreact import MultiToughReact
 import matplotlib.pyplot as plt
 
@@ -15,8 +16,17 @@ class PlotMultiFiles(object):
         self.props = props
         self.modifier = Utilities()
 
+    def validateInput(self):
+        if self.simulator_type.lower() == 'toughreact':
+            multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        elif self.simulator_type.lower() == 'tmvoc':
+            multi_tough = MultiTough3(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        else:
+            print("Code only has capability for TOUGHREACT or TOUGH3 (by extension TMVOC)")
+        return multi_tough
+
     def multiFileSinglePlot(self, grid_block_number, legend):
-        multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        multi_tough = self.validateInput()
         data = multi_tough.retrieve_data_multi_timeseries(grid_block_number)
         prop_index = 0
         with plt.style.context('mystyle'):
@@ -34,7 +44,7 @@ class PlotMultiFiles(object):
             fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def plotMultiElementMultiFilePerFile(self, grid_block_number, legend):
-        multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        multi_tough = self.validateInput()
         data = multi_tough.getMultiElementData(grid_block_number)
         print('Each plot shows results from a file')
         with plt.style.context('mystyle'):
@@ -63,7 +73,7 @@ class PlotMultiFiles(object):
             fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def plotMultiElementMultiFilePerProp(self, grid_block_number, legend):
-        multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        multi_tough = self.validateInput()
         data = multi_tough.getMultiElementData(grid_block_number)
         print('Each plot shows results per parameter')
         with plt.style.context('mystyle'):
