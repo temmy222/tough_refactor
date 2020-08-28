@@ -17,20 +17,19 @@ testcode = FileRead("toughreact", allfiles, filetypes)
 testcode2 = ToughReact("toughreact", file_toughreact, filetype_toughreact)
 testcode3 = FileRead("tmvoc", file, filetype)
 
-
 params2 = ['DEN_L', 'sat_N']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
-params2 = ['pH', 't_h2o', 't_h+']
+params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 labels = ['first plot', 'second plot']
 
 test = PlotMulti('toughreact', allfiles, filetypes, params2)
-legend = ['first plot', 'second plot', 'third plot']
+legend = ['first plot', 'second plot', 'third plot', 'fourth plot']
 # test.test_multi_plot(0, legend)
-test.plotMultiElementMultiFile(0, legend)
+test.plotMultiElementMultiFilePerProp(0, legend)
 #
 # plotting = PlotTough('toughreact', file_toughreact, filetype_toughreact)
 # plotting.plotParamWithTime(params2[0], 43)
 
 
-# class_data = MultiToughReact('toughreact', allfiles, filetypes, params2)
-# data = class_data.getMultiElementData(0)
+class_data = MultiToughReact('toughreact', allfiles, filetypes, params2)
+data = class_data.getMultiElementData(0)
