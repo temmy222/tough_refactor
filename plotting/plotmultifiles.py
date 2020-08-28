@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from utils.utilities import Utilities
 
 
-class PlotMulti(object):
+class PlotMultiFiles(object):
     def __init__(self, simulator_type, file_locations, file_titles, props):
         assert isinstance(file_locations, list)
         assert isinstance(file_titles, list)
@@ -15,9 +15,9 @@ class PlotMulti(object):
         self.props = props
         self.modifier = Utilities()
 
-    def test_multi_plot(self, grid_block_number, legend):
+    def multiFileSinglePlot(self, grid_block_number, legend):
         multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
-        data = multi_tough.retrieve_data_multi_timeseries(grid_block_number, self.props)
+        data = multi_tough.retrieve_data_multi_timeseries(grid_block_number)
         prop_index = 0
         with plt.style.context('mystyle'):
             fig, axs = plt.subplots(1, 1)

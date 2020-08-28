@@ -39,7 +39,7 @@ class Utilities(object):
                       'X_BENZEN_L':'Mass Fraction of Benzene in Liquid','X_TOLUEN_L':'Mass Fraction of Toluene in Liquid',
                       'X_N-DECA_L': 'Mass Fraction of Decane in Liquid','X_TOLUEN_N':'Mass Fraction of Toluene in NAPL',
                       'X_TOLUEN_G':'Mass Fraction of Toluene in Gas', 'PH': 'pH', 'T_NA+': 'Concentration of Sodium', 'T_CL-': 'Concentration of Chlorine',
-                      'T_CA+2': 'Concentration of Calcium'
+                      'T_CA+2': 'Concentration of Calcium','T_H2O': 'Concentration of Water', 'T_H+': 'Concentration of Hydrogen'
                       }
         return dict_param[param]
 

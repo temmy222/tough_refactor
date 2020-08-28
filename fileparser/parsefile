@@ -1,6 +1,7 @@
-from fileparser.fileread import FileRead
+from fileparser.fileread import FileReadSingle, FileReadMultiple
 from fileparser.toughreact import ToughReact, MultiToughReact
-from plotting.plotmulti import PlotMulti
+from plotting.plotmultifiles import PlotMultiFiles
+from plotting.plotmultitough import PlotMultiTough
 from plotting.plottough import PlotTough
 
 file = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
@@ -12,26 +13,15 @@ allfiles = [file_toughreact, file_toughreact2, file_toughreact3]
 filetype = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
 filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
-testcode = FileRead("toughreact", file_toughreact, filetypes)
-testcode = FileRead("toughreact", allfiles, filetypes)
-testcode2 = ToughReact("toughreact", file_toughreact, filetype_toughreact)
-testcode3 = FileRead("tmvoc", file, filetype)
 
 params2 = ['DEN_L', 'sat_N']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
-labels = ['first plot', 'second plot']
+params3 = ['pH', 't_h2o']
+labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
 
-test = PlotMulti('toughreact', allfiles, filetypes, params2)
-legend = ['first plot', 'second plot', 'third plot', 'fourth plot']
-data = testcode2.getLayerData('z', 7, 2000, 'pH')
-data2 = testcode2.get_unique_coord_data('x', 2000)
-
-
-plottough = PlotTough('toughreact', file_toughreact, filetype_toughreact)
-plottough.plotParamWithLayer('x', 'z', 'pH', 3, 2000)
-
-# class_data = MultiToughReact('toughreact', allfiles, filetypes, params2)
-# data = class_data.getMultiElementData(0)
+testcodemultitoughreact = FileReadMultiple("toughreact", allfiles, filetypes, params2)
+testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
+testcode3tmvoc = FileReadSingle("tmvoc", file, filetype)
 
 
