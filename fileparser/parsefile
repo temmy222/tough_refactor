@@ -18,6 +18,7 @@ all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
 all_tmvoc_files = [file_tmvoc, file_tmvoc]
 filetype_tmvoc = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
+filetype_toughreact_min = 'kdd_min.tec'
 all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
 all_tmvoc_filetypes = [filetype_tmvoc, filetype_tmvoc]
 
@@ -26,14 +27,15 @@ params_tmvoc_multi = ['DEN_L', 'sat_N', 'X_Toluen_L', 'X_AIR_L']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params3 = ['pH', 't_h2o']
+param_min = ['portlandite', 'calcite']
 labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
 
 testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
+testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min)
 testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
 testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
 
-
-testcodemultitmvoc.plotTime(5, labels)
-
-
+testcodetoughreact_min.plot2D('x', 'z', 'portlandite', 2.592e+15, 'grid')
+# testcodetoughreact.plotTime('pH', 85, format_of_date='day')
+# testcodetoughreact_min.plotTime(param_min, 85, format_of_date='day')

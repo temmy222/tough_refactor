@@ -35,10 +35,10 @@ class ToughReact(object):
         time_data = value.choplist(time_data, 40)
         return time_data
 
-    def convert_times_year(self):
+    def convert_times(self, format_of_date):
         intermediate = self.get_times()
         firstUsage = processor.Utilities()
-        timeyear = firstUsage.convert_times_year(intermediate)
+        timeyear = firstUsage.convert_times(intermediate, format_of_date)
         return timeyear
 
     def get_timeseries_data(self, param, gridblocknumber):
@@ -186,13 +186,13 @@ class MultiToughReact(object):
     def __repr__(self):
         return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
 
-    def retrieve_data_multi_timeseries(self, grid_block_number):
+    def retrieve_data_multi_timeseries(self, grid_block_number, format_of_date='year'):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
             result_data = tough_data.get_timeseries_data(self.prop[i], grid_block_number)
-            time_data = tough_data.convert_times_year()
+            time_data = tough_data.convert_times(format_of_date='year')
             time_data_label = 'time' + str(i)
             result_data_label = 'result' + str(i)
             data_table[time_data_label] = time_data
@@ -226,14 +226,14 @@ class MultiToughReact(object):
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
-    def getMultiElementData(self, grid_block_number):
+    def getMultiElementData(self, grid_block_number, format_of_date='year'):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             for j in range(0, len(self.prop)):
                 os.chdir(self.file_location[i])
                 tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
                 result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
-                time_data = tough_data.convert_times_year()
+                time_data = tough_data.convert_times(format_of_date='year')
                 time_data_label = self.prop[j] + 'time' + str(i) + str(j)
                 result_data_label = self.prop[j] + 'result' + str(i) + str(j)
                 data_table[time_data_label] = time_data

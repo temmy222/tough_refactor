@@ -1,49 +1,75 @@
 import numpy as np
 import random
+
+
 class Utilities(object):
     def __init__(self):
         welcome = "welcome to utilities"
 
-    def convert_times_year(self, arraylist):
+    def convert_times(self, arraylist, format_of_date):
         intermediate = arraylist
         timeyear = []
-        for i in range(len(intermediate)):
-            timeyear.append(intermediate[i] / 3.154e+7)
+        if format_of_date.lower() == 'year':
+            for i in range(len(intermediate)):
+                timeyear.append(intermediate[i] / 3.154e+7)
+        elif format_of_date.lower() == 'day':
+            for i in range(len(intermediate)):
+                timeyear.append(intermediate[i] / 86400)
+        elif format_of_date.lower() == 'hour':
+            for i in range(len(intermediate)):
+                timeyear.append(intermediate[i] / 3600)
+        elif format_of_date.lower() == 'minute':
+            for i in range(len(intermediate)):
+                timeyear.append(intermediate[i] / 60)
+        else:
+            raise ValueError("format can either be year, day, hour or minute")
         return timeyear
 
-    def choplist (self, liste, number=40):
+    def choplist(self, liste, number=40):
         if isinstance(liste, list):
-            finallist =[]
+            finallist = []
             finallist.append(liste[0])
             newlist = liste[1:-1]
             len_newlist = len(newlist)
-            ascend = list(np.linspace(1,len_newlist,len_newlist))
-            randomi = random.sample(ascend,number)
+            ascend = list(np.linspace(1, len_newlist, len_newlist))
+            randomi = random.sample(ascend, number)
             randomi.sort()
             myList = [int(x) for x in randomi]
-            for index,value in enumerate(myList):
+            for index, value in enumerate(myList):
                 finallist.append(liste[value])
             finallist.append(liste[-1])
         else:
             print('Input must be a list')
         return finallist
 
-    def param_label_full (self, param):
-        dict_param = {'PRES': 'Pressure (Pa)', 'TEMP': 'Temperature ($^o C$)', 'SAT_G': 'Gas Saturation (-)', 'SAT_L': 'Liquid Saturation (-)',
-                      'SAT_N':'NAPL Saturation (-)','X_WATER_G':'Water Mass Fraction in Gas (-)','X_AIR_G':'Air Mass Fraction in Gas (-)',
-                      'X_WATER_L':'Water Mass Fraction in Liquid (-)','X_AIR_L':'Air Mass Fraction in Liquid (-)','X_WATER_N':'Water Mass Fraction in NAPL (-)',
-                      'X_AIR_N':'Air Mass Fraction in NAPL (-)','REL_G"':'Relative Permeability of Gas (-)','REL_L':'Relative Permeability of Liquid (-)',
-                      'REL_N':'Relative Permeability of NAPL (-)','PCAP_GL':'Capillary Pressure of Gas in Liquid (Pa)',
-                      'PCAP_GN':'Capillary Pressure of Gas in NAPL (Pa)','DEN_G':'Gas Density ($kg/m^3$)','DEN_L':'Liquid Density ($kg/m^3$)',
-                      'DEN_N':'NAPL Density ($kg/m^3$)','POR':'Porosity','BIO1':'Biomass Mass Fraction(-)','BIO2':'Biomass Mass Fraction(-)',
-                      'X_BENZEN_L':'Mass Fraction of Benzene in Liquid','X_TOLUEN_L':'Mass Fraction of Toluene in Liquid',
-                      'X_N-DECA_L': 'Mass Fraction of Decane in Liquid','X_TOLUEN_N':'Mass Fraction of Toluene in NAPL',
-                      'X_TOLUEN_G':'Mass Fraction of Toluene in Gas', 'PH': 'pH', 'T_NA+': 'Concentration of Sodium', 'T_CL-': 'Concentration of Chlorine',
-                      'T_CA+2': 'Concentration of Calcium','T_H2O': 'Concentration of Water', 'T_H+': 'Concentration of Hydrogen'
+    def param_label_full(self, param):
+        dict_param = {'PRES': 'Pressure (Pa)', 'TEMP': 'Temperature ($^o C$)', 'SAT_G': 'Gas Saturation (-)',
+                      'SAT_L': 'Liquid Saturation (-)',
+                      'SAT_N': 'NAPL Saturation (-)', 'X_WATER_G': 'Water Mass Fraction in Gas (-)',
+                      'X_AIR_G': 'Air Mass Fraction in Gas (-)',
+                      'X_WATER_L': 'Water Mass Fraction in Liquid (-)', 'X_AIR_L': 'Air Mass Fraction in Liquid (-)',
+                      'X_WATER_N': 'Water Mass Fraction in NAPL (-)',
+                      'X_AIR_N': 'Air Mass Fraction in NAPL (-)', 'REL_G"': 'Relative Permeability of Gas (-)',
+                      'REL_L': 'Relative Permeability of Liquid (-)',
+                      'REL_N': 'Relative Permeability of NAPL (-)',
+                      'PCAP_GL': 'Capillary Pressure of Gas in Liquid (Pa)',
+                      'PCAP_GN': 'Capillary Pressure of Gas in NAPL (Pa)', 'DEN_G': 'Gas Density ($kg/m^3$)',
+                      'DEN_L': 'Liquid Density ($kg/m^3$)',
+                      'DEN_N': 'NAPL Density ($kg/m^3$)', 'POR': 'Porosity', 'BIO1': 'Biomass Mass Fraction(-)',
+                      'BIO2': 'Biomass Mass Fraction(-)',
+                      'X_BENZEN_L': 'Mass Fraction of Benzene in Liquid',
+                      'X_TOLUEN_L': 'Mass Fraction of Toluene in Liquid',
+                      'X_N-DECA_L': 'Mass Fraction of Decane in Liquid',
+                      'X_TOLUEN_N': 'Mass Fraction of Toluene in NAPL',
+                      'X_TOLUEN_G': 'Mass Fraction of Toluene in Gas', 'PH': 'pH', 'T_NA+': 'Concentration of Sodium',
+                      'T_CL-': 'Concentration of Chlorine',
+                      'T_CA+2': 'Concentration of Calcium', 'T_H2O': 'Concentration of Water',
+                      'T_H+': 'Concentration of Hydrogen',
+                      'CALCITE': 'Calcite', 'PORTLANDITE': 'Portlandite'
                       }
         return dict_param[param]
 
-    def fmt (self, x, pos):
+    def fmt(self, x, pos):
         a, b = '{:.2e}'.format(x).split('e')
         b = int(b)
         return r'${} \times 10^{{{}}}$'.format(a, b)
@@ -57,7 +83,7 @@ class Utilities(object):
 
     def getgridnumber(self, df, direction):
         X = df[direction]
-        d ={}
+        d = {}
         for i in X:
             if i not in d:
                 d[i] = 1

@@ -34,15 +34,22 @@ class PlotTough(object):
             fileReader = toughreact.ToughReact(self.simulatortype, self.filelocation, self.filetitle)
         return fileReader
 
-    def plotParamWithTime(self, param, gridblocknumber):
+    def plotParamWithTime(self, param, gridblocknumber, format_of_date):
         with plt.style.context('mystyle'):
 
             fileReader = self.read_file()
-            time_year = fileReader.convert_times_year()
+            time_year = fileReader.convert_times(format_of_date)
             result_array = fileReader.get_timeseries_data(param, gridblocknumber)
             fig, axs = plt.subplots(1, 1)
             axs.plot(time_year, result_array, marker='^')
-            axs.set_xlabel('Time (year)')
+            if format_of_date.lower() == 'year':
+                axs.set_xlabel('Time (year)')
+            elif format_of_date.lower() == 'day':
+                axs.set_xlabel('Time (day)')
+            elif format_of_date.lower() == 'hour':
+                axs.set_xlabel('Time (hour)')
+            elif format_of_date.lower() == 'min':
+                axs.set_xlabel('Time (min)')
             parameters = processor.Utilities()
             axs.set_ylabel(parameters.param_label_full(param.upper()))
             plt.tight_layout()

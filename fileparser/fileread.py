@@ -27,13 +27,13 @@ class FileReadSingle(object):
     def getSimulatorType(self):
         return self.simulatortype
 
-    def plotTime(self, param, gridblocknumber, labels=[], style='horizontal', width=12, height=8):
+    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], style='horizontal', width=12, height=8):
         if isinstance(param, str):
             plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)
-            plottest.plotParamWithTime(param, gridblocknumber)
+            plottest.plotParamWithTime(param, gridblocknumber, format_of_date)
         elif isinstance(param, list) and isinstance(self.filelocation, str):
             plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle)
-            plottest.multi_time_plot(param, gridblocknumber, style)
+            plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)
@@ -43,11 +43,11 @@ class FileReadSingle(object):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)
         plottest.plotParamWithLayer(directionXAxis, directionYAxis, param, layer_num, time)
 
-    def plot2D(self, direction1, direction2, param, timer, type='plain'):
+    def plot2D(self, direction1, direction2, param, timer, grid_type='plain'):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)
-        if type == 'plain':
+        if grid_type == 'plain':
             plottest.plot2D_one(direction1, direction2, param, timer)
-        elif type == 'grid':
+        elif grid_type == 'grid':
             plottest.plot2D_withgrid(direction1, direction2, param, timer)
         else:
             print('Type can either be plain or grid')

@@ -30,12 +30,12 @@ class PlotMultiTough(object):
             fileReader = toughreact.ToughReact(self.simulatortype, file, filetitle)
         return fileReader
 
-    def multi_time_plot(self, param, gridblocknumber, style='horizontal'):
+    def multi_time_plot(self, param, gridblocknumber, format_of_date, style='horizontal'):
         fileReader = self.read_file()
-        time_year = fileReader.convert_times_year()
+        time_year = fileReader.convert_times(format_of_date)
         j = 0
         if style.lower() == 'horizontal':
-            if isinstance(param, list) and len(param) <3:
+            if isinstance(param, list) and len(param) < 3:
                 with plt.style.context('mystyle'):
                     fig = plt.figure()
                     fig, axs = plt.subplots(len(param), sharex=False)
@@ -49,7 +49,14 @@ class PlotMultiTough(object):
                         axs[j].spines['top'].set_linewidth(0)
                         axs[j].spines['right'].set_linewidth(0)
                         # axs[j].legend(loc='best',borderpad=0.1)
-                        axs[j].set_xlabel('Time (year)', fontsize=12)
+                        if format_of_date.lower() == 'year':
+                            axs[j].set_xlabel('Time (year)', fontsize=12)
+                        elif format_of_date.lower() == 'day':
+                            axs[j].set_xlabel('Time (day)', fontsize=12)
+                        elif format_of_date.lower() == 'hour':
+                            axs[j].set_xlabel('Time (hour)', fontsize=12)
+                        elif format_of_date.lower() == 'min':
+                            axs[j].set_xlabel('Time (min)', fontsize=12)
                         axs[j].ticklabel_format(useOffset=False)
                         plt.setp(axs[j].get_xticklabels(), fontsize=12)
                         plt.setp(axs[j].get_yticklabels(), fontsize=12)
@@ -63,11 +70,12 @@ class PlotMultiTough(object):
             if isinstance(param, list) and len(param) < 3:
                 with plt.style.context('mystyle'):
                     fig = plt.figure()
-                    for number in range(1, len(param)+1):
+                    for number in range(1, len(param) + 1):
                         ax = fig.add_subplot(1, len(param), number)
-                        result_array = fileReader.get_timeseries_data(param[number-1], gridblocknumber)
-                        ax.plot(time_year, result_array, marker='^', label=self.modifier.param_label_full(param[number-1].upper()))
-                        ax.set_ylabel(self.modifier.param_label_full(param[number-1].upper()), fontsize=12)
+                        result_array = fileReader.get_timeseries_data(param[number - 1], gridblocknumber)
+                        ax.plot(time_year, result_array, marker='^',
+                                label=self.modifier.param_label_full(param[number - 1].upper()))
+                        ax.set_ylabel(self.modifier.param_label_full(param[number - 1].upper()), fontsize=12)
                         ax.spines['bottom'].set_linewidth(1.5)
                         ax.spines['left'].set_linewidth(1.5)
                         ax.spines['top'].set_linewidth(0)
@@ -77,8 +85,15 @@ class PlotMultiTough(object):
                         plt.setp(ax.get_xticklabels(), fontsize=12)
                         plt.setp(ax.get_yticklabels(), fontsize=12)
                         # ax.legend(loc='best',borderpad=0.1)
-                        ax.set_xlabel('Time (year)', fontsize=12)
-                        j = j+1
+                        if format_of_date.lower() == 'year':
+                            ax.set_xlabel('Time (year)', fontsize=12)
+                        elif format_of_date.lower() == 'day':
+                            ax.set_xlabel('Time (day)', fontsize=12)
+                        elif format_of_date.lower() == 'hour':
+                            ax.set_xlabel('Time (hour)', fontsize=12)
+                        elif format_of_date.lower() == 'min':
+                            ax.set_xlabel('Time (min)', fontsize=12)
+                        j = j + 1
                     plt.tight_layout()
                     plt.show()
                     fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
@@ -98,11 +113,11 @@ class PlotMultiTough(object):
                 fileNumber = fileNumber + 1
         return fileNames, dataStorage
 
-
-    def multi_param_multi_file_plot(self, param, gridblocknumber, labels, style='horizontal', width=12, height=8):
+    def multi_param_multi_file_plot(self, param, gridblocknumber, labels, format_of_date='year', style='horizontal',
+                                    width=12, height=8):
         fig = plt.figure(figsize=(width, height))
         fileReader = self.read_file_multi(self.filelocations[0], self.filetitles[0])
-        time_year = fileReader.convert_times_year()
+        time_year = fileReader.convert_times(format_of_date)
         lst, dictionary = self.retrieve_multi_data(param, gridblocknumber)
         colors = ['r', 'royalblue', 'g', 'k', 'c', 'm', 'y']
         markers = ["o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s", "p", "P", "*", "h", "H", "+", "x", "X", "D",
@@ -110,14 +125,15 @@ class PlotMultiTough(object):
         kpansa = 0
         param_counter = 0
         subplot_i = 2
-        k=0
+        k = 0
         subplot_j = 2
-        data_step = len(self.filelocations)-1
+        data_step = len(self.filelocations) - 1
         fig, axs = plt.subplots(subplot_i, subplot_j)
         for number in range(subplot_i):
             for i in range(subplot_j):
                 for j in range(len(self.filelocations)):
-                    axs[number, i].plot(time_year, dictionary[lst[kpansa+j]], label=labels[k], linewidth=2, color=colors[j], marker=markers[j])
+                    axs[number, i].plot(time_year, dictionary[lst[kpansa + j]], label=labels[k], linewidth=2,
+                                        color=colors[j], marker=markers[j])
                     axs[number, i].set_ylabel(self.modifier.strip_param(param[param_counter]))
                     axs[number, i].set_title(self.modifier.param_label_full(param[param_counter].upper()))
                     axs[number, i].set_xlabel('Time (year)')
@@ -126,11 +142,10 @@ class PlotMultiTough(object):
                     axs[number, i].spines['top'].set_linewidth(0.0)
                     axs[number, i].spines['right'].set_linewidth(0.0)
                 kpansa = kpansa + len(self.filelocations)
-                param_counter = param_counter+1
+                param_counter = param_counter + 1
             k = k + 1
         # handles, labels = axs[number, i].get_legend_handles_labels()
         # axs[number, i].legend(handles, labels, loc='lower center', bbox_to_anchor=(-0.1, -0.5), fancybox=False, shadow=False, ncol=4)
         plt.subplots_adjust(left=0.125, wspace=0.4, top=0.95)
         plt.tight_layout()
         plt.show()
-

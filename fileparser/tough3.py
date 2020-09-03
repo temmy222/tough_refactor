@@ -37,10 +37,10 @@ class Tough3(object):
             timeraw.append(float(interim[2]))
         return timeraw
 
-    def convert_times_year(self):
+    def convert_times(self, format_of_date):
         intermediate = self.get_times()
         firstusage = processor.Utilities()
-        timeyear = firstusage.convert_times_year(intermediate)
+        timeyear = firstusage.convert_times(intermediate, format_of_date)
         return timeyear
 
     def get_time_index(self):
@@ -253,7 +253,7 @@ class MultiTough3(object):
             tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
             result_data = tough_data.get_timeseries_data(self.prop[i], grid_block_number)
-            time_data = tough_data.convert_times_year()
+            time_data = tough_data.convert_times()
             time_data_label = 'time' + str(i)
             result_data_label = 'result' + str(i)
             data_table[time_data_label] = time_data
@@ -294,7 +294,7 @@ class MultiTough3(object):
                 os.chdir(self.file_location[i])
                 tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
                 result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
-                time_data = tough_data.convert_times_year()
+                time_data = tough_data.convert_times()
                 time_data_label = self.prop[j] + 'time' + str(i) + str(j)
                 result_data_label = self.prop[j] + 'result' + str(i) + str(j)
                 data_table[time_data_label] = time_data
