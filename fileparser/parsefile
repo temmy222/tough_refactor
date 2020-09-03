@@ -36,6 +36,6 @@ testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_
 testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
 testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
 
-testcodetoughreact_min.plot2D('x', 'z', 'portlandite', 2.592e+15, 'grid')
+testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
 # testcodetoughreact.plotTime('pH', 85, format_of_date='day')
 # testcodetoughreact_min.plotTime(param_min, 85, format_of_date='day')

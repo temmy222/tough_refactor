@@ -8,7 +8,7 @@ from plotting.plottough import PlotTough
 class FileReadSingle(object):
     def __init__(self, simulatortype, filelocation, filetitle):
         """
-
+        Class for processing single file results
         :type simulatortype: object
         """
         self.filelocation = filelocation
@@ -54,6 +54,9 @@ class FileReadSingle(object):
 
 
 class FileReadMultiple(object):
+    """
+    Class for processing multiple file results
+    """
     def __init__(self, simulator_type, file_locations, file_titles, props):
         assert isinstance(file_locations, list)
         assert isinstance(file_titles, list)
@@ -63,6 +66,15 @@ class FileReadMultiple(object):
         self.props = props
 
     def plotTime(self, grid_block_number, legend, plot_kind='property'):
+        """
+
+        :param grid_block_number:
+        :type grid_block_number: int
+        :param legend:
+        :type legend: list
+        :param plot_kind:
+        :type plot_kind: string
+        """
         plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props)
         if len(self.props) == 1:
             plottest.multiFileSinglePlot(grid_block_number, legend)
