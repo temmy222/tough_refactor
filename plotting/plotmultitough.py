@@ -36,34 +36,65 @@ class PlotMultiTough(object):
         j = 0
         if style.lower() == 'horizontal':
             if isinstance(param, list) and len(param) < 3:
-                with plt.style.context('mystyle'):
-                    fig = plt.figure()
-                    fig, axs = plt.subplots(len(param), sharex=False)
-                    for parameter in param:
-                        result_array = fileReader.get_timeseries_data(parameter, gridblocknumber)
-                        axs[j].plot(time_year, result_array, marker='^',
-                                    label=self.modifier.param_label_full(parameter.upper()))
-                        axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
-                        axs[j].spines['bottom'].set_linewidth(1.5)
-                        axs[j].spines['left'].set_linewidth(1.5)
-                        axs[j].spines['top'].set_linewidth(0)
-                        axs[j].spines['right'].set_linewidth(0)
-                        # axs[j].legend(loc='best',borderpad=0.1)
-                        if format_of_date.lower() == 'year':
-                            axs[j].set_xlabel('Time (year)', fontsize=12)
-                        elif format_of_date.lower() == 'day':
-                            axs[j].set_xlabel('Time (day)', fontsize=12)
-                        elif format_of_date.lower() == 'hour':
-                            axs[j].set_xlabel('Time (hour)', fontsize=12)
-                        elif format_of_date.lower() == 'min':
-                            axs[j].set_xlabel('Time (min)', fontsize=12)
-                        axs[j].ticklabel_format(useOffset=False)
-                        plt.setp(axs[j].get_xticklabels(), fontsize=12)
-                        plt.setp(axs[j].get_yticklabels(), fontsize=12)
-                        j = j + 1
-                    plt.tight_layout()
-                    plt.show()
-                    fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                try:
+                    with plt.style.context('mystyle'):
+                        fig = plt.figure()
+                        fig, axs = plt.subplots(len(param), sharex=False)
+                        for parameter in param:
+                            result_array = fileReader.get_timeseries_data(parameter, gridblocknumber)
+                            axs[j].plot(time_year, result_array, marker='^',
+                                        label=self.modifier.param_label_full(parameter.upper()))
+                            axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
+                            axs[j].spines['bottom'].set_linewidth(1.5)
+                            axs[j].spines['left'].set_linewidth(1.5)
+                            axs[j].spines['top'].set_linewidth(0)
+                            axs[j].spines['right'].set_linewidth(0)
+                            # axs[j].legend(loc='best',borderpad=0.1)
+                            if format_of_date.lower() == 'year':
+                                axs[j].set_xlabel('Time (year)', fontsize=12)
+                            elif format_of_date.lower() == 'day':
+                                axs[j].set_xlabel('Time (day)', fontsize=12)
+                            elif format_of_date.lower() == 'hour':
+                                axs[j].set_xlabel('Time (hour)', fontsize=12)
+                            elif format_of_date.lower() == 'min':
+                                axs[j].set_xlabel('Time (min)', fontsize=12)
+                            axs[j].ticklabel_format(useOffset=False)
+                            plt.setp(axs[j].get_xticklabels(), fontsize=12)
+                            plt.setp(axs[j].get_yticklabels(), fontsize=12)
+                            j = j + 1
+                        plt.tight_layout()
+                        plt.show()
+                        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                except:
+                    with plt.style.context('classic'):
+                        fig = plt.figure()
+                        fig, axs = plt.subplots(len(param), sharex=False)
+                        for parameter in param:
+                            result_array = fileReader.get_timeseries_data(parameter, gridblocknumber)
+                            axs[j].plot(time_year, result_array, marker='^',
+                                        label=self.modifier.param_label_full(parameter.upper()))
+                            axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
+                            axs[j].spines['bottom'].set_linewidth(1.5)
+                            axs[j].spines['left'].set_linewidth(1.5)
+                            axs[j].spines['top'].set_linewidth(0)
+                            axs[j].spines['right'].set_linewidth(0)
+                            # axs[j].legend(loc='best',borderpad=0.1)
+                            if format_of_date.lower() == 'year':
+                                axs[j].set_xlabel('Time (year)', fontsize=12)
+                            elif format_of_date.lower() == 'day':
+                                axs[j].set_xlabel('Time (day)', fontsize=12)
+                            elif format_of_date.lower() == 'hour':
+                                axs[j].set_xlabel('Time (hour)', fontsize=12)
+                            elif format_of_date.lower() == 'min':
+                                axs[j].set_xlabel('Time (min)', fontsize=12)
+                            axs[j].ticklabel_format(useOffset=False)
+                            plt.setp(axs[j].get_xticklabels(), fontsize=12)
+                            plt.setp(axs[j].get_yticklabels(), fontsize=12)
+                            j = j + 1
+                        plt.tight_layout()
+                        plt.show()
+                        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+
             else:
                 print("Parameters must be a list of parameter values with parameters less than 3")
         elif style.lower() == 'vertical':

@@ -20,41 +20,66 @@ import pandas as pd
 
 
 class PlotTough(object):
-    def __init__(self, simulatortype, filelocation, filetitle):
-        self.filelocation = filelocation
-        os.chdir(self.filelocation)
+    def __init__(self, simulatortype, file_location, filetitle, *args):
+        self.file_location = file_location
+        os.chdir(self.file_location)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
         self.modifier = processor.Utilities()
+        self.args = args
 
     def read_file(self):
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
-            fileReader = tough3.Tough3(self.simulatortype, self.filelocation, self.filetitle)
+            fileReader = tough3.Tough3(self.simulatortype, self.file_location, self.filetitle)
         else:
-            fileReader = toughreact.ToughReact(self.simulatortype, self.filelocation, self.filetitle)
+            fileReader = toughreact.ToughReact(self.simulatortype, self.file_location, self.filetitle)
         return fileReader
 
     def plotParamWithTime(self, param, gridblocknumber, format_of_date):
-        with plt.style.context('mystyle'):
+        try:
+            with plt.style.context('mystyle'):
+                fileReader = self.read_file()
+                time_year = fileReader.convert_times(format_of_date)
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                fig, axs = plt.subplots(1, 1)
+                axs.plot(time_year, result_array, marker='^')
+                if format_of_date.lower() == 'year':
+                    axs.set_xlabel('Time (year)')
+                elif format_of_date.lower() == 'day':
+                    axs.set_xlabel('Time (day)')
+                elif format_of_date.lower() == 'hour':
+                    axs.set_xlabel('Time (hour)')
+                elif format_of_date.lower() == 'min':
+                    axs.set_xlabel('Time (min)')
+                parameters = processor.Utilities()
+                axs.set_ylabel(parameters.param_label_full(param.upper()))
+                plt.tight_layout()
+                plt.show()
+                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+        except:
+            with plt.style.context('classic'):
+                fileReader = self.read_file()
+                time_year = fileReader.convert_times(format_of_date)
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                fig, axs = plt.subplots(1, 1)
+                axs.plot(time_year, result_array, marker='^')
+                if format_of_date.lower() == 'year':
+                    axs.set_xlabel('Time (year)')
+                elif format_of_date.lower() == 'day':
+                    axs.set_xlabel('Time (day)')
+                elif format_of_date.lower() == 'hour':
+                    axs.set_xlabel('Time (hour)')
+                elif format_of_date.lower() == 'min':
+                    axs.set_xlabel('Time (min)')
+                parameters = processor.Utilities()
+                axs.set_ylabel(parameters.param_label_full(param.upper()))
+                plt.tight_layout()
+                plt.show()
+                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
-            fileReader = self.read_file()
-            time_year = fileReader.convert_times(format_of_date)
-            result_array = fileReader.get_timeseries_data(param, gridblocknumber)
-            fig, axs = plt.subplots(1, 1)
-            axs.plot(time_year, result_array, marker='^')
-            if format_of_date.lower() == 'year':
-                axs.set_xlabel('Time (year)')
-            elif format_of_date.lower() == 'day':
-                axs.set_xlabel('Time (day)')
-            elif format_of_date.lower() == 'hour':
-                axs.set_xlabel('Time (hour)')
-            elif format_of_date.lower() == 'min':
-                axs.set_xlabel('Time (min)')
-            parameters = processor.Utilities()
-            axs.set_ylabel(parameters.param_label_full(param.upper()))
-            plt.tight_layout()
-            plt.show()
-            fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+    def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):
+        pass
+
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 
