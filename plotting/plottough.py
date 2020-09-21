@@ -1,4 +1,5 @@
 import csv
+import itertools
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,8 +16,6 @@ import fileparser.fileread as fileDetails
 import fileparser.tough3 as tough3
 import fileparser.toughreact as toughreact
 import pandas as pd
-
-
 
 
 class PlotTough(object):
@@ -77,9 +76,92 @@ class PlotTough(object):
                 plt.show()
                 fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
-    def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):
-        pass
+    def getRestartLocations(self):
+        restart_files = list()
+        restart_files.append(self.file_location)
+        for i in range(len(self.args)):
+            restart_files.append(self.args[i][0])
+        return restart_files
 
+    def getRestartDataTime(self, format_of_date):
+        locations = self.getRestartLocations()
+        final_time = []
+        for i in range(0, len(locations)):
+            if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
+                fileReader = tough3.Tough3(self.simulatortype, locations[i], self.filetitle)
+            else:
+                fileReader = toughreact.ToughReact(self.simulatortype, locations[i], self.filetitle)
+            if i == 0:
+                time_year = fileReader.convert_times(format_of_date)
+                final_time.append(time_year)
+            else:
+                time_year = fileReader.convert_times(format_of_date)
+                time_year = time_year[1:]
+                final_time.append(time_year)
+        final_time = list(itertools.chain.from_iterable(final_time))
+        return final_time
+
+    def getRestartDataElement(self, param, gridblocknumber):
+        locations = self.getRestartLocations()
+        final_result = []
+        for i in range(0, len(locations)):
+            if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
+                fileReader = tough3.Tough3(self.simulatortype, locations[i], self.filetitle)
+            else:
+                fileReader = toughreact.ToughReact(self.simulatortype, locations[i], self.filetitle)
+            if i == 0:
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                final_result.append(result_array)
+            else:
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                result_array = result_array[1:]
+                final_result.append(result_array)
+        final_result = list(itertools.chain.from_iterable(final_result))
+        return final_result
+
+    def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):
+        try:
+            with plt.style.context('mystyle'):
+                fileReader = self.read_file()
+                time_year = self.getRestartDataTime(format_of_date)
+                result_array = self.getRestartDataElement(param, gridblocknumber)
+                fig, axs = plt.subplots(1, 1)
+                axs.plot(time_year, result_array, marker='^')
+                if format_of_date.lower() == 'year':
+                    axs.set_xlabel('Time (year)')
+                elif format_of_date.lower() == 'day':
+                    axs.set_xlabel('Time (day)')
+                elif format_of_date.lower() == 'hour':
+                    axs.set_xlabel('Time (hour)')
+                elif format_of_date.lower() == 'min':
+                    axs.set_xlabel('Time (min)')
+                parameters = processor.Utilities()
+                axs.set_ylabel(parameters.param_label_full(param.upper()))
+                plt.tight_layout()
+                plt.show()
+                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+        except:
+            with plt.style.context('classic'):
+                fileReader = self.read_file()
+                time_year = self.getRestartDataTime(format_of_date)
+                result_array = self.getRestartDataElement(param, gridblocknumber)
+                print(time_year)
+                print(result_array)
+                fig, axs = plt.subplots(1, 1)
+                axs.plot(time_year, result_array, marker='^')
+                if format_of_date.lower() == 'year':
+                    axs.set_xlabel('Time (year)')
+                elif format_of_date.lower() == 'day':
+                    axs.set_xlabel('Time (day)')
+                elif format_of_date.lower() == 'hour':
+                    axs.set_xlabel('Time (hour)')
+                elif format_of_date.lower() == 'min':
+                    axs.set_xlabel('Time (min)')
+                parameters = processor.Utilities()
+                axs.set_ylabel(parameters.param_label_full(param.upper()))
+                plt.tight_layout()
+                plt.show()
+                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 
@@ -106,7 +188,6 @@ class PlotTough(object):
             axs.set_ylabel(self.modifier.param_label_full(param.upper()))
             plt.tight_layout()
             plt.show()
-
 
     def plot2D_one(self, direction1, direction2, param, timer):
         fileReader = self.read_file()
@@ -193,4 +274,3 @@ class PlotTough(object):
         plt.tight_layout()
         plt.show()
         fig.savefig('Grid' + str(timer) + param + '.png', bbox_inches='tight', dpi=600)
-

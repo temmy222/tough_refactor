@@ -17,7 +17,6 @@ class FileReadSingle(object):
         self.filetitle = filetitle
         self.simulatortype = simulatortype
         self.args = args
-        print(len(self.args))
 
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
