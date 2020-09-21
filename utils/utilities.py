@@ -1,4 +1,5 @@
 import numpy as np
+from more_itertools import unique_everseen
 import random
 
 
@@ -27,20 +28,31 @@ class Utilities(object):
 
     def choplist(self, liste, number=40):
         if isinstance(liste, list):
-            finallist = []
-            finallist.append(liste[0])
-            newlist = liste[1:-1]
-            len_newlist = len(newlist)
-            ascend = list(np.linspace(1, len_newlist, len_newlist))
-            randomi = random.sample(ascend, number)
-            randomi.sort()
-            myList = [int(x) for x in randomi]
-            for index, value in enumerate(myList):
-                finallist.append(liste[value])
-            finallist.append(liste[-1])
+            # finallist = []
+            # finallist.append(liste[0])
+            # newlist = liste[1:-1]
+            # len_newlist = len(newlist)
+            # ascend = list(np.linspace(1, len_newlist, len_newlist))
+            # randomi = random.sample(ascend, number)
+            # randomi.sort()
+            # myList = [int(x) for x in randomi]
+            # for index, value in enumerate(myList):
+            #     finallist.append(liste[value])
+            # finallist.append(liste[-1])
+
+            finallist = liste[0:len(liste):number]
         else:
             print('Input must be a list')
         return finallist
+
+    def removeRepetiting(self, time_list, value_list):
+        final_time_list = []
+        final_value_list = []
+        for i in range(0, len(time_list)):
+            if time_list[i] not in final_time_list:
+                final_time_list.append(time_list[i])
+                final_value_list.append(value_list[i])
+        return final_time_list, final_value_list
 
     def param_label_full(self, param):
         dict_param = {'PRES': 'Pressure (Pa)', 'TEMP': 'Temperature ($^o C$)', 'SAT_G': 'Gas Saturation (-)',

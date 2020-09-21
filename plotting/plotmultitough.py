@@ -8,11 +8,12 @@ from fileparser.toughreact import MultiToughReact
 
 
 class PlotMultiTough(object):
-    def __init__(self, simulatortype, filelocations, filetitles):
+    def __init__(self, simulatortype, filelocations, filetitles, *args):
         self.filelocations = filelocations
         self.filetitles = filetitles
         self.simulatortype = simulatortype
         self.modifier = processor.Utilities()
+        self.args = args
 
     def read_file(self):
         os.chdir(self.filelocations)

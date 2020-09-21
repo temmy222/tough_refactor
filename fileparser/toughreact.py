@@ -30,9 +30,9 @@ class ToughReact(object):
 
     def get_times(self):
         time_data = self.data.times
-        time_data = list(time_data)
+        time_data2 = list(time_data)
         value = processor.Utilities()
-        time_data = value.choplist(time_data, 40)
+        time_data = value.choplist(time_data2, 40)
         return time_data
 
     def convert_times(self, format_of_date):

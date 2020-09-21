@@ -79,8 +79,8 @@ class PlotTough(object):
     def getRestartLocations(self):
         restart_files = list()
         restart_files.append(self.file_location)
-        for i in range(len(self.args)):
-            restart_files.append(self.args[i][0])
+        for i in range(len(self.args[0])):
+            restart_files.append(self.args[0][i])
         return restart_files
 
     def getRestartDataTime(self, format_of_date):
@@ -122,9 +122,10 @@ class PlotTough(object):
     def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):
         try:
             with plt.style.context('mystyle'):
-                fileReader = self.read_file()
                 time_year = self.getRestartDataTime(format_of_date)
                 result_array = self.getRestartDataElement(param, gridblocknumber)
+                parameters = processor.Utilities()
+                time_year, result_array = parameters.removeRepetiting(time_year, result_array)
                 fig, axs = plt.subplots(1, 1)
                 axs.plot(time_year, result_array, marker='^')
                 if format_of_date.lower() == 'year':
@@ -135,18 +136,16 @@ class PlotTough(object):
                     axs.set_xlabel('Time (hour)')
                 elif format_of_date.lower() == 'min':
                     axs.set_xlabel('Time (min)')
-                parameters = processor.Utilities()
                 axs.set_ylabel(parameters.param_label_full(param.upper()))
                 plt.tight_layout()
                 plt.show()
-                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                fig.savefig(param + ' vs ' + 'time' + ' restart' '.png', bbox_inches='tight', dpi=600)
         except:
             with plt.style.context('classic'):
-                fileReader = self.read_file()
                 time_year = self.getRestartDataTime(format_of_date)
                 result_array = self.getRestartDataElement(param, gridblocknumber)
-                print(time_year)
-                print(result_array)
+                parameters = processor.Utilities()
+                time_year, result_array = parameters.removeRepetiting(time_year, result_array)
                 fig, axs = plt.subplots(1, 1)
                 axs.plot(time_year, result_array, marker='^')
                 if format_of_date.lower() == 'year':
@@ -161,7 +160,7 @@ class PlotTough(object):
                 axs.set_ylabel(parameters.param_label_full(param.upper()))
                 plt.tight_layout()
                 plt.show()
-                fig.savefig(param + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                fig.savefig(param + ' vs ' + 'time' + ' restart' + '.png', bbox_inches='tight', dpi=600)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 
