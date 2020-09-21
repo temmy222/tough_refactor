@@ -40,7 +40,7 @@ class FileReadSingle(object):
             if len(self.args) == 0:
                 plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
             else:
-                plottest.plotParamWithTimeRestart(param, gridblocknumber, format_of_date, style)
+                plottest.multi_time_plot_restart(param, gridblocknumber, format_of_date, style)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)

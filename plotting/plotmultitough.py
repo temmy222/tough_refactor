@@ -1,3 +1,5 @@
+import itertools
+
 import utils.utilities as processor
 import os
 import numpy as np
@@ -30,6 +32,149 @@ class PlotMultiTough(object):
         else:
             fileReader = toughreact.ToughReact(self.simulatortype, file, filetitle)
         return fileReader
+
+    def getRestartLocations(self):
+        restart_files = list()
+        restart_files.append(self.filelocations)
+        for i in range(len(self.args[0])):
+            restart_files.append(self.args[0][i])
+        return restart_files
+
+    def getRestartDataTime(self, format_of_date):
+        locations = self.getRestartLocations()
+        final_time = []
+        for i in range(0, len(locations)):
+            if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
+                fileReader = tough3.Tough3(self.simulatortype, locations[i], self.filetitle)
+            else:
+                fileReader = toughreact.ToughReact(self.simulatortype, locations[i], self.filetitles)
+            if i == 0:
+                time_year = fileReader.convert_times(format_of_date)
+                final_time.append(time_year)
+            else:
+                time_year = fileReader.convert_times(format_of_date)
+                time_year = time_year[1:]
+                final_time.append(time_year)
+        final_time = list(itertools.chain.from_iterable(final_time))
+        return final_time
+
+    def getRestartDataElement(self, param, gridblocknumber):
+        locations = self.getRestartLocations()
+        final_result = []
+        for i in range(0, len(locations)):
+            if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
+                fileReader = tough3.Tough3(self.simulatortype, locations[i], self.filetitles)
+            else:
+                fileReader = toughreact.ToughReact(self.simulatortype, locations[i], self.filetitles)
+            if i == 0:
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                final_result.append(result_array)
+            else:
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+                result_array = result_array[1:]
+                final_result.append(result_array)
+        final_result = list(itertools.chain.from_iterable(final_result))
+        return final_result
+
+    def multi_time_plot_restart(self, param, gridblocknumber, format_of_date, style='horizontal'):
+        time_year = self.getRestartDataTime(format_of_date)
+        j = 0
+        if style.lower() == 'horizontal':
+            if isinstance(param, list) and len(param) < 3:
+                try:
+                    with plt.style.context('mystyle'):
+                        fig = plt.figure()
+                        fig, axs = plt.subplots(len(param), sharex=False)
+                        for parameter in param:
+                            result_array = self.getRestartDataElement(parameter, gridblocknumber)
+                            axs[j].plot(time_year, result_array, marker='^',
+                                        label=self.modifier.param_label_full(parameter.upper()))
+                            axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
+                            axs[j].spines['bottom'].set_linewidth(1.5)
+                            axs[j].spines['left'].set_linewidth(1.5)
+                            axs[j].spines['top'].set_linewidth(0)
+                            axs[j].spines['right'].set_linewidth(0)
+                            # axs[j].legend(loc='best',borderpad=0.1)
+                            if format_of_date.lower() == 'year':
+                                axs[j].set_xlabel('Time (year)', fontsize=12)
+                            elif format_of_date.lower() == 'day':
+                                axs[j].set_xlabel('Time (day)', fontsize=12)
+                            elif format_of_date.lower() == 'hour':
+                                axs[j].set_xlabel('Time (hour)', fontsize=12)
+                            elif format_of_date.lower() == 'min':
+                                axs[j].set_xlabel('Time (min)', fontsize=12)
+                            axs[j].ticklabel_format(useOffset=False)
+                            plt.setp(axs[j].get_xticklabels(), fontsize=12)
+                            plt.setp(axs[j].get_yticklabels(), fontsize=12)
+                            j = j + 1
+                        plt.tight_layout()
+                        plt.show()
+                        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                except:
+                    with plt.style.context('classic'):
+                        fig = plt.figure()
+                        fig, axs = plt.subplots(len(param), sharex=False)
+                        for parameter in param:
+                            result_array = self.getRestartDataElement(parameter, gridblocknumber)
+                            axs[j].plot(time_year, result_array, marker='^',
+                                        label=self.modifier.param_label_full(parameter.upper()))
+                            axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
+                            axs[j].spines['bottom'].set_linewidth(1.5)
+                            axs[j].spines['left'].set_linewidth(1.5)
+                            axs[j].spines['top'].set_linewidth(0)
+                            axs[j].spines['right'].set_linewidth(0)
+                            # axs[j].legend(loc='best',borderpad=0.1)
+                            if format_of_date.lower() == 'year':
+                                axs[j].set_xlabel('Time (year)', fontsize=12)
+                            elif format_of_date.lower() == 'day':
+                                axs[j].set_xlabel('Time (day)', fontsize=12)
+                            elif format_of_date.lower() == 'hour':
+                                axs[j].set_xlabel('Time (hour)', fontsize=12)
+                            elif format_of_date.lower() == 'min':
+                                axs[j].set_xlabel('Time (min)', fontsize=12)
+                            axs[j].ticklabel_format(useOffset=False)
+                            plt.setp(axs[j].get_xticklabels(), fontsize=12)
+                            plt.setp(axs[j].get_yticklabels(), fontsize=12)
+                            j = j + 1
+                        plt.tight_layout()
+                        plt.show()
+                        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+
+            else:
+                print("Parameters must be a list of parameter values with parameters less than 3")
+        elif style.lower() == 'vertical':
+            if isinstance(param, list) and len(param) < 3:
+                with plt.style.context('mystyle'):
+                    fig = plt.figure()
+                    for number in range(1, len(param) + 1):
+                        ax = fig.add_subplot(1, len(param), number)
+                        result_array = self.getRestartDataElement(param[number - 1], gridblocknumber)
+                        ax.plot(time_year, result_array, marker='^',
+                                label=self.modifier.param_label_full(param[number - 1].upper()))
+                        ax.set_ylabel(self.modifier.param_label_full(param[number - 1].upper()), fontsize=12)
+                        ax.spines['bottom'].set_linewidth(1.5)
+                        ax.spines['left'].set_linewidth(1.5)
+                        ax.spines['top'].set_linewidth(0)
+                        ax.spines['right'].set_linewidth(0)
+                        # ax.ticklabel_format(useOffset=False,style='plain')
+                        ax.ticklabel_format(useOffset=False)
+                        plt.setp(ax.get_xticklabels(), fontsize=12)
+                        plt.setp(ax.get_yticklabels(), fontsize=12)
+                        # ax.legend(loc='best',borderpad=0.1)
+                        if format_of_date.lower() == 'year':
+                            ax.set_xlabel('Time (year)', fontsize=12)
+                        elif format_of_date.lower() == 'day':
+                            ax.set_xlabel('Time (day)', fontsize=12)
+                        elif format_of_date.lower() == 'hour':
+                            ax.set_xlabel('Time (hour)', fontsize=12)
+                        elif format_of_date.lower() == 'min':
+                            ax.set_xlabel('Time (min)', fontsize=12)
+                        j = j + 1
+                    plt.tight_layout()
+                    plt.show()
+                    fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+            else:
+                print("Parameters must be a list of parameter values with parameters less than 3")
 
     def multi_time_plot(self, param, gridblocknumber, format_of_date, style='horizontal'):
         fileReader = self.read_file()
