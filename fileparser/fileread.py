@@ -6,7 +6,7 @@ from plotting.plottough import PlotTough
 
 
 class FileReadSingle(object):
-    def __init__(self, simulatortype, filelocation, filetitle, *args):
+    def __init__(self, simulatortype, filelocation, filetitle, **kwargs):
         """
         Class for processing single file results
         :type simulatortype: object
@@ -16,7 +16,8 @@ class FileReadSingle(object):
             os.chdir(self.filelocation)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
-        self.args = args
+        self.full_args = kwargs.get('restart_files')
+        self.expt = kwargs.get('experiment')
 
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
@@ -28,16 +29,18 @@ class FileReadSingle(object):
     def getSimulatorType(self):
         return self.simulatortype
 
-    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], style='horizontal', width=12, height=8):
+    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], style='horizontal', width=12,
+                 height=8):
         if isinstance(param, str):
-            plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle, self.args)
-            if len(self.args) == 0:
+            plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle, restart_files=self.full_args,
+                                 experiment=self.expt)
+            if len(self.full_args) == 0:
                 plottest.plotParamWithTime(param, gridblocknumber, format_of_date)
             else:
                 plottest.plotParamWithTimeRestart(param, gridblocknumber, format_of_date)
         elif isinstance(param, list) and isinstance(self.filelocation, str):
-            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, self.args)
-            if len(self.args) == 0:
+            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, self.full_args, self.expt)
+            if len(self.full_args) == 0:
                 plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
             else:
                 plottest.multi_time_plot_restart(param, gridblocknumber, format_of_date, style)
@@ -64,6 +67,7 @@ class FileReadMultiple(object):
     """
     Class for processing multiple file results
     """
+
     def __init__(self, simulator_type, file_locations, file_titles, props):
         assert isinstance(file_locations, list)
         assert isinstance(file_titles, list)

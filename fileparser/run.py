@@ -6,7 +6,6 @@ from plotting.plotmultitough import PlotMultiTough
 from plotting.plottough import PlotTough
 import os
 
-
 # blog_1 = [4, 5]
 # blog_2 = " yes oo"
 # blog_3 = "Implication"
@@ -20,14 +19,6 @@ import os
 #
 # blogs(blog_3, blog_1, blog_2)
 
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
-
-
-lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-print(lst[0:len(lst):2])
 
 # dirname = os.path.dirname(__file__)
 # print(dirname)
@@ -42,6 +33,7 @@ file_toughreact2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Vali
 #                    r"Onshore flux with Ca offshore "
 file_toughreact3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart2"
 file_toughreact4 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart3"
+expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\experiment"
 # file_tmvoc = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one
 # component\biodegradation" file_tmvoc2 = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper
 # work\one component\no biodegradation"
@@ -61,15 +53,17 @@ params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params3 = ['pH', 't_h2o']
 param_min = ['portlandite', 'calcite']
 labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
+restart_files = [file_toughreact2, file_toughreact3, file_toughreact4]
+expt_file = [expt]
 
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
-testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, file_toughreact2,
-                                    file_toughreact3, file_toughreact4)
-testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min, file_toughreact2,
-                                        file_toughreact3, file_toughreact4)
+testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
+                                    experiment=expt_file)
+# testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min, file_toughreact2,
+#                                         file_toughreact3, file_toughreact4)
 # testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
 # testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
 
 # testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
-# testcodetoughreact.plotTime('pH', 106, format_of_date='day')
-testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
+testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+# testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')

@@ -1,6 +1,10 @@
 import numpy as np
 from more_itertools import unique_everseen
 import random
+import matplotlib.pyplot as plt
+
+
+
 
 
 class Utilities(object):
@@ -28,8 +32,7 @@ class Utilities(object):
 
     def choplist(self, liste, number=40):
         if isinstance(liste, list):
-            # finallist = []
-            # finallist.append(liste[0])
+            # finallist = []d[0])
             # newlist = liste[1:-1]
             # len_newlist = len(newlist)
             # ascend = list(np.linspace(1, len_newlist, len_newlist))

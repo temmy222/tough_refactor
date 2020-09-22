@@ -19,13 +19,14 @@ import pandas as pd
 
 
 class PlotTough(object):
-    def __init__(self, simulatortype, file_location, filetitle, *args):
+    def __init__(self, simulatortype, file_location, filetitle, **kwargs):
         self.file_location = file_location
         os.chdir(self.file_location)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
         self.modifier = processor.Utilities()
-        self.args = args
+        self.args = kwargs.get('restart_files')
+        self.expt = kwargs.get('experiment')
 
     def read_file(self):
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
@@ -79,8 +80,7 @@ class PlotTough(object):
     def getRestartLocations(self):
         restart_files = list()
         restart_files.append(self.file_location)
-        for i in range(len(self.args[0])):
-            restart_files.append(self.args[0][i])
+        restart_files = restart_files + self.args
         return restart_files
 
     def getRestartDataTime(self, format_of_date):
