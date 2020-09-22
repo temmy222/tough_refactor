@@ -1,6 +1,6 @@
-# Read Me Template
+# TOUGH-PLOTS
 
-![Project Image](project-image-url)
+![Project Image](https://github.com/temmy222/tough_refactor/blob/master/images/Multi%20plot%20vs%20time.png)
 
 > 
 
@@ -30,6 +30,7 @@ These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and
 ---
 
 ## How To Use
+TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installation is described below. It consists of a FileReadSingle class which reads in single files and does manipulations on those files to create plots
 
 #### Installation
 
