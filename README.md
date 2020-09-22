@@ -7,7 +7,6 @@
 ---
 
 ### Table of Contents
-You're sections headers will be used to reference location of destination.
 
 - [Description](#description)
 - [How To Use](#how-to-use)
@@ -34,13 +33,15 @@ TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installatio
 
 It consists of a FileReadSingle class which reads in single files and does manipulations on those files to create plots. For plots involving multiple files, a FileReadMultiple class is provided. 
 
-A simple use case for a line plot of pH against time with the time axis in days and the 106th grid block.
+A simple use case for a line plot of pH against time with the time axis in days and the 106th grid block is shown in the example below.
+
+Similar plots can be made for TOUGH3 and TMVOC.
 
 #### Installation
 Use of the code requires the installation of external python libraries Numpy and Pandas. To use created style sheet, please copy the 'mystyle' style sheet from the plotting package to the appropriate matplotlib directory. Otherwise, the code will default to the 'classic' style sheet.
 
 
-#### API Reference
+#### Example
 
 ```html
     file_toughreact = r"insert_file_location"
@@ -89,7 +90,7 @@ SOFTWARE.
 
 ## Author Info
 
-- Twitter - [@jamesqquick](https://twitter.com/jamesqquick)
-- Website - [James Q Quick](https://jamesqquick.com)
+Temitope Ajayi is a Graduate Student at Louisiana State University
+
 
 [Back To The Top](#read-me-template)
