@@ -42,6 +42,7 @@ class ToughReact(object):
         return timeyear
 
     def get_timeseries_data(self, param, gridblocknumber):
+        os.chdir(self.filelocation)
         grid = self.get_elements()[gridblocknumber]
         mf = self.data.history([(grid, param)])
         timeseries = mf[1]

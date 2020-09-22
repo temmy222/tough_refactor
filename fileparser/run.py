@@ -1,3 +1,4 @@
+from fileparser.experiment import Experiment
 from fileparser.fileread import FileReadSingle, FileReadMultiple
 from fileparser.tough3 import Tough3
 from fileparser.toughreact import ToughReact, MultiToughReact
@@ -59,11 +60,12 @@ expt_file = [expt]
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
                                     experiment=expt_file)
-# testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min, file_toughreact2,
-#                                         file_toughreact3, file_toughreact4)
+testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min,
+                                        restart_files=restart_files,
+                                        experiment=expt_file)
 # testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
 # testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
 
 # testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
-testcodetoughreact.plotTime('pH', 106, format_of_date='day')
-# testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
+# testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')

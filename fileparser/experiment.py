@@ -1,5 +1,6 @@
-import csv
+import numpy as np
 import os
+import pandas as pd
 
 
 class Experiment(object):
@@ -10,9 +11,28 @@ class Experiment(object):
 
     def read_file(self):
         os.chdir(self.filelocation)
-        with open(self.filetitle) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
-            self.file_as_list = []
-            for row in csv_reader:
-                self.file_as_list.append(row)
-        return self.file_as_list
+        df = pd.read_csv(self.filetitle)
+        return df
+
+    def getColumnNames(self):
+        df = self.read_file()
+        heads = df.columns
+        return heads
+
+    def get_times(self):
+        df = self.read_file()
+        time_raw = df['Time']
+        time_raw = list(time_raw)
+        time_raw = time_raw[1:]
+        time_raw = np.array(time_raw, float)
+        return time_raw
+
+    def get_timeseries_data(self, param):
+        df = self.read_file()
+        resultarray = df[param]
+        resultarray = list(resultarray)
+        resultarray = resultarray[1:]
+        resultarray = np.array(resultarray, float)
+        return resultarray
+
+

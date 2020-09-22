@@ -17,6 +17,8 @@ import fileparser.tough3 as tough3
 import fileparser.toughreact as toughreact
 import pandas as pd
 
+from fileparser.experiment import Experiment
+
 
 class PlotTough(object):
     def __init__(self, simulatortype, file_location, filetitle, **kwargs):
@@ -119,48 +121,66 @@ class PlotTough(object):
         final_result = list(itertools.chain.from_iterable(final_result))
         return final_result
 
+    def plotRaw(self, param, gridblocknumber, format_of_date):
+        time_year = self.getRestartDataTime(format_of_date)
+        result_array = self.getRestartDataElement(param, gridblocknumber)
+        parameters = processor.Utilities()
+        time_year, result_array = parameters.removeRepetiting(time_year, result_array)
+        fig, axs = plt.subplots(1, 1)
+        axs.plot(time_year, result_array, marker='^')
+        if format_of_date.lower() == 'year':
+            axs.set_xlabel('Time (year)')
+        elif format_of_date.lower() == 'day':
+            axs.set_xlabel('Time (day)')
+        elif format_of_date.lower() == 'hour':
+            axs.set_xlabel('Time (hour)')
+        elif format_of_date.lower() == 'min':
+            axs.set_xlabel('Time (min)')
+        axs.set_ylabel(parameters.param_label_full(param.upper()))
+        plt.tight_layout()
+        plt.show()
+        fig.savefig(param + ' vs ' + 'time' + ' restart' '.png', bbox_inches='tight', dpi=600)
+
+    def plotRawWithExpt(self, param, gridblocknumber, format_of_date):
+        expt_test = Experiment(self.expt[0], 'data_file.csv')
+        time_year_expt = expt_test.get_times()
+        result_array_expt = expt_test.get_timeseries_data(param)
+        time_year = self.getRestartDataTime(format_of_date)
+        result_array = self.getRestartDataElement(param, gridblocknumber)
+        parameters = processor.Utilities()
+        time_year, result_array = parameters.removeRepetiting(time_year, result_array)
+        fig, axs = plt.subplots(1, 1)
+        axs.plot(time_year, result_array, marker='^', label='simulation')
+        axs.plot(time_year_expt, result_array_expt, '--', marker='o', color='r', label='experiment')
+        if format_of_date.lower() == 'year':
+            axs.set_xlabel('Time (year)')
+        elif format_of_date.lower() == 'day':
+            axs.set_xlabel('Time (day)')
+        elif format_of_date.lower() == 'hour':
+            axs.set_xlabel('Time (hour)')
+        elif format_of_date.lower() == 'min':
+            axs.set_xlabel('Time (min)')
+        axs.set_ylabel(parameters.param_label_full(param.upper()))
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.show()
+        fig.savefig(param + ' vs ' + 'time' + ' restart experiment' + '.png', bbox_inches='tight', dpi=600)
+
     def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):
-        try:
-            with plt.style.context('mystyle'):
-                time_year = self.getRestartDataTime(format_of_date)
-                result_array = self.getRestartDataElement(param, gridblocknumber)
-                parameters = processor.Utilities()
-                time_year, result_array = parameters.removeRepetiting(time_year, result_array)
-                fig, axs = plt.subplots(1, 1)
-                axs.plot(time_year, result_array, marker='^')
-                if format_of_date.lower() == 'year':
-                    axs.set_xlabel('Time (year)')
-                elif format_of_date.lower() == 'day':
-                    axs.set_xlabel('Time (day)')
-                elif format_of_date.lower() == 'hour':
-                    axs.set_xlabel('Time (hour)')
-                elif format_of_date.lower() == 'min':
-                    axs.set_xlabel('Time (min)')
-                axs.set_ylabel(parameters.param_label_full(param.upper()))
-                plt.tight_layout()
-                plt.show()
-                fig.savefig(param + ' vs ' + 'time' + ' restart' '.png', bbox_inches='tight', dpi=600)
-        except:
-            with plt.style.context('classic'):
-                time_year = self.getRestartDataTime(format_of_date)
-                result_array = self.getRestartDataElement(param, gridblocknumber)
-                parameters = processor.Utilities()
-                time_year, result_array = parameters.removeRepetiting(time_year, result_array)
-                fig, axs = plt.subplots(1, 1)
-                axs.plot(time_year, result_array, marker='^')
-                if format_of_date.lower() == 'year':
-                    axs.set_xlabel('Time (year)')
-                elif format_of_date.lower() == 'day':
-                    axs.set_xlabel('Time (day)')
-                elif format_of_date.lower() == 'hour':
-                    axs.set_xlabel('Time (hour)')
-                elif format_of_date.lower() == 'min':
-                    axs.set_xlabel('Time (min)')
-                parameters = processor.Utilities()
-                axs.set_ylabel(parameters.param_label_full(param.upper()))
-                plt.tight_layout()
-                plt.show()
-                fig.savefig(param + ' vs ' + 'time' + ' restart' + '.png', bbox_inches='tight', dpi=600)
+        if self.expt:
+            try:
+                with plt.style.context('mystyle'):
+                    self.plotRawWithExpt(param, gridblocknumber, format_of_date)
+            except:
+                with plt.style.context('classic'):
+                    self.plotRawWithExpt(param, gridblocknumber, format_of_date)
+        else:
+            try:
+                with plt.style.context('mystyle'):
+                    self.plotRaw(param, gridblocknumber, format_of_date)
+            except:
+                with plt.style.context('classic'):
+                    self.plotRaw(param, gridblocknumber, format_of_date)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 

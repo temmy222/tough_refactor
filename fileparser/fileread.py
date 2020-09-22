@@ -39,7 +39,9 @@ class FileReadSingle(object):
             else:
                 plottest.plotParamWithTimeRestart(param, gridblocknumber, format_of_date)
         elif isinstance(param, list) and isinstance(self.filelocation, str):
-            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, self.full_args, self.expt)
+            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle,
+                                      restart_files=self.full_args,
+                                      experiment=self.expt)
             if len(self.full_args) == 0:
                 plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
             else:
