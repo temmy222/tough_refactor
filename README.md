@@ -39,7 +39,9 @@ TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installatio
 #### API Reference
 
 ```html
-    <p>dummy code</p>
+    <p>file_toughreact = r"insert_file_location"</p>
+    filetype_toughreact = 'kddconc.tec'
+    testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
 ```
 [Back To The Top](#read-me-template)
 
@@ -54,7 +56,7 @@ TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installatio
 
 MIT License
 
-Copyright (c) [2017] [James Q Quick]
+Copyright (c) [2020] [Temitope Ajayi]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
