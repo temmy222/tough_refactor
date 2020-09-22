@@ -19,7 +19,7 @@ You're sections headers will be used to reference location of destination.
 
 ## Description
 
-These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and TOUGHREACT). The scripts can make 2D plots, single plots, multi plots ready for publications
+These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and TOUGHREACT). The scripts can make 2D plots, single plots, multi plots ready for publications. The advantage of these scripts is the ease of usage and manipulation for specifc needs.
 
 #### Technologies
 
@@ -30,18 +30,23 @@ These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and
 ---
 
 ## How To Use
-TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installation is described below. It consists of a FileReadSingle class which reads in single files and does manipulations on those files to create plots
+TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installation is described below. 
+
+It consists of a FileReadSingle class which reads in single files and does manipulations on those files to create plots. For plots involving multiple files, a FileReadMultiple class is provided. 
+
+A simple use case for a line plot of pH against time with the time axis in days and the 106th grid block.
 
 #### Installation
-
+Use of the code requires the installation of external python libraries Numpy and Pandas. To use created style sheet, please copy the 'mystyle' style sheet from the plotting package to the appropriate matplotlib directory. Otherwise, the code will default to the 'classic' style sheet.
 
 
 #### API Reference
 
 ```html
-    <p>file_toughreact = r"insert_file_location"</p>
+    file_toughreact = r"insert_file_location"
     filetype_toughreact = 'kddconc.tec'
     testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
+    testcodetoughreact.plotTime('pH', 106, format_of_date='day')
 ```
 [Back To The Top](#read-me-template)
 
@@ -49,6 +54,8 @@ TOUGH-PLOTS is developed using Object Oriented Programming concepts. Installatio
 
 ## References
 [Back To The Top](#read-me-template)
+
+I can be reached on tajayi3@lsu.edu for collaboration or more information on how to use.
 
 ---
 
