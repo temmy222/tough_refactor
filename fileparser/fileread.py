@@ -34,7 +34,7 @@ class FileReadSingle(object):
         if isinstance(param, str):
             plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle, restart_files=self.full_args,
                                  experiment=self.expt)
-            if len(self.full_args) == 0:
+            if self.full_args is None:
                 plottest.plotParamWithTime(param, gridblocknumber, format_of_date)
             else:
                 plottest.plotParamWithTimeRestart(param, gridblocknumber, format_of_date)
@@ -42,7 +42,7 @@ class FileReadSingle(object):
             plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle,
                                       restart_files=self.full_args,
                                       experiment=self.expt)
-            if len(self.full_args) == 0:
+            if self.full_args is None:
                 plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
             else:
                 plottest.multi_time_plot_restart(param, gridblocknumber, format_of_date, style)

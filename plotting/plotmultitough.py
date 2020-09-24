@@ -216,6 +216,43 @@ class PlotMultiTough(object):
         plt.show()
         fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
+    def raw_multi_plot_horizontal_with_expt(self, param, format_of_date, gridblocknumber):
+        fileReader = self.read_file()
+        time_year = fileReader.convert_times(format_of_date)
+        expt_test = Experiment(self.expt[0], 'data_file.csv')
+        time_year_expt = expt_test.get_times()
+        j = 0
+        fig, axs = plt.subplots(len(param), sharex=False)
+        for parameter in param:
+            result_array = fileReader.get_timeseries_data(parameter, gridblocknumber)
+            result_array_expt = expt_test.get_timeseries_data(parameter)
+            axs[j].plot(time_year, result_array, marker='^',
+                        label='simulation')
+            axs[j].plot(time_year_expt, result_array_expt, '--', marker='o', color='r',
+                    label='experiment')
+            axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
+            axs[j].spines['bottom'].set_linewidth(1.5)
+            axs[j].spines['left'].set_linewidth(1.5)
+            axs[j].spines['top'].set_linewidth(0)
+            axs[j].spines['right'].set_linewidth(0)
+            # axs[j].legend(loc='best',borderpad=0.1)
+            if format_of_date.lower() == 'year':
+                axs[j].set_xlabel('Time (year)', fontsize=12)
+            elif format_of_date.lower() == 'day':
+                axs[j].set_xlabel('Time (day)', fontsize=12)
+            elif format_of_date.lower() == 'hour':
+                axs[j].set_xlabel('Time (hour)', fontsize=12)
+            elif format_of_date.lower() == 'min':
+                axs[j].set_xlabel('Time (min)', fontsize=12)
+            axs[j].ticklabel_format(useOffset=False)
+            axs[j].legend(loc = 'best')
+            plt.setp(axs[j].get_xticklabels(), fontsize=12)
+            plt.setp(axs[j].get_yticklabels(), fontsize=12)
+            j = j + 1
+        plt.tight_layout()
+        plt.show()
+        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+
     def raw_multi_plot_restart_horizontal_with_expt(self, param, format_of_date, gridblocknumber):
         time_year = self.getRestartDataTime(format_of_date)
         j = 0
@@ -313,7 +350,7 @@ class PlotMultiTough(object):
             ax.ticklabel_format(useOffset=False)
             plt.setp(ax.get_xticklabels(), fontsize=12)
             plt.setp(ax.get_yticklabels(), fontsize=12)
-            # ax.legend(loc='best',borderpad=0.1)
+            ax.legend(loc='best',borderpad=0.1)
             if format_of_date.lower() == 'year':
                 ax.set_xlabel('Time (year)', fontsize=12)
             elif format_of_date.lower() == 'day':
@@ -333,20 +370,20 @@ class PlotMultiTough(object):
                 if isinstance(param, list) and len(param) < 3:
                     try:
                         with plt.style.context('mystyle'):
-                            self.raw_multi_plot_restart_horizontal_with_expt(param, format_of_date, gridblocknumber)
+                            self.raw_multi_plot_horizontal_with_expt(param, format_of_date, gridblocknumber)
                     except:
                         with plt.style.context('classic'):
-                            self.raw_multi_plot_restart_horizontal_with_expt(param, format_of_date, gridblocknumber)
+                            self.raw_multi_plot_horizontal_with_expt(param, format_of_date, gridblocknumber)
                 else:
                     print("Parameters must be a list of parameter values with parameters less than 3")
             else:
                 if isinstance(param, list) and len(param) < 3:
                     try:
                         with plt.style.context('mystyle'):
-                            self.raw_multi_plot_restart_horizontal_with_expt(param, format_of_date, gridblocknumber)
+                            self.raw_multi_plot_horizontal(param, format_of_date, gridblocknumber)
                     except:
                         with plt.style.context('classic'):
-                            self.raw_multi_plot_restart_horizontal_with_expt(param, format_of_date, gridblocknumber)
+                            self.raw_multi_plot_horizontal(param, format_of_date, gridblocknumber)
                 else:
                     print("Parameters must be a list of parameter values with parameters less than 3")
         elif style.lower() == 'vertical':

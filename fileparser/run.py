@@ -34,6 +34,8 @@ file_toughreact2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Vali
 #                    r"Onshore flux with Ca offshore "
 file_toughreact3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart2"
 file_toughreact4 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart3"
+filer = r"C:\Users\tajayi3\Desktop\Valivation Restart\restart right\run with equilibirum\reduced gas injection"
+
 expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\experiment"
 # file_tmvoc = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one
 # component\biodegradation" file_tmvoc2 = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper
@@ -60,12 +62,17 @@ expt_file = [expt]
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
                                     experiment=expt_file)
+testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
+testcode2_min = FileReadSingle("toughreact", filer, filetype_toughreact_min, experiment=expt_file)
 testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min,
                                         restart_files=restart_files,
                                         experiment=expt_file)
-# testcode3tmvoc = FileReadSingle("tmvoc", file_tmvoc, filetype_tmvoc)
-# testcodemultitmvoc = FileReadMultiple('tmvoc', all_tmvoc_files, all_tmvoc_filetypes, params_tmvoc_multi)
+
+
+# testcode2_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
+# testcode2.plotTime('pH', 106, format_of_date='day')
+# testcode2_min.plotTime(param_min, 106, format_of_date='day')
 
 # testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
-# testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+testcodetoughreact.plotTime('pH', 106, format_of_date='day')
 testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
