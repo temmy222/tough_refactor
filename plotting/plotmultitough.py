@@ -270,8 +270,11 @@ class PlotMultiTough(object):
                         label='simulation')
             # axs[j].plot(time_year_expt, result_array_expt, '--', color ='r', marker='o',
             #             label='experiment')
-            dy = 0.2 * min(result_array_expt)
-            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--r', label='experiment')
+            if max(result_array_expt) <= 0:
+                dy = 0.1 * abs(min(result_array_expt))
+            else:
+                dy = 0.1 * abs(max(result_array_expt))
+            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or',color ='--r',  label='experiment')
             axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
             axs[j].spines['bottom'].set_linewidth(1.5)
             axs[j].spines['left'].set_linewidth(1.5)
