@@ -19,8 +19,11 @@ import os
 #
 #
 # blogs(blog_3, blog_1, blog_2)
-
-
+# number = [1, 1, 1, 1, 2, 3, 4, 5]
+# for i in range(len(number)-1, -1, -1):
+#     if number[i] - number[i-1] >= 1:
+#         del number[i]
+# print(number)
 # dirname = os.path.dirname(__file__)
 # print(dirname)
 root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2"
@@ -67,7 +70,6 @@ testcode2_min = FileReadSingle("toughreact", filer, filetype_toughreact_min, exp
 testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min,
                                         restart_files=restart_files,
                                         experiment=expt_file)
-
 
 # testcode2_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
 # testcode2.plotTime('pH', 106, format_of_date='day')

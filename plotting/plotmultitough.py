@@ -268,8 +268,10 @@ class PlotMultiTough(object):
             result_array_expt = expt_test.get_timeseries_data(parameter)
             axs[j].plot(time_year, result_array, marker='^',
                         label='simulation')
-            axs[j].plot(time_year_expt, result_array_expt, '--', color ='r', marker='o',
-                        label='experiment')
+            # axs[j].plot(time_year_expt, result_array_expt, '--', color ='r', marker='o',
+            #             label='experiment')
+            dy = 0.2 * min(result_array_expt)
+            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--r', label='experiment')
             axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
             axs[j].spines['bottom'].set_linewidth(1.5)
             axs[j].spines['left'].set_linewidth(1.5)

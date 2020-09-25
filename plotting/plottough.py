@@ -137,8 +137,10 @@ class PlotTough(object):
             time_year = fileReader.convert_times(format_of_date)
             result_array = fileReader.get_timeseries_data(param, gridblocknumber)
         fig, axs = plt.subplots(1, 1)
+        dy = 0.2 * min(result_array_expt)
         axs.plot(time_year, result_array, marker='^', label='simulation')
-        axs.plot(time_year_expt, result_array_expt, '--', marker='o', color='r', label='experiment')
+        # axs.plot(time_year_expt, result_array_expt, '--', marker='o', color='r', label='experiment')
+        axs.errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--r', label='experiment')
         if format_of_date.lower() == 'year':
             axs.set_xlabel('Time (year)')
         elif format_of_date.lower() == 'day':

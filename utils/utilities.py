@@ -55,6 +55,10 @@ class Utilities(object):
             if time_list[i] not in final_time_list:
                 final_time_list.append(time_list[i])
                 final_value_list.append(value_list[i])
+        for i in range(len(final_time_list)-1, 0, -1):
+            if final_time_list[i] - final_time_list[i-1] < 1:
+                del final_time_list[i]
+                del final_value_list[i]
         return final_time_list, final_value_list
 
     def param_label_full(self, param):
