@@ -54,6 +54,7 @@ expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\expe
 
 all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
 all_toughreact_files = [grid_sens1, grid_sens1, grid_sens1]
+legend = ['longer grid', 'short grid', 'shorter grid']
 # all_tmvoc_files = [file_tmvoc, file_tmvoc]
 filetype_tmvoc = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
@@ -95,3 +96,6 @@ testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, a
 #
 # test_equil.plotTime('pH', 106, format_of_date='day')
 # test_equil_min.plotTime(param_min, 106, format_of_date='day')
+
+
+testcodemultitoughreact.plotTime(106, legend)

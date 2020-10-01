@@ -25,80 +25,101 @@ class PlotMultiFiles(object):
             print("Code only has capability for TOUGHREACT or TOUGH3 (by extension TMVOC)")
         return multi_tough
 
+    def plotRawSingle(self, data, legend):
+        prop_index = 0
+        fig, axs = plt.subplots(1, 1)
+        for i in range(0, len(data.columns), 2):
+            x_data = data.iloc[:, i]
+            y_data = data.iloc[:, i + 1]
+            axs.plot(x_data, y_data, marker='^')
+            axs.set_xlabel('Time (year)')
+            axs.set_ylabel(self.props[prop_index])
+            axs.legend(legend)
+            prop_index = prop_index + 1
+        plt.tight_layout()
+        plt.show()
+        fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+
+    def plotRawMulti(self, data, legend):
+        fig = plt.figure()
+        plot_counter = 1
+        start_point = 0
+        prop_index = 0
+        initial_length = len(self.props) * 2
+        for number in range(1, len(self.props)):
+            axs = plt.subplot(3, 2, plot_counter)
+            legend_index = 0
+            for i in range(start_point, initial_length, 2):
+                x_data = data.iloc[:, i]
+                y_data = data.iloc[:, i + 1]
+                axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
+                axs.set_xlabel('Time (year)')
+                axs.set_ylabel(self.props[prop_index])
+                legend_index = legend_index + 1
+            plot_counter = plot_counter + 1
+            start_point = start_point + (len(self.props) * 2)
+            initial_length = initial_length + (len(self.props) * 2)
+            prop_index = prop_index + 1
+        handles, labels = axs.get_legend_handles_labels()
+        plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
+        plt.show()
+        fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+
+    def plotRawMultiFile(self, data, legend):
+        fig = plt.figure()
+        plot_counter = 1
+        start_point = 0
+        prop_index = 0
+        for number in range(1, len(self.props) + 1):
+            axs = plt.subplot(3, 2, plot_counter)
+            legend_index = 0
+            for i in range(start_point, len(data.columns), (len(self.props) * 2)):
+                x_data = data.iloc[:, i]
+                y_data = data.iloc[:, i + 1]
+                axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
+                axs.set_xlabel('Time (year)')
+                axs.set_ylabel(self.props[prop_index])
+                legend_index = legend_index + 1
+            plot_counter = plot_counter + 1
+            start_point = start_point + 2
+            prop_index = prop_index + 1
+        handles, labels = axs.get_legend_handles_labels()
+        plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
+        fig.tight_layout()
+        plt.show()
+        fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+
     def multiFileSinglePlot(self, grid_block_number, legend):
         multi_tough = self.validateInput()
         data = multi_tough.retrieve_data_multi_timeseries(grid_block_number)
-        prop_index = 0
-        with plt.style.context('mystyle'):
-            fig, axs = plt.subplots(1, 1)
-            for i in range(0, len(data.columns), 2):
-                x_data = data.iloc[:, i]
-                y_data = data.iloc[:, i + 1]
-                axs.plot(x_data, y_data, marker='^')
-                axs.set_xlabel('Time (year)')
-                axs.set_ylabel(self.props[prop_index])
-                axs.legend(legend)
-                prop_index = prop_index + 1
-            plt.tight_layout()
-            plt.show()
-            fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+        try:
+            with plt.style.context('mystyle'):
+                self.plotRawSingle(data, legend)
+        except:
+            with plt.style.context('classic'):
+                self.plotRawSingle(data, legend)
 
     def plotMultiElementMultiFilePerFile(self, grid_block_number, legend):
         multi_tough = self.validateInput()
         data = multi_tough.getMultiElementData(grid_block_number)
         print('Each plot shows results from a file')
-        with plt.style.context('mystyle'):
-            fig = plt.figure()
-            plot_counter = 1
-            start_point = 0
-            prop_index = 0
-            initial_length = len(self.props) * 2
-            for number in range(1, len(self.props)):
-                axs = plt.subplot(3, 2, plot_counter)
-                legend_index = 0
-                for i in range(start_point, initial_length, 2):
-                    x_data = data.iloc[:, i]
-                    y_data = data.iloc[:, i + 1]
-                    axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
-                    axs.set_xlabel('Time (year)')
-                    axs.set_ylabel(self.props[prop_index])
-                    legend_index = legend_index + 1
-                plot_counter = plot_counter + 1
-                start_point = start_point + (len(self.props) * 2)
-                initial_length = initial_length + (len(self.props) * 2)
-                prop_index = prop_index + 1
-            handles, labels = axs.get_legend_handles_labels()
-            plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
-            plt.show()
-            fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+        try:
+            with plt.style.context('mystyle'):
+                self.plotRawMulti(data, legend)
+        except:
+            with plt.style.context('classic'):
+                self.plotRawMulti(data, legend)
 
     def plotMultiElementMultiFilePerProp(self, grid_block_number, legend):
         multi_tough = self.validateInput()
         data = multi_tough.getMultiElementData(grid_block_number)
         print('Each plot shows results per parameter')
-        with plt.style.context('mystyle'):
-            fig = plt.figure()
-            plot_counter = 1
-            start_point = 0
-            prop_index = 0
-            for number in range(1, len(self.props) + 1):
-                axs = plt.subplot(3, 2, plot_counter)
-                legend_index = 0
-                for i in range(start_point, len(data.columns), (len(self.props) * 2)):
-                    x_data = data.iloc[:, i]
-                    y_data = data.iloc[:, i + 1]
-                    axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
-                    axs.set_xlabel('Time (year)')
-                    axs.set_ylabel(self.props[prop_index])
-                    legend_index = legend_index + 1
-                plot_counter = plot_counter + 1
-                start_point = start_point + 2
-                prop_index = prop_index + 1
-            handles, labels = axs.get_legend_handles_labels()
-            plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
-            fig.tight_layout()
-            plt.show()
-            fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+        try:
+            with plt.style.context('mystyle'):
+                self.plotRawMultiFile(data, legend)
+        except:
+            with plt.style.context('classic'):
+                self.plotRawMultiFile(data, legend)
 
     def plotMultiElementMultiFile(self, grid_block_number, legend, plot_kind='property'):
         if plot_kind.lower() == 'property':
