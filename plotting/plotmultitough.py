@@ -228,8 +228,13 @@ class PlotMultiTough(object):
             result_array_expt = expt_test.get_timeseries_data(parameter)
             axs[j].plot(time_year, result_array, marker='^',
                         label='simulation')
-            axs[j].plot(time_year_expt, result_array_expt, '--', marker='o', color='r',
-                    label='experiment')
+            if max(result_array_expt) <= 0:
+                dy = 0.1 * abs(min(result_array_expt))
+            else:
+                dy = 0.1 * abs(max(result_array_expt))
+            # axs[j].plot(time_year_expt, result_array_expt, '--', marker='o', color='r',
+            #         label='experiment')
+            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or', color='--r', label='experiment')
             axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
             axs[j].spines['bottom'].set_linewidth(1.5)
             axs[j].spines['left'].set_linewidth(1.5)
@@ -251,6 +256,7 @@ class PlotMultiTough(object):
             j = j + 1
         plt.tight_layout()
         plt.show()
+        os.chdir(self.filelocations)
         fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def raw_multi_plot_restart_horizontal_with_expt(self, param, format_of_date, gridblocknumber):
@@ -296,7 +302,8 @@ class PlotMultiTough(object):
             j = j + 1
         plt.tight_layout()
         plt.show()
-        fig.savefig('Multi plot' + ' vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+        os.chdir(self.filelocations)
+        fig.savefig('Multi plot' + ' vs ' + 'experiment restart time' + '.png', bbox_inches='tight', dpi=600)
 
     def raw_multi_plot_vertical(self, param, format_of_date, gridblocknumber):
         fileReader = self.read_file()

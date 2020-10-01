@@ -37,7 +37,15 @@ file_toughreact2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Vali
 #                    r"Onshore flux with Ca offshore "
 file_toughreact3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart2"
 file_toughreact4 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\restart3"
+file_equil = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\run with equilibirum"
+file_equil2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\run with equilibirum\restart1"
+file_equil3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\run with equilibirum\restart2"
+file_equil4 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\restart right\run with equilibirum\restart3"
 filer = r"C:\Users\tajayi3\Desktop\Valivation Restart\restart right\run with equilibirum\reduced gas injection"
+
+grid_sens1 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Cement flow with batch\Increased depth\Grid Sensitivity\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore"
+grid_sens2 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Cement flow with batch\Increased depth\Grid Sensitivity\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer grid"
+grid_sens3 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Cement flow with batch\Increased depth\Grid Sensitivity\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer grid2"
 
 expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\experiment"
 # file_tmvoc = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one
@@ -45,6 +53,7 @@ expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\expe
 # work\one component\no biodegradation"
 
 all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
+all_toughreact_files = [grid_sens1, grid_sens1, grid_sens1]
 # all_tmvoc_files = [file_tmvoc, file_tmvoc]
 filetype_tmvoc = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
@@ -60,21 +69,29 @@ params3 = ['pH', 't_h2o']
 param_min = ['portlandite', 'calcite']
 labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
 restart_files = [file_toughreact2, file_toughreact3, file_toughreact4]
+restart_files_equil = [file_equil2, file_equil3, file_equil4]
 expt_file = [expt]
 
-# testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
-testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
-                                    experiment=expt_file)
-testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
-testcode2_min = FileReadSingle("toughreact", filer, filetype_toughreact_min, experiment=expt_file)
-testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min,
-                                        restart_files=restart_files,
-                                        experiment=expt_file)
+testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
+# testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
+#                                     experiment=expt_file)
+# testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
+# testcode2_min = FileReadSingle("toughreact", filer, filetype_toughreact_min, experiment=expt_file)
+# test_equil = FileReadSingle("toughreact", file_equil, filetype_toughreact, restart_files=restart_files_equil,
+#                             experiment=expt_file)
+# test_equil_min = FileReadSingle("toughreact", file_equil, filetype_toughreact_min, restart_files=restart_files_equil,
+#                                 experiment=expt_file)
+# testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min,
+#                                         restart_files=restart_files,
+#                                         experiment=expt_file)
 
 # testcode2_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
 # testcode2.plotTime('pH', 106, format_of_date='day')
 # testcode2_min.plotTime(param_min, 106, format_of_date='day')
 
 # testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
-testcodetoughreact.plotTime('pH', 106, format_of_date='day')
-testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
+# testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+# testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
+#
+# test_equil.plotTime('pH', 106, format_of_date='day')
+# test_equil_min.plotTime(param_min, 106, format_of_date='day')

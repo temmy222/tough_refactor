@@ -50,14 +50,20 @@ class PlotTough(object):
         fig, axs = plt.subplots(1, 1)
         axs.plot(time_year, result_array, marker='^')
         if format_of_date.lower() == 'year':
-            axs.set_xlabel('Time (year)')
+            axs.set_xlabel('Time (year)', fontsize=12)
         elif format_of_date.lower() == 'day':
-            axs.set_xlabel('Time (day)')
+            axs.set_xlabel('Time (day)', fontsize=12)
         elif format_of_date.lower() == 'hour':
-            axs.set_xlabel('Time (hour)')
+            axs.set_xlabel('Time (hour)', fontsize=12)
         elif format_of_date.lower() == 'min':
-            axs.set_xlabel('Time (min)')
-        axs.set_ylabel(parameters.param_label_full(param.upper()))
+            axs.set_xlabel('Time (min)', fontsize=12)
+        axs.set_ylabel(parameters.param_label_full(param.upper()), fontsize=12)
+        axs.spines['bottom'].set_linewidth(1.5)
+        axs.spines['left'].set_linewidth(1.5)
+        axs.spines['top'].set_linewidth(0)
+        axs.spines['right'].set_linewidth(0)
+        plt.setp(axs.get_xticklabels(), fontsize=12)
+        plt.setp(axs.get_yticklabels(), fontsize=12)
         plt.tight_layout()
         plt.show()
         if restart is True:
@@ -145,15 +151,21 @@ class PlotTough(object):
         # axs.plot(time_year_expt, result_array_expt, '--', marker='o', color='r', label='experiment')
         axs.errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or', color='--r', label='experiment')
         if format_of_date.lower() == 'year':
-            axs.set_xlabel('Time (year)')
+            axs.set_xlabel('Time (year)', fontsize=12)
         elif format_of_date.lower() == 'day':
-            axs.set_xlabel('Time (day)')
+            axs.set_xlabel('Time (day)', fontsize=12)
         elif format_of_date.lower() == 'hour':
-            axs.set_xlabel('Time (hour)')
+            axs.set_xlabel('Time (hour)', fontsize=12)
         elif format_of_date.lower() == 'min':
-            axs.set_xlabel('Time (min)')
-        axs.set_ylabel(parameters.param_label_full(param.upper()))
+            axs.set_xlabel('Time (min)', fontsize=12)
+        axs.set_ylabel(parameters.param_label_full(param.upper()), fontsize=12)
+        axs.spines['bottom'].set_linewidth(1.5)
+        axs.spines['left'].set_linewidth(1.5)
+        axs.spines['top'].set_linewidth(0)
+        axs.spines['right'].set_linewidth(0)
         plt.legend(loc='best')
+        plt.setp(axs.get_xticklabels(), fontsize=12)
+        plt.setp(axs.get_yticklabels(), fontsize=12)
         plt.tight_layout()
         plt.show()
         if restart is True:
