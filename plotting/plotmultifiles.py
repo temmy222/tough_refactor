@@ -35,7 +35,7 @@ class PlotMultiFiles(object):
             axs.set_xlabel('Time (year)')
             axs.set_ylabel(self.props[prop_index])
             axs.legend(legend)
-            prop_index = prop_index + 1
+            # prop_index = prop_index + 1
         plt.tight_layout()
         plt.show()
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)

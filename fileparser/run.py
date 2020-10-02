@@ -53,7 +53,7 @@ expt = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2\expe
 # work\one component\no biodegradation"
 
 all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
-all_toughreact_files = [grid_sens1, grid_sens1, grid_sens1]
+all_toughreact_files = [grid_sens1, grid_sens2, grid_sens3]
 legend = ['longer grid', 'short grid', 'shorter grid']
 # all_tmvoc_files = [file_tmvoc, file_tmvoc]
 filetype_tmvoc = 'OUTPUT_ELEME.csv'
@@ -67,13 +67,14 @@ params_tmvoc_multi = ['DEN_L', 'sat_N', 'X_Toluen_L', 'X_AIR_L']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params3 = ['pH', 't_h2o']
+params4 = ['pH']
 param_min = ['portlandite', 'calcite']
 labels = ['first plot', 'second plot', 'third plot', 'fourth plot']
 restart_files = [file_toughreact2, file_toughreact3, file_toughreact4]
 restart_files_equil = [file_equil2, file_equil3, file_equil4]
 expt_file = [expt]
 
-testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
+testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params4)
 # testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
 #                                     experiment=expt_file)
 # testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
@@ -98,4 +99,4 @@ testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, a
 # test_equil_min.plotTime(param_min, 106, format_of_date='day')
 
 
-testcodemultitoughreact.plotTime(106, legend)
+testcodemultitoughreact.plotTime(0, legend)
