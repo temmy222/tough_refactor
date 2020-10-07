@@ -4,9 +4,6 @@ import random
 import matplotlib.pyplot as plt
 
 
-
-
-
 class Utilities(object):
     def __init__(self):
         welcome = "welcome to utilities"
@@ -30,7 +27,8 @@ class Utilities(object):
             raise ValueError("format can either be year, day, hour or minute")
         return timeyear
 
-    def choplist(self, liste, number=40):
+    def choplist(self, liste, number=5):
+        global finallist
         if isinstance(liste, list):
             # finallist = []d[0])
             # newlist = liste[1:-1]
@@ -42,11 +40,15 @@ class Utilities(object):
             # for index, value in enumerate(myList):
             #     finallist.append(liste[value])
             # finallist.append(liste[-1])
-
-            finallist = liste[0:len(liste):number]
-        else:
-            print('Input must be a list')
+            if len(liste) > 100:
+                liste = liste[0:len(liste):number]
+                self.choplist(liste)
+            else:
+                finallist = liste[0:len(liste):number]
         return finallist
+        # else:
+        #     print('Input must be a list')
+
 
     def removeRepetiting(self, time_list, value_list):
         final_time_list = []
@@ -55,8 +57,8 @@ class Utilities(object):
             if time_list[i] not in final_time_list:
                 final_time_list.append(time_list[i])
                 final_value_list.append(value_list[i])
-        for i in range(len(final_time_list)-1, 0, -1):
-            if final_time_list[i] - final_time_list[i-1] < 1:
+        for i in range(len(final_time_list) - 1, 0, -1):
+            if final_time_list[i] - final_time_list[i - 1] < 1:
                 del final_time_list[i]
                 del final_value_list[i]
         return final_time_list, final_value_list

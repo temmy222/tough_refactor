@@ -169,8 +169,10 @@ class PlotTough(object):
         plt.tight_layout()
         plt.show()
         if restart is True:
+            os.chdir(self.file_location)
             fig.savefig(param + ' vs ' + 'time' + ' restart experiment' + '.png', bbox_inches='tight', dpi=600)
         else:
+            os.chdir(self.file_location)
             fig.savefig(param + ' vs ' + 'time' + ' experiment' + '.png', bbox_inches='tight', dpi=600)
 
     def plotParamWithTimeRestart(self, param, gridblocknumber, format_of_date):

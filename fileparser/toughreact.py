@@ -238,6 +238,6 @@ class MultiToughReact(object):
                 time_data = tough_data.convert_times(format_of_date='year')
                 time_data_label = self.prop[j] + 'time' + str(i) + str(j)
                 result_data_label = self.prop[j] + 'result' + str(i) + str(j)
-                data_table[time_data_label] = time_data
-                data_table[result_data_label] = result_data
+                data_table[time_data_label] = pd.Series(time_data)
+                data_table[result_data_label] = pd.Series(result_data)
         return data_table

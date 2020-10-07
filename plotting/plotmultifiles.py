@@ -1,3 +1,5 @@
+import os
+
 from fileparser.tough3 import MultiTough3
 from fileparser.toughreact import MultiToughReact
 import matplotlib.pyplot as plt
@@ -34,8 +36,10 @@ class PlotMultiFiles(object):
             axs.plot(x_data, y_data, marker='^')
             axs.set_xlabel('Time (year)')
             axs.set_ylabel(self.props[prop_index])
-            axs.legend(legend)
+            axs.legend(legend, loc = 'best')
+            axs.ticklabel_format(useOffset=False)
             # prop_index = prop_index + 1
+        os.chdir(self.file_locations[0])
         plt.tight_layout()
         plt.show()
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
@@ -70,13 +74,14 @@ class PlotMultiFiles(object):
         plot_counter = 1
         start_point = 0
         prop_index = 0
+        markers = ['^', 'o', 's', 'x', 'd']
         for number in range(1, len(self.props) + 1):
             axs = plt.subplot(3, 2, plot_counter)
             legend_index = 0
             for i in range(start_point, len(data.columns), (len(self.props) * 2)):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
-                axs.plot(x_data, y_data, marker='^', label=legend[legend_index])
+                axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
                 axs.set_xlabel('Time (year)')
                 axs.set_ylabel(self.props[prop_index])
                 legend_index = legend_index + 1
@@ -84,9 +89,10 @@ class PlotMultiFiles(object):
             start_point = start_point + 2
             prop_index = prop_index + 1
         handles, labels = axs.get_legend_handles_labels()
-        plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
+        plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
         fig.tight_layout()
         plt.show()
+        os.chdir(self.file_locations[0])
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def multiFileSinglePlot(self, grid_block_number, legend):

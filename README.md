@@ -18,7 +18,7 @@
 
 ## Description
 
-These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and TOUGHREACT). The scripts can make 2D plots, single plots, multi plots ready for publications. The advantage of these scripts is the ease of usage and manipulation for specifc needs.
+These sets of scripts help to make plots from TOUGH softwares (TOUGH3, TMVOC and TOUGHREACT). The scripts can make 2D plots, single plots, multi plots ready for publications. The advantage of these scripts is the ease of usage and manipulation for specific needs.
 
 #### Technologies
 
