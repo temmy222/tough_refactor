@@ -27,7 +27,7 @@ class Utilities(object):
             raise ValueError("format can either be year, day, hour or minute")
         return timeyear
 
-    def choplist(self, liste, number=5):
+    def choplist(self, liste, number=3):
         global finallist
         if isinstance(liste, list):
             # finallist = []d[0])

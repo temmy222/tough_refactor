@@ -22,7 +22,7 @@ params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params_min = ['gypsum','Porosity','friedel_salt','ettringite']
 filetype_toughreact = 'kdd_conc.tec'
 filetype_toughreact_min = 'kdd_min.tec'
-legend = ['125 grid blocks', '625 grid blocks', '1000 grid blocks', '5000 gridblocks']
+legend = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
 
 all_toughreact_files = [loca28, loca29, loca30, loca31]
 all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact, filetype_toughreact]

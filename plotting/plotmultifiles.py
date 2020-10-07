@@ -36,7 +36,7 @@ class PlotMultiFiles(object):
             axs.plot(x_data, y_data, marker='^')
             axs.set_xlabel('Time (year)')
             axs.set_ylabel(self.props[prop_index])
-            axs.legend(legend, loc = 'best')
+            axs.legend(legend, loc='best')
             axs.ticklabel_format(useOffset=False)
             # prop_index = prop_index + 1
         os.chdir(self.file_locations[0])
@@ -70,7 +70,7 @@ class PlotMultiFiles(object):
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def plotRawMultiFile(self, data, legend):
-        fig = plt.figure()
+        fig = plt.figure(figsize=(10, 8))
         plot_counter = 1
         start_point = 0
         prop_index = 0
@@ -82,13 +82,16 @@ class PlotMultiFiles(object):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
                 axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
-                axs.set_xlabel('Time (year)')
-                axs.set_ylabel(self.props[prop_index])
+                axs.set_xlabel('Time (year)', fontsize=14)
+                axs.set_ylabel(self.props[prop_index], fontsize=14)
+                axs.ticklabel_format(useOffset=False)
                 legend_index = legend_index + 1
             plot_counter = plot_counter + 1
             start_point = start_point + 2
             prop_index = prop_index + 1
         handles, labels = axs.get_legend_handles_labels()
+        plt.setp(axs.get_xticklabels(), fontsize=14)
+        plt.setp(axs.get_yticklabels(), fontsize=14)
         plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
         fig.tight_layout()
         plt.show()
