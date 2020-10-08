@@ -65,18 +65,21 @@ class FileReadSingle(object):
             print('Type can either be plain or grid')
 
 
+
+
 class FileReadMultiple(object):
     """
     Class for processing multiple file results
     """
 
-    def __init__(self, simulator_type, file_locations, file_titles, props):
+    def __init__(self, simulator_type, file_locations, file_titles, props, **kwargs):
         assert isinstance(file_locations, list)
         assert isinstance(file_titles, list)
         self.file_locations = file_locations
         self.file_titles = file_titles
         self.simulator_type = simulator_type
         self.props = props
+        self.text = kwargs.get('text')
 
     def plotTime(self, grid_block_number, legend, plot_kind='property'):
         """

@@ -233,7 +233,7 @@ class MultiToughReact(object):
         for i in range(0, len(self.file_location)):
             for j in range(0, len(self.prop)):
                 os.chdir(self.file_location[i])
-                tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[i])
+                tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[j])
                 result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
                 time_data = tough_data.convert_times(format_of_date='year')
                 time_data_label = self.prop[j] + 'time' + str(i) + str(j)

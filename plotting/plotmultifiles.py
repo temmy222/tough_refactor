@@ -8,7 +8,7 @@ from utils.utilities import Utilities
 
 
 class PlotMultiFiles(object):
-    def __init__(self, simulator_type, file_locations, file_titles, props):
+    def __init__(self, simulator_type, file_locations, file_titles, props, **kwargs):
         assert isinstance(file_locations, list)
         assert isinstance(file_titles, list)
         assert isinstance(props, list)
@@ -17,6 +17,7 @@ class PlotMultiFiles(object):
         self.simulator_type = simulator_type
         self.props = props
         self.modifier = Utilities()
+        self.text = kwargs.get('text')
 
     def validateInput(self):
         if self.simulator_type.lower() == 'toughreact':
@@ -96,6 +97,7 @@ class PlotMultiFiles(object):
         fig.tight_layout()
         plt.show()
         os.chdir(self.file_locations[0])
+        print("yes")
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def multiFileSinglePlot(self, grid_block_number, legend):

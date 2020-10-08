@@ -46,8 +46,12 @@ class Utilities(object):
             else:
                 finallist = liste[0:len(liste):number]
         return finallist
-        # else:
-        #     print('Input must be a list')
+
+    def cutdata(self,time_data, resultdata, slicevalue):
+        for i in range(len(time_data)):
+            if time_data[i] > slicevalue:
+
+
 
 
     def removeRepetiting(self, time_list, value_list):
