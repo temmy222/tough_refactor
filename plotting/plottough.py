@@ -144,9 +144,9 @@ class PlotTough(object):
             result_array = fileReader.get_timeseries_data(param, gridblocknumber)
         fig, axs = plt.subplots(1, 1)
         if max(result_array_expt) <= 0:
-            dy = 0.1 * abs(min(result_array_expt))
+            dy = 0.15 * abs(min(result_array_expt))
         else:
-            dy = 0.1 * abs(max(result_array_expt))
+            dy = 0.15 * abs(max(result_array_expt))
         axs.plot(time_year, result_array, marker='^', label='simulation')
         # axs.plot(time_year_expt, result_array_expt, '--', marker='o', color='r', label='experiment')
         axs.errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or', color='--r', label='experiment')

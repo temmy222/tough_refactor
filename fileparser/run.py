@@ -44,9 +44,9 @@ loca110 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased dep
 loca35 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\Gulf of Mexico Cement Flow - NaCl sand equil brine injected Onshore - longer"
 loca37 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - NaCl sand equil brine injected Onshore - longer"
 
-loca38 =r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer time"
+loca38 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer time"
 loca39 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Ca injected sand equil brine Onshore - longer time"
-loca40 =r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Na acetate sand equil injected Onshore - longer time"
+loca40 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Na acetate sand equil injected Onshore - longer time"
 loca41 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - NaCl sand equil brine injected Onshore - longer"
 
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
@@ -63,8 +63,7 @@ legend = ['$1.65E-11 m^{2}/s$', '$1.65E-10 m^{2}/s$ (base case)', '$1.65E-9 m^{2
 legend = ['Closed boundary', 'Open boundary (base case)']
 legend = ['RSA-1 (higher order of magnitude)', 'RSA (base case)', 'RSA-2 (lower order of magnitude)']
 
-
-all_toughreact_files = [loca38, loca28]
+all_toughreact_files = [loca109, loca28, loca110]
 all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact, filetype_toughreact]
 all_toughreact_filetypes_min = [filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min,
                                 filetype_toughreact_min]
@@ -73,7 +72,7 @@ all_toughreact_filetypes_min_chem = [filetype_toughreact_min, filetype_toughreac
 
 testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodemultitoughreact_min = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min,
-                                               params_min)
+                                               params_min, x_slice_value=500)
 # testcodemultitoughreact_min_chem = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min_chem,
 #                                                param6)
 

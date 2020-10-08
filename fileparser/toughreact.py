@@ -175,7 +175,7 @@ class ToughReact(object):
 
 
 class MultiToughReact(object):
-    def __init__(self, simulator_type, file_location, file_title, prop):
+    def __init__(self, simulator_type, file_location, file_title, prop, **kwargs):
         assert isinstance(file_location, list)
         assert isinstance(file_title, list)
         assert isinstance(prop, list)
@@ -183,6 +183,7 @@ class MultiToughReact(object):
         self.file_title = file_title
         self.simulator_type = simulator_type
         self.prop = prop
+        self.x_slice_value = kwargs.get('x_slice_value')
 
     def __repr__(self):
         return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
@@ -236,6 +237,9 @@ class MultiToughReact(object):
                 tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[j])
                 result_data = tough_data.get_timeseries_data(self.prop[j], grid_block_number)
                 time_data = tough_data.convert_times(format_of_date='year')
+                if self.x_slice_value is not None:
+                    inter = processor.Utilities()
+                    time_data, result_data = inter.cutdata(time_data, result_data, self.x_slice_value)
                 time_data_label = self.prop[j] + 'time' + str(i) + str(j)
                 result_data_label = self.prop[j] + 'result' + str(i) + str(j)
                 data_table[time_data_label] = pd.Series(time_data)

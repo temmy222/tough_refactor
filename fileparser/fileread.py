@@ -94,7 +94,7 @@ class FileReadMultiple(object):
         :param plot_kind:
         :type plot_kind: string
         """
-        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props)
+        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props, x_slice_value=self.x_slice_value)
         if len(self.props) == 1:
             plottest.multiFileSinglePlot(grid_block_number, legend)
         else:

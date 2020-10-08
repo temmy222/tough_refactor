@@ -17,11 +17,11 @@ class PlotMultiFiles(object):
         self.simulator_type = simulator_type
         self.props = props
         self.modifier = Utilities()
-        self.text = kwargs.get('text')
+        self.x_slice_value = kwargs.get('x_slice_value')
 
     def validateInput(self):
         if self.simulator_type.lower() == 'toughreact':
-            multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props)
+            multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props, x_slice_value= self.x_slice_value)
         elif self.simulator_type.lower() == 'tmvoc':
             multi_tough = MultiTough3(self.simulator_type, self.file_locations, self.file_titles, self.props)
         else:
