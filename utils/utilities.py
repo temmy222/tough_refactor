@@ -47,12 +47,12 @@ class Utilities(object):
                 finallist = liste[0:len(liste):number]
         return finallist
 
-    def cutdata(self,time_data, resultdata, slicevalue):
-        for i in range(len(time_data)):
+    def cutdata(self, time_data, resultdata, slicevalue):
+        for i in range(len(time_data) - 1, 0, -1):
             if time_data[i] > slicevalue:
-
-
-
+                del time_data[i]
+                del resultdata[i]
+        return time_data, resultdata
 
     def removeRepetiting(self, time_list, value_list):
         final_time_list = []

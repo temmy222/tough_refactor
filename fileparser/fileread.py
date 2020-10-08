@@ -79,7 +79,7 @@ class FileReadMultiple(object):
         self.file_titles = file_titles
         self.simulator_type = simulator_type
         self.props = props
-        self.text = kwargs.get('text')
+        self.x_slice_value = kwargs.get('x_slice_value')
 
     def plotTime(self, grid_block_number, legend, plot_kind='property'):
         """
