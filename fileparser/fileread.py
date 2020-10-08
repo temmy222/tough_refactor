@@ -82,6 +82,9 @@ class FileReadMultiple(object):
         self.x_slice_value = kwargs.get('x_slice_value')
 
     def plotTime(self, grid_block_number, legend, plot_kind='property'):
+        # TODO write code to slice x axis
+        # TODO write code to slice through domain
+
         """
 
         :param grid_block_number:
