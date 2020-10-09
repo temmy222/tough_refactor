@@ -127,6 +127,7 @@ class ToughReact(object):
             end_index = x_start[layer_number - 1] + 1
         else:
             end_index = 50
+        z_data = self.get_element_data(timer, param)
         output = z_data[begin_index:end_index]
         return output
 
@@ -227,6 +228,40 @@ class MultiToughReact(object):
             result_data_label = 'result' + str(i)
             data_table[x_data_label] = pd.Series(x_data)
             data_table[result_data_label] = pd.Series(result_data)
+        return data_table
+
+    def getMultiPropDistance(self, directionX, directionY, time, layer_num):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.file_location)):
+            for j in range(0, len(self.prop)):
+                os.chdir(self.file_location[i])
+                tough_data = ToughReact(self.simulator_type, self.file_location[i], self.file_title[j])
+                x_data = tough_data.get_unique_coord_data(directionX, time)
+                result_data = tough_data.getLayerData(directionY, layer_num, time, self.prop[j])
+                if self.x_slice_value is not None:
+                    inter = processor.Utilities()
+                    time_data, result_data = inter.cutdata(x_data, result_data, self.x_slice_value)
+                time_data_label = self.prop[j] + 'time' + str(i) + str(j)
+                result_data_label = self.prop[j] + 'result' + str(i) + str(j)
+                data_table[time_data_label] = pd.Series(x_data)
+                data_table[result_data_label] = pd.Series(result_data)
+        return data_table
+
+    def getMultiFileDistance(self, directionX, directionY, time, layer_num):
+        data_table = pd.DataFrame()
+        for i in range(0, len(self.prop)):
+            for j in range(0, len(self.file_location)):
+                os.chdir(self.file_location[j])
+                tough_data = ToughReact(self.simulator_type, self.file_location[j], self.file_title[j])
+                x_data = tough_data.get_unique_coord_data(directionX, time)
+                result_data = tough_data.getLayerData(directionY, layer_num, time, self.prop[i])
+                if self.x_slice_value is not None:
+                    inter = processor.Utilities()
+                    time_data, result_data = inter.cutdata(x_data, result_data, self.x_slice_value)
+                time_data_label = self.prop[i] + 'time' + str(i) + str(j)
+                result_data_label = self.prop[i] + 'result' + str(i) + str(j)
+                data_table[time_data_label] = pd.Series(x_data)
+                data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
     def getMultiElementData(self, grid_block_number, format_of_date='year'):

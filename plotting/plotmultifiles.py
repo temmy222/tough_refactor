@@ -18,10 +18,13 @@ class PlotMultiFiles(object):
         self.props = props
         self.modifier = Utilities()
         self.x_slice_value = kwargs.get('x_slice_value')
+        self.per_file = kwargs.get('per_file')
+        self.title = kwargs.get('title')
 
     def validateInput(self):
         if self.simulator_type.lower() == 'toughreact':
-            multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props, x_slice_value= self.x_slice_value)
+            multi_tough = MultiToughReact(self.simulator_type, self.file_locations, self.file_titles, self.props,
+                                          x_slice_value=self.x_slice_value)
         elif self.simulator_type.lower() == 'tmvoc':
             multi_tough = MultiTough3(self.simulator_type, self.file_locations, self.file_titles, self.props)
         else:
@@ -97,7 +100,46 @@ class PlotMultiFiles(object):
         fig.tight_layout()
         plt.show()
         os.chdir(self.file_locations[0])
-        print("yes")
+        fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
+
+    def plotRawMultiFilePerFile(self, data, legend):
+        fig = plt.figure(figsize=(10, 8))
+        plot_counter = 1
+        start_point = 0
+        prop_index = 0
+        markers = ['^', 'o', 's', 'x', 'd']
+        for number in range(1, len(self.props) + 1):
+            axs = plt.subplot(3, 2, plot_counter)
+            legend_index = 0
+            for i in range(start_point, len(data.columns), (len(self.props) * 2)):
+                x_data = data.iloc[:, i]
+                y_data = data.iloc[:, i + 1]
+                if "Porosity" in data.columns[i]:
+                    ax2s = axs.twinx()
+                    ax2s.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index], color='k')
+                    ax2s.set_xlabel('Distance (m)', fontsize=14)
+                    ax2s.set_ylabel("Porosity", fontsize=14)
+                    ax2s.set_ylim(0.2, 0.45)
+                else:
+                    axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
+                    axs.set_xlabel('Distance (m)', fontsize=14)
+                    axs.set_ylabel("Change in volume fraction", fontsize=14)
+                axs.ticklabel_format(useOffset=False)
+                legend_index = legend_index + 1
+            axs.set_title(self.title[prop_index], fontsize='14')
+            plot_counter = plot_counter + 1
+            start_point = start_point + 2
+            prop_index = prop_index + 1
+        handles, labels = axs.get_legend_handles_labels()
+        handles2, labels2 = ax2s.get_legend_handles_labels()
+        handles.append(handles2[0])
+        labels.append(labels2[0])
+        plt.setp(axs.get_xticklabels(), fontsize=14)
+        plt.setp(axs.get_yticklabels(), fontsize=14)
+        plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
+        fig.tight_layout()
+        plt.show()
+        os.chdir(self.file_locations[0])
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
     def multiFileSinglePlot(self, grid_block_number, legend):
@@ -139,3 +181,21 @@ class PlotMultiFiles(object):
             self.plotMultiElementMultiFilePerFile(grid_block_number, legend)
         else:
             print('Plot kind can either be property or file')
+
+    def plotMultiFileDistance(self, directionX, directionY, time, layer_num, legend):
+        multi_tough = self.validateInput()
+        data = multi_tough.getMultiFileDistance(directionX, directionY, time, layer_num)
+        if self.per_file is True:
+            try:
+                with plt.style.context('mystyle'):
+                    self.plotRawMultiFilePerFile(data, legend)
+            except:
+                with plt.style.context('classic'):
+                    self.plotRawMultiFilePerFile(data, legend)
+        else:
+            try:
+                with plt.style.context('mystyle'):
+                    self.plotRawMultiFile(data, legend)
+            except:
+                with plt.style.context('classic'):
+                    self.plotRawMultiFile(data, legend)

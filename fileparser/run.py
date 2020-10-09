@@ -49,21 +49,34 @@ loca39 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased dept
 loca40 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - Na acetate sand equil injected Onshore - longer time"
 loca41 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\closed boundary\Gulf of Mexico Cement Flow - NaCl sand equil brine injected Onshore - longer"
 
+loca64=r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - Ca injected brine Offshore"
+loca65=r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - Ca injected brine Onshore"
+loca66=r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - Na acetate brine"
+loca67=r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - NaCl brine"
+
+loca68 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca injected brine Offshore"
+loca69 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca injected brine Onshore"
+loca70 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Na acetate brine"
+loca71 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - NaCl brine"
+
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
-params_min = ['calcite', 'Porosity', 'portlandite', 'ettringite']
+params_min = ['gypsum', 'ettringite', 'calcite', 'Porosity']
 param3 = ['portlandite', 'calcite', 'jennite', 'monosulfoalu']
 param5 = ['katoitesi1', 'c3fh6', 'tobermorite(', 'hydrotalcite']
 param6 = ['brucite', 'chalcedony', 'dolomite', 'pH']
 filetype_toughreact = 'kdd_conc.tec'
 filetype_toughreact_min = 'kdd_min.tec'
 
-legend = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
-legend = ['1.53E-7 m$^3$/day', '1.53E-5 m$^3$/day (base case)', '1.53E-3 m$^3$/day']
-legend = ['$1.65E-11 m^{2}/s$', '$1.65E-10 m^{2}/s$ (base case)', '$1.65E-9 m^{2}/s$', '$1.65E-5 m^{2}/s$']
-legend = ['Closed boundary', 'Open boundary (base case)']
-legend = ['RSA-1 (higher order of magnitude)', 'RSA (base case)', 'RSA-2 (lower order of magnitude)']
+# legend = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
+# legend = ['1.53E-7 m$^3$/day', '1.53E-5 m$^3$/day (base case)', '1.53E-3 m$^3$/day']
+# legend = ['$1.65E-11 m^{2}/s$', '$1.65E-10 m^{2}/s$ (base case)', '$1.65E-9 m^{2}/s$', '$1.65E-5 m^{2}/s$']
+# legend = ['Closed boundary', 'Open boundary (base case)']
+# legend = ['RSA-1 (higher order of magnitude)', 'RSA (base case)', 'RSA-2 (lower order of magnitude)']
+legend = ['gypsum', 'ettringite', 'calcite', 'Porosity']
 
-all_toughreact_files = [loca109, loca28, loca110]
+title = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
+
+all_toughreact_files = [loca68, loca69, loca70, loca71]
 all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact, filetype_toughreact]
 all_toughreact_filetypes_min = [filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min,
                                 filetype_toughreact_min]
@@ -72,7 +85,7 @@ all_toughreact_filetypes_min_chem = [filetype_toughreact_min, filetype_toughreac
 
 testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodemultitoughreact_min = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min,
-                                               params_min, x_slice_value=500)
+                                               params_min, per_file=True, title=title)
 # testcodemultitoughreact_min_chem = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min_chem,
 #                                                param6)
 
@@ -85,4 +98,10 @@ testcodetoughreact_min = FileReadSingle("toughreact", loca88, filetype_toughreac
 # testcodetoughreact.plotTime('pH', 106, format_of_date='year')
 # testcodetoughreact_min.plotTime(param_min, 106, format_of_date='year')
 
-testcodemultitoughreact_min.plotTime(0, legend)
+testcodemultitoughreact_min.plotParamWithLayer('X', 'Z', 4, 2.592e+15, legend)
+
+# tough_data = ToughReact("toughreact", loca68, 'kdd_min.tec')
+# x_data = tough_data.get_unique_coord_data('Z', 2.592e+15)
+# print(x_data)
+# result_data = tough_data.getLayerData('Z', 4, 1.71310257E+07, 'calcite')
+# print(result_data)

@@ -65,8 +65,6 @@ class FileReadSingle(object):
             print('Type can either be plain or grid')
 
 
-
-
 class FileReadMultiple(object):
     """
     Class for processing multiple file results
@@ -80,6 +78,8 @@ class FileReadMultiple(object):
         self.simulator_type = simulator_type
         self.props = props
         self.x_slice_value = kwargs.get('x_slice_value')
+        self.per_file = kwargs.get('per_file')
+        self.title = kwargs.get('title')
 
     def plotTime(self, grid_block_number, legend, plot_kind='property'):
         # TODO write code to slice x axis
@@ -94,8 +94,17 @@ class FileReadMultiple(object):
         :param plot_kind:
         :type plot_kind: string
         """
-        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props, x_slice_value=self.x_slice_value)
+        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props,
+                                  x_slice_value=self.x_slice_value, per_file=self.per_file, title=self.title)
         if len(self.props) == 1:
             plottest.multiFileSinglePlot(grid_block_number, legend)
         else:
             plottest.plotMultiElementMultiFile(grid_block_number, legend, plot_kind)
+
+    def plotParamWithLayer(self, directionX, directionY, layer_num, time, legend):
+        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props,
+                                  x_slice_value=self.x_slice_value, per_file=self.per_file, title=self.title)
+        if len(self.props) == 1:
+            pass
+        else:
+            plottest.plotMultiFileDistance(directionX, directionY, time, layer_num, legend)

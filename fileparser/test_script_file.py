@@ -101,4 +101,5 @@ testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
 # test_equil_min.plotTime(param_min, 106, format_of_date='day')
 
 
-testcodemultitoughreact.plotTime(0, legend)
+# testcodemultitoughreact.plotTime(0, legend)
+# testcodetoughreact_min.plotParamWithLayer('X', 'Z', param_min[0], 1, 500)
