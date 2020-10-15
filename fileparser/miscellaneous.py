@@ -108,7 +108,8 @@ class Miscellaneous(object):
         compname2 = list(compname.split(" "))
         plt.legend(compname2, prop={'size': 16})
         plt.xlabel('Temperature (Celsius) ', fontsize=14)
-        plt.ylabel('Log of Equilibirum Constant', fontsize=14)
+        plt.ylabel('Log of Equilibrium Constant', fontsize=14)
+        plt.show()
         fig.savefig('Equilibrium constant' + '.jpg', bbox_inches='tight', dpi=(600))
 
     def plotSpecieK(self, compname):
@@ -133,6 +134,7 @@ class Miscellaneous(object):
         plt.spines['left'].set_linewidth(1.5)
         plt.spines['top'].set_linewidth(0.2)
         plt.spines['right'].set_linewidth(0.2)
+        plt.show()
         fig.savefig('Equilibrium constant' + '.jpg', bbox_inches='tight', dpi=(600))
 
     def plotMineralK(self, compname):
@@ -149,7 +151,7 @@ class Miscellaneous(object):
         plt.legend(compname2, prop={'size': 16})
         plt.grid()
         plt.xlabel('Temperature (Celsius) ', fontsize=14, fontweight='bold')
-        plt.ylabel('Log of Equilibirum Constant', fontsize=14, fontweight='bold')
+        plt.ylabel('Log of Equilibrium Constant', fontsize=14, fontweight='bold')
         plt.grid(True, which='both')
         plt.minorticks_on()
         plt.grid(b=True, which='major', linestyle='-', linewidth=0.5, color='k')
@@ -158,9 +160,10 @@ class Miscellaneous(object):
         axs.spines['left'].set_linewidth(1.5)
         axs.spines['top'].set_linewidth(0.2)
         axs.spines['right'].set_linewidth(0.2)
+        plt.show()
         fig.savefig('Equilibrium constant' + '.jpg', bbox_inches='tight', dpi=(600))
 
-    def plotmultipleMineralK(self, compname):
+    def plotRawMultipleMineralK(self, compname):
         temp = [0, 25, 60, 100, 150, 200, 250, 300]
         fig = plt.figure(figsize=(10, 10))
         fig, axs = plt.subplots(1, 1)
@@ -178,13 +181,22 @@ class Miscellaneous(object):
                 k = k + 1
             plt.grid()
             plt.xlabel('Temperature (Celsius) ', fontsize=14)
-            plt.ylabel('Log of Equilibirum Constant', fontsize=14)
-            plt.grid(True, which='both')
-            plt.minorticks_on()
-            plt.grid(b=True, which='major', linestyle='-', linewidth=0.5, color='k')
-            plt.grid(b=True, which='minor', linestyle='-', linewidth=0.1)
-            axs.spines['bottom'].set_linewidth(1.5)
-            axs.spines['left'].set_linewidth(1.5)
-            axs.spines['top'].set_linewidth(0.2)
-            axs.spines['right'].set_linewidth(0.2)
+            plt.ylabel('Log of Equilibrium Constant', fontsize=14)
+            # plt.grid(True, which='both')
+            # plt.minorticks_on()
+            # plt.grid(b=True, which='major', linestyle='-', linewidth=0.5, color='k')
+            # plt.grid(b=True, which='minor', linestyle='-', linewidth=0.1)
+            # axs.spines['bottom'].set_linewidth(1.5)
+            # axs.spines['left'].set_linewidth(1.5)
+            # axs.spines['top'].set_linewidth(0.2)
+            # axs.spines['right'].set_linewidth(0.2)
+            plt.show()
             fig.savefig('Equilibrium constant' + '.jpg', bbox_inches='tight', dpi=(600))
+
+    def plotmultipleMineralK(self, compname):
+        try:
+            with plt.style.context('mystyle'):
+                self.plotRawMultipleMineralK(compname)
+        except:
+            with plt.style.context('classic'):
+                self.plotRawMultipleMineralK(compname)

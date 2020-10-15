@@ -1,5 +1,6 @@
 from fileparser.experiment import Experiment
 from fileparser.fileread import FileReadSingle, FileReadMultiple
+from fileparser.miscellaneous import Miscellaneous
 from fileparser.tough3 import Tough3
 from fileparser.toughreact import ToughReact, MultiToughReact
 from plotting.plotmultifiles import PlotMultiFiles
@@ -77,9 +78,8 @@ restart_files_equil = [file_equil2, file_equil3, file_equil4]
 expt_file = [expt]
 
 testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params4)
-testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files,
-                                    experiment=expt_file)
-# testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
+testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact, restart_files=restart_files, experiment=expt_file)
+testcode2 = FileReadSingle("toughreact", filer, filetype_toughreact, experiment=expt_file)
 # testcode2_min = FileReadSingle("toughreact", filer, filetype_toughreact_min, experiment=expt_file)
 # test_equil = FileReadSingle("toughreact", file_equil, filetype_toughreact, restart_files=restart_files_equil,
 #                             experiment=expt_file)
@@ -90,11 +90,13 @@ testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_
                                         experiment=expt_file)
 
 # testcode2_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
+# testcode2.plot2D('x', 'z', 'pH', 0, 'grid')
 # testcode2.plotTime('pH', 106, format_of_date='day')
 # testcode2_min.plotTime(param_min, 106, format_of_date='day')
 
-# testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
-testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+# testcodetoughreact_min.plot2D('x', 'z', 'calcite', 0, 'grid')
+# testcodetoughreact.plotTime('pH', 106, format_of_date='day')
+# testcodetoughreact.plot2D('x', 'z', 'pH', 0, 'grid')
 testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
 #
 # test_equil.plotTime('pH', 106, format_of_date='day')
@@ -103,3 +105,17 @@ testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
 
 # testcodemultitoughreact.plotTime(0, legend)
 # testcodetoughreact_min.plotParamWithLayer('X', 'Z', param_min[0], 1, 500)
+
+
+# dest1 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - Ca injected brine Onshore"
+# os.chdir(dest1)
+# filename = 'thddem1214r3_hs.dat'
+#
+# tre = Miscellaneous(dest1, filename)
+# minerals = ['Gypsum', 'Ettringite', 'Friedel_Salt', 'Calcite', 'Sepiolite', 'Tobermorite(11A)', 'Jennite',
+#             'Portlandite', 'Chalcedony', 'KatoiteSi1', 'Hydrotalcite', 'Dolomite']
+# # minerals = ['Calcite','Portlandite']
+# gases = ['CO2(g)']
+# tre.plotGasK('CO2(g)')
+# tre.plotMineralK('Hydrotalcite')
+# tre.plotmultipleMineralK(minerals)
