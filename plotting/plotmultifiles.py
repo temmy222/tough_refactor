@@ -1,3 +1,4 @@
+import math
 import os
 
 from fileparser.tough3 import MultiTough3
@@ -80,7 +81,7 @@ class PlotMultiFiles(object):
         prop_index = 0
         markers = ['^', 'o', 's', 'x', 'd']
         for number in range(1, len(self.props) + 1):
-            axs = plt.subplot(3, 2, plot_counter)
+            axs = plt.subplot(math.ceil(len(self.props) / 2), 2, plot_counter)
             legend_index = 0
             for i in range(start_point, len(data.columns), (len(self.props) * 2)):
                 x_data = data.iloc[:, i]
@@ -96,8 +97,13 @@ class PlotMultiFiles(object):
         handles, labels = axs.get_legend_handles_labels()
         plt.setp(axs.get_xticklabels(), fontsize=14)
         plt.setp(axs.get_yticklabels(), fontsize=14)
-        plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
-        fig.tight_layout()
+        if len(self.props) > 3:
+            plt.subplots_adjust(bottom=0.5)
+            plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
+        else:
+            plt.figlegend(handles, labels)
+        # fig.tight_layout(pad=0)
+        # axs.legend(ncol=4, bbox_to_anchor=(1, -0.1))
         plt.show()
         os.chdir(self.file_locations[0])
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
