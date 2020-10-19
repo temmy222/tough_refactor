@@ -39,11 +39,13 @@ class PlotMultiFiles(object):
             x_data = data.iloc[:, i]
             y_data = data.iloc[:, i + 1]
             axs.plot(x_data, y_data, marker='^')
-            axs.set_xlabel('Time (year)')
-            axs.set_ylabel(self.props[prop_index])
+            axs.set_xlabel('Time (year)', fontsize=14)
+            axs.set_ylabel(self.props[prop_index], fontsize=14)
             axs.legend(legend, loc='best')
             axs.ticklabel_format(useOffset=False)
             # prop_index = prop_index + 1
+        plt.setp(axs.get_xticklabels(), fontsize=14)
+        plt.setp(axs.get_yticklabels(), fontsize=14)
         os.chdir(self.file_locations[0])
         plt.tight_layout()
         plt.show()
@@ -70,12 +72,23 @@ class PlotMultiFiles(object):
             initial_length = initial_length + (len(self.props) * 2)
             prop_index = prop_index + 1
         handles, labels = axs.get_legend_handles_labels()
+        plt.setp(axs.get_xticklabels(), fontsize=14)
+        plt.setp(axs.get_yticklabels(), fontsize=14)
         plt.figlegend(handles, labels, loc='lower center', ncol=5, labelspacing=0.)
         plt.show()
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
+    def setToughYLabel(self, value):
+        if 'tobermorite(' in value:
+            value = 'Tobermorite'
+        elif 'monosulfoalu' in value:
+            value = 'Monosulfoaluminate'
+        if 'pH' not in value:
+            value = value.capitalize()
+        return value
+
     def plotRawMultiFile(self, data, legend):
-        fig = plt.figure(figsize=(10, 8))
+        fig = plt.figure(figsize=(10, 10))
         plot_counter = 1
         start_point = 0
         prop_index = 0
@@ -86,24 +99,40 @@ class PlotMultiFiles(object):
             for i in range(start_point, len(data.columns), (len(self.props) * 2)):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
-                axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
+                axs.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]))
                 axs.set_xlabel('Time (year)', fontsize=14)
-                axs.set_ylabel(self.props[prop_index], fontsize=14)
+                axs.set_ylabel(self.setToughYLabel(self.props[prop_index]), fontsize=14)
                 axs.ticklabel_format(useOffset=False)
                 legend_index = legend_index + 1
             plot_counter = plot_counter + 1
             start_point = start_point + 2
             prop_index = prop_index + 1
+            plt.setp(axs.get_xticklabels(), fontsize=14)
+            plt.setp(axs.get_yticklabels(), fontsize=14)
         handles, labels = axs.get_legend_handles_labels()
-        plt.setp(axs.get_xticklabels(), fontsize=14)
-        plt.setp(axs.get_yticklabels(), fontsize=14)
+        fig.tight_layout()
         if len(self.props) > 3:
-            plt.subplots_adjust(bottom=0.5)
-            plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
+            # plt.subplots_adjust(bottom=0.5)
+            # plt.figlegend(handles, labels, loc='lower center', bbox_to_anchor=(0, -0.1, 1, 1))
+            # plt.subplots_adjust(left=0.07, right=0.93, wspace=0.25, hspace=0.35)
+            # plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
+            plt.subplots_adjust(top=0.85, wspace=0.001, right=0.97, left=-0.07)
+            fig.legend(handles, labels, loc='lower right', bbox_to_anchor=(1.05, -0.3), fancybox=False, shadow=False,
+                       ncol=4)
+
+            plt.setp(axs.get_legend().get_texts(), fontsize='14')
+
         else:
-            plt.figlegend(handles, labels)
+            plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
         # fig.tight_layout(pad=0)
         # axs.legend(ncol=4, bbox_to_anchor=(1, -0.1))
+        # lastSubplot = plt.subplot(1, 1, 1)
+        # lastSubplot.set_frame_on(False)
+        # lastSubplot.get_xaxis().set_visible(False)
+        # lastSubplot.get_yaxis().set_visible(False)
+        # plt.plot(0, 0, marker='o', color='r', label='line1')
+        # plt.plot(0, 0, marker='o', color='b', label='line2')
+        # lastSubplot.legend(loc='lower right')
         plt.show()
         os.chdir(self.file_locations[0])
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)

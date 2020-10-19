@@ -247,17 +247,17 @@ class MultiTough3(object):
     def __repr__(self):
         return 'Multiple Results from provided file locations and provided files for' + self.simulator_type
 
-    def retrieve_data_multi_timeseries(self, grid_block_number):
+    def retrieve_data_multi_timeseries(self, grid_block_number, format_of_date='year'):
         data_table = pd.DataFrame()
         for i in range(0, len(self.file_location)):
             tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
             os.chdir(self.file_location[i])
-            result_data = tough_data.get_timeseries_data(self.prop[i], grid_block_number)
-            time_data = tough_data.convert_times()
+            result_data = tough_data.get_timeseries_data(self.prop[0], grid_block_number)
+            time_data = tough_data.convert_times(format_of_date='year')
             time_data_label = 'time' + str(i)
             result_data_label = 'result' + str(i)
-            data_table[time_data_label] = time_data
-            data_table[result_data_label] = result_data
+            data_table[time_data_label] = pd.Series(time_data)
+            data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
     def retrieve_data_multi_file_fixed_time(self, direction, time):
