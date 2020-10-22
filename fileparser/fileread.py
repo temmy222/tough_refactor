@@ -68,6 +68,15 @@ class FileReadSingle(object):
 class FileReadMultiple(object):
     """
     Class for processing multiple file results
+    file_locations (list of strings) - specifies the location of the files on the system
+    file_titles (list of strings) - gives the title of the file e.g 'kdd.conc' or 'OUTPUT.csv
+    simulator_type (string) can either be toughreact, tmvoc or tough3
+    props (list of strings) -  are the properties to be plotted
+
+    **kwargs
+    x_slice value (integer) - if the plot should be sliced a the  x axis
+    per_file -  (boolean) - if the plot should be made per file and not per property
+    title (list of strings) - title of each of the plots
     """
 
     def __init__(self, simulator_type, file_locations, file_titles, props, **kwargs):

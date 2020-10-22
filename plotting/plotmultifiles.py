@@ -83,8 +83,12 @@ class PlotMultiFiles(object):
             value = 'Tobermorite'
         elif 'monosulfoalu' in value:
             value = 'Monosulfoaluminate'
+        elif 'katoite' in value:
+            value = 'Katoite'
         if 'pH' not in value:
             value = value.capitalize()
+        if 'C3fh6' in value:
+            value = 'C3FH6'
         return value
 
     def plotRawMultiFile(self, data, legend):
@@ -94,12 +98,14 @@ class PlotMultiFiles(object):
         prop_index = 0
         markers = ['^', 'o', 's', 'x', 'd']
         for number in range(1, len(self.props) + 1):
-            axs = plt.subplot(math.ceil(len(self.props) / 2), 2, plot_counter)
+            if number == 4:
+                trye = axs
+            axs = plt.subplot(math.ceil(len(self.props) / 2)+1, 2, plot_counter)
             legend_index = 0
             for i in range(start_point, len(data.columns), (len(self.props) * 2)):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
-                axs.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]))
+                axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
                 axs.set_xlabel('Time (year)', fontsize=14)
                 axs.set_ylabel(self.setToughYLabel(self.props[prop_index]), fontsize=14)
                 axs.ticklabel_format(useOffset=False)
@@ -114,13 +120,12 @@ class PlotMultiFiles(object):
         if len(self.props) > 3:
             # plt.subplots_adjust(bottom=0.5)
             # plt.figlegend(handles, labels, loc='lower center', bbox_to_anchor=(0, -0.1, 1, 1))
-            # plt.subplots_adjust(left=0.07, right=0.93, wspace=0.25, hspace=0.35)
-            # plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
-            plt.subplots_adjust(top=0.85, wspace=0.001, right=0.97, left=-0.07)
-            fig.legend(handles, labels, loc='lower right', bbox_to_anchor=(1.05, -0.3), fancybox=False, shadow=False,
-                       ncol=4)
+            plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
 
-            plt.setp(axs.get_legend().get_texts(), fontsize='14')
+            # plt.legend(handles, labels, loc='lower right', bbox_to_anchor=(1.05, -0.3), fancybox=False, shadow=False,
+            #            ncol=4)
+            # plt.subplots_adjust(top=0.85, wspace=0.001, right=0.97, left=-0.07)
+            # plt.setp(axs.get_legend().get_texts(), fontsize='14')
 
         else:
             plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
@@ -151,15 +156,17 @@ class PlotMultiFiles(object):
                 y_data = data.iloc[:, i + 1]
                 if "Porosity" in data.columns[i]:
                     ax2s = axs.twinx()
-                    ax2s.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index], color='k')
+                    ax2s.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]), color='k')
                     ax2s.set_xlabel('Distance (m)', fontsize=14)
                     ax2s.set_ylabel("Porosity", fontsize=14)
                     ax2s.set_ylim(0.2, 0.45)
                 else:
-                    axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
+                    axs.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]))
                     axs.set_xlabel('Distance (m)', fontsize=14)
                     axs.set_ylabel("Change in volume fraction", fontsize=14)
                 axs.ticklabel_format(useOffset=False)
+                plt.setp(axs.get_xticklabels(), fontsize=14)
+                plt.setp(axs.get_yticklabels(), fontsize=14)
                 legend_index = legend_index + 1
             axs.set_title(self.title[prop_index], fontsize='14')
             plot_counter = plot_counter + 1
@@ -169,8 +176,6 @@ class PlotMultiFiles(object):
         handles2, labels2 = ax2s.get_legend_handles_labels()
         handles.append(handles2[0])
         labels.append(labels2[0])
-        plt.setp(axs.get_xticklabels(), fontsize=14)
-        plt.setp(axs.get_yticklabels(), fontsize=14)
         plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
         fig.tight_layout()
         plt.show()

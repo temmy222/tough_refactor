@@ -90,7 +90,8 @@ class Utilities(object):
                       'T_CL-': 'Concentration of Chlorine',
                       'T_CA+2': 'Concentration of Calcium', 'T_H2O': 'Concentration of Water',
                       'T_H+': 'Concentration of Hydrogen',
-                      'CALCITE': 'Calcite', 'PORTLANDITE': 'Portlandite'
+                      'CALCITE': 'Calcite', 'PORTLANDITE': 'Portlandite', 'GYPSUM': 'Gypsum',
+                      'POROSITY': 'Porosity', 'ETTRINGITE': 'Ettringite'
                       }
         return dict_param[param]
 

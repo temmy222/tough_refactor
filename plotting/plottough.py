@@ -1,5 +1,6 @@
 import csv
 import itertools
+import math
 import os
 import numpy as np
 import matplotlib.pyplot as plt
@@ -193,14 +194,34 @@ class PlotTough(object):
 
     def plotRawLayer(self, directionXAxis, directionYAxis, param, layer_num, time):
         fileReader = self.read_file()
-        y_data = fileReader.getLayerData(directionYAxis, layer_num, time, param)
-        x_data = fileReader.get_unique_coord_data(directionXAxis, time)
-        fig, axs = plt.subplots(1, 1)
-        axs.plot(x_data, y_data, marker='^')
-        axs.set_xlabel('Distance in the ' + directionXAxis + ' direction (m)')
-        axs.set_ylabel(self.modifier.param_label_full(param.upper()))
-        plt.tight_layout()
-        plt.show()
+        if len(param) == 1:
+            y_data = fileReader.getLayerData(directionYAxis, layer_num, time, param)
+            x_data = fileReader.get_unique_coord_data(directionXAxis, time)
+            fig, axs = plt.subplots(1, 1)
+            axs.plot(x_data, y_data, marker='^')
+            axs.set_xlabel('Distance in the ' + directionXAxis + ' direction (m)')
+            axs.set_ylabel(self.modifier.param_label_full(param.upper()))
+            plt.tight_layout()
+            plt.show()
+            os.chdir(self.file_location)
+            fig.savefig(param + ' layer plot for layer ' + str(layer_num) + '.png', bbox_inches='tight', dpi=600)
+        else:
+            fig = plt.figure(figsize=(10, 8))
+            plot_counter = 1
+            start_point = 0
+            x_data = fileReader.get_unique_coord_data(directionXAxis, time)
+            for number in range(1, len(param) + 1):
+                axs = plt.subplot(math.ceil(len(param) / 2) + 1, 2, plot_counter)
+                y_data = fileReader.getLayerData(directionYAxis, layer_num, time, param[start_point])
+                axs.plot(x_data, y_data)
+                axs.set_xlabel('Distance in the ' + directionXAxis + ' direction (m)', fontsize=14)
+                axs.set_ylabel(self.modifier.param_label_full(param[start_point].upper()), fontsize=14)
+                plot_counter = plot_counter + 1
+                start_point = start_point + 1
+                plt.setp(axs.get_xticklabels(), fontsize=14)
+                plt.setp(axs.get_yticklabels(), fontsize=14)
+            fig.tight_layout()
+            plt.show()
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
 

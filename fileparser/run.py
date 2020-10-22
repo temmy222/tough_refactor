@@ -63,7 +63,13 @@ loca111 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving For
 loca112 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Cement flow with batch\Increased depth\Grid Sensitivity\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer grid"
 loca113 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Cement flow with batch\Increased depth\Grid Sensitivity\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer grid2"
 
+loca114 = r"C:\Users\tajayi3\Desktop\LGR runs\Gulf of Mexico Sandstone Cement Flow - NaCl brine LGR"
+
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
+params_min = ['gypsum', 'ettringite', 'calcite', 'Porosity']
+params_min = ['gypsum', 'Porosity', 'friedel_salt', 'ettringite']
+params_min = ['calcite', 'Porosity', 'friedel_salt', 'ettringite']
+params_min = ['calcite', 'Porosity', 'portlandite', 'ettringite']
 params_min = ['gypsum', 'ettringite', 'calcite', 'Porosity']
 param3 = ['portlandite', 'calcite', 'jennite', 'monosulfoalu']
 param5 = ['katoitesi1', 'c3fh6', 'tobermorite(', 'hydrotalcite']
@@ -73,38 +79,50 @@ filetype_toughreact_min = 'kdd_min.tec'
 params2 = ['pH', 't_h+', 't_na+']
 
 # legend = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
+# legend = ['NaCl (Case 1)', 'Na acetate (Case 2)', 'Ca Onshore (Case 3)', 'Ca Offshore (Case 4)']
 # legend = ['1.53E-7 m$^3$/day', '1.53E-5 m$^3$/day (base case)', '1.53E-3 m$^3$/day']
-# legend = ['$1.65E-11 m^{2}/s$', '$1.65E-10 m^{2}/s$ (base case)', '$1.65E-9 m^{2}/s$', '$1.65E-5 m^{2}/s$']
+# legend = ['1.65E-11 $m^{2}/s$', '1.65E-10 $m^{2}/s$ (base case)', '1.65E-9 $m^{2}/s$', '1.65E-5 $m^{2}/s$']
 # legend = ['Closed boundary', 'Open boundary (base case)']
 # legend = ['RSA-1 (higher order of magnitude)', 'RSA (base case)', 'RSA-2 (lower order of magnitude)']
 legend = ['gypsum', 'ettringite', 'calcite', 'Porosity']
 # legend = ['125 grid blocks', '625 grid blocks', '1000 grid blocks']
 
 title = ['Ca Offshore (Case 4)', 'Ca Onshore (Case 3)', 'Na acetate (Case 2)', 'NaCl (Case 1)']
+title = ['NaCl (Case 1)', 'Na acetate (Case 2)', 'Ca Onshore (Case 3)', 'Ca Offshore (Case 4)']
 
-all_toughreact_files = [loca38, loca39, loca40, loca41]
+all_toughreact_files = [loca13, loca12, loca11, loca10]
+all_toughreact_files = [loca99, loca28, loca100]
+all_toughreact_files = [loca101, loca31, loca102]
+all_toughreact_files = [loca27, loca25, loca26, loca26b]
+all_toughreact_files = [loca109, loca28, loca110]
+all_toughreact_files = [loca38, loca28]
+all_toughreact_files = [loca67, loca66, loca65, loca64]
+all_toughreact_files = [loca71]
 all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact, filetype_toughreact]
-all_toughreact_filetypes_min = [filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min]
+all_toughreact_filetypes_min = [filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min,
+                                filetype_toughreact_min]
 all_toughreact_filetypes_min_chem = [filetype_toughreact_min, filetype_toughreact_min, filetype_toughreact_min,
                                      filetype_toughreact]
 
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, params2)
 testcodemultitoughreact_min = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min,
                                                params_min, per_file=True, title=title)
+
 # testcodemultitoughreact_min_chem = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes_min_chem,
 #                                                param6)
 
 param_min = ['portlandite', 'calcite']
 
-# testcodetoughreact = FileReadSingle("toughreact", loca88, filetype_toughreact)
-# testcodetoughreact_min = FileReadSingle("toughreact", loca88, filetype_toughreact_min)
+# testcodetoughreact = FileReadSingle("toughreact", loca114, filetype_toughreact)
+testcodetoughreact_min = FileReadSingle("toughreact", loca114, filetype_toughreact_min)
 
-# testcodetoughreact.plot2D('x', 'z', 'pH', 2.592e+25, 'plain')
+# testcodetoughreact.plot2D('x', 'z', 'pH', 2.592e+2, 'grid')
 # testcodemultitoughreact.plotTime(106, legend)
 # testcodetoughreact_min.plotTime(param3, 106, format_of_date='year')
+testcodetoughreact_min.plotParamWithLayer('x', 'z', params_min, 4, 20000000)
 
 # testcodemultitoughreact_min.plotParamWithLayer('X', 'Z', 4, 2.592e+15, legend)
-testcodemultitoughreact_min.plotTime(106, legend)
+# testcodemultitoughreact_min.plotTime(0, legend)
 
 # tough_data = ToughReact("toughreact", loca68, 'kdd_min.tec')
 # x_data = tough_data.get_unique_coord_data('Z', 2.592e+15)
