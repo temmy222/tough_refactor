@@ -91,7 +91,8 @@ class Utilities(object):
                       'T_CA+2': 'Concentration of Calcium', 'T_H2O': 'Concentration of Water',
                       'T_H+': 'Concentration of Hydrogen',
                       'CALCITE': 'Calcite', 'PORTLANDITE': 'Portlandite', 'GYPSUM': 'Gypsum',
-                      'POROSITY': 'Porosity', 'ETTRINGITE': 'Ettringite'
+                      'POROSITY': 'Porosity', 'ETTRINGITE': 'Ettringite',
+                      'X3_L_TOLUENE': 'Mass Fraction of Toluene', 'X2_L_O2': 'Mass Fraction Oxygen'
                       }
         return dict_param[param]
 

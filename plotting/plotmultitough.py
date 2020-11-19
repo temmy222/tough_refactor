@@ -4,6 +4,7 @@ import utils.utilities as processor
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 from fileparser import tough3, toughreact
 from fileparser.toughreact import MultiToughReact
@@ -16,13 +17,15 @@ class PlotMultiTough(object):
         self.filetitles = filetitles
         self.simulatortype = simulatortype
         self.modifier = processor.Utilities()
+        self.generation = kwargs.get('generation')
         self.args = kwargs.get('restart_files')
         self.expt = kwargs.get('experiment')
 
     def read_file(self):
         os.chdir(self.filelocations)
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
-            fileReader = tough3.Tough3(self.simulatortype, self.filelocations, self.filetitles)
+            fileReader = tough3.Tough3(self.simulatortype, self.filelocations, self.filetitles,
+                                       generation=self.generation)
         else:
             fileReader = toughreact.ToughReact(self.simulatortype, self.filelocations, self.filetitles)
         return fileReader
@@ -250,7 +253,7 @@ class PlotMultiTough(object):
             elif format_of_date.lower() == 'min':
                 axs[j].set_xlabel('Time (min)', fontsize=12)
             axs[j].ticklabel_format(useOffset=False)
-            axs[j].legend(loc = 'best')
+            axs[j].legend(loc='best')
             plt.setp(axs[j].get_xticklabels(), fontsize=12)
             plt.setp(axs[j].get_yticklabels(), fontsize=12)
             j = j + 1
@@ -280,7 +283,7 @@ class PlotMultiTough(object):
                 dy = 0.15 * abs(min(result_array_expt))
             else:
                 dy = 0.15 * abs(max(result_array_expt))
-            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or',color ='--r',  label='experiment')
+            axs[j].errorbar(time_year_expt, result_array_expt, yerr=dy, fmt='--or', color='--r', label='experiment')
             axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
             axs[j].spines['bottom'].set_linewidth(1.5)
             axs[j].spines['left'].set_linewidth(1.5)
@@ -347,12 +350,12 @@ class PlotMultiTough(object):
         fig = plt.figure()
         for number in range(1, len(param) + 1):
             ax = fig.add_subplot(1, len(param), number)
-            result_array_expt = expt_test.get_timeseries_data(param[number-1])
+            result_array_expt = expt_test.get_timeseries_data(param[number - 1])
             result_array = fileReader.get_timeseries_data(param[number - 1], gridblocknumber)
             ax.plot(time_year, result_array, marker='^',
                     label='simulation')
             ax.plot(time_year_expt, result_array_expt, '--', marker='o', color='r',
-                        label='experiment')
+                    label='experiment')
             ax.set_ylabel(self.modifier.param_label_full(param[number - 1].upper()), fontsize=12)
             ax.spines['bottom'].set_linewidth(1.5)
             ax.spines['left'].set_linewidth(1.5)
@@ -362,7 +365,7 @@ class PlotMultiTough(object):
             ax.ticklabel_format(useOffset=False)
             plt.setp(ax.get_xticklabels(), fontsize=12)
             plt.setp(ax.get_yticklabels(), fontsize=12)
-            ax.legend(loc='best',borderpad=0.1)
+            ax.legend(loc='best', borderpad=0.1)
             if format_of_date.lower() == 'year':
                 ax.set_xlabel('Time (year)', fontsize=12)
             elif format_of_date.lower() == 'day':
@@ -432,6 +435,35 @@ class PlotMultiTough(object):
                 fileNames.append(filename)
                 fileNumber = fileNumber + 1
         return fileNames, dataStorage
+
+    def retrieve_multi_data_generation(self, param):
+        data_table = pd.DataFrame()
+        fileReader = self.read_file()
+        for i in range(len(param)):
+            time_data_label = 'time' + str(i)
+            result_data_label = 'result' + str(i)
+            time_data = fileReader.convert_times(format_of_date='day')
+            result_data = fileReader.getGenerationData(param[i])
+            data_table[time_data_label] = pd.Series(time_data)
+            data_table[result_data_label] = pd.Series(result_data)
+        return data_table
+
+    def plotMultiParamSinglePlot(self, param, gridblocknumber):
+        if self.generation is True:
+            with plt.style.context('classic'):
+                fig, axs = plt.subplots(1, 1)
+                dataFile = self.retrieve_multi_data_generation(param)
+                legend_index = 0
+                for i in range(0, len(dataFile.columns), 2):
+                    axs.plot(dataFile.iloc[:, i], dataFile.iloc[:, i + 1], label=param[legend_index])
+                    axs.set_xlabel('Time (day)', fontsize=14)
+                    axs.set_ylabel('Mass Fraction', fontsize=14)
+                    legend_index += 1
+                plt.setp(axs.get_xticklabels(), fontsize=14)
+                plt.setp(axs.get_yticklabels(), fontsize=14)
+                plt.legend()
+                plt.tight_layout()
+                plt.show()
 
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, format_of_date='year', style='horizontal',
                                     width=12, height=8):

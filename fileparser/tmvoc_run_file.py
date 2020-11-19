@@ -12,9 +12,11 @@ file8 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\
 filetype_tmvoc = "OUTPUT_ELEME.csv"
 second_filetype = "FOFT_A___1.csv"
 
-read_file = FileReadSingle("tmvoc", file4a, second_filetype)
+read_file = FileReadSingle("tmvoc", file4a, second_filetype, generation=True)
+# read_file = FileReadSingle("tmvoc", file4a, filetype_tmvoc)
 # read_file_multi = FileReadMultiple("tmvoc", [file4, file5], [filetype_tmvoc, filetype_tmvoc], ['X_Toluen_L'], per_file=True)
 # read_file.plot2D('x', 'z', 'X_AIR_G', 39999, 'grid')
-read_file.plotTime('X_Toluen_L', 0)
+# read_file.plotTime('X3_L_toluene', 0)
+read_file.plotTime(['X3_L_toluene', 'X2_L_O2', 'X4_L_BENZENE'], 0, singlePlot=True)
 # read_file.plot2D('x', 'z', 'PRES', 1.154e+6, 'grid')
 # read_file_multi.plotTime(0, ['With Biodegradation', 'Without Biodegradation'])

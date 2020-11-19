@@ -28,12 +28,14 @@ class PlotTough(object):
         self.filetitle = filetitle
         self.simulatortype = simulatortype
         self.modifier = processor.Utilities()
+        self.generation = kwargs.get('generation')
         self.args = kwargs.get('restart_files')
         self.expt = kwargs.get('experiment')
 
     def read_file(self):
         if self.simulatortype.lower() == "tmvoc" or self.simulatortype.lower() == "tough3":
-            fileReader = tough3.Tough3(self.simulatortype, self.file_location, self.filetitle)
+            fileReader = tough3.Tough3(self.simulatortype, self.file_location, self.filetitle,
+                                       generation=self.generation)
         else:
             fileReader = toughreact.ToughReact(self.simulatortype, self.file_location, self.filetitle)
         return fileReader
@@ -47,7 +49,10 @@ class PlotTough(object):
         else:
             fileReader = self.read_file()
             time_year = fileReader.convert_times(format_of_date)
-            result_array = fileReader.get_timeseries_data(param, gridblocknumber)
+            if self.generation is True:
+                result_array = fileReader.getGenerationData(param)
+            else:
+                result_array = fileReader.get_timeseries_data(param, gridblocknumber)
         fig, axs = plt.subplots(1, 1)
         axs.plot(time_year, result_array, marker='^')
         if format_of_date.lower() == 'year':

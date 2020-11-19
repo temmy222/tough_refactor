@@ -16,6 +16,7 @@ class FileReadSingle(object):
             os.chdir(self.filelocation)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
+        self.generation = kwargs.get('generation')
         self.full_args = kwargs.get('restart_files')
         self.expt = kwargs.get('experiment')
 
@@ -29,23 +30,31 @@ class FileReadSingle(object):
     def getSimulatorType(self):
         return self.simulatortype
 
-    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], style='horizontal', width=12,
+    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], singlePlot=False, style='horizontal',
+                 width=12,
                  height=8):
         if isinstance(param, str):
-            plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle, restart_files=self.full_args,
+            plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle, generation=self.generation,
+                                 restart_files=self.full_args,
                                  experiment=self.expt)
             if self.full_args is None:
                 plottest.plotParamWithTime(param, gridblocknumber, format_of_date)
             else:
                 plottest.plotParamWithTimeRestart(param, gridblocknumber, format_of_date)
-        elif isinstance(param, list) and isinstance(self.filelocation, str):
-            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle,
+        elif isinstance(param, list) and isinstance(self.filelocation, str) and singlePlot == False:
+            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, generation=self.generation,
                                       restart_files=self.full_args,
                                       experiment=self.expt)
             if self.full_args is None:
                 plottest.multi_time_plot(param, gridblocknumber, format_of_date, style)
             else:
                 plottest.multi_time_plot_restart(param, gridblocknumber, format_of_date, style)
+        elif isinstance(param, list) and isinstance(self.filelocation, str) and singlePlot == True:
+            plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, generation=self.generation,
+                                      restart_files=self.full_args,
+                                      experiment=self.expt)
+            if self.full_args is None:
+                plottest.plotMultiParamSinglePlot(param, gridblocknumber)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)

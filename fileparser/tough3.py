@@ -6,11 +6,12 @@ import plotting.plottough as plot
 
 
 class Tough3(object):
-    def __init__(self, simulatortype, filelocation, filetitle):
+    def __init__(self, simulatortype, filelocation, filetitle, **kwargs):
         self.filelocation = filelocation
         os.chdir(self.filelocation)
         self.filetitle = filetitle
         self.simulatortype = simulatortype
+        self.generation = kwargs.get('generation')
         self.file_as_list = []
 
     def __repr__(self):
@@ -26,18 +27,31 @@ class Tough3(object):
         return self.file_as_list
 
     def get_times(self):
+        """
+        get times stored for duration of the simulation
+        :return: a list of all times
+        """
         self.read_file()
         time = []
         timeraw = []
-        for i in range(len(self.file_as_list)):
-            if len(self.file_as_list[i]) == 1:
-                time.append(self.file_as_list[i])
-        for i in range(len(time)):
-            interim = time[i][0].split()
-            timeraw.append(float(interim[2]))
+        if self.generation is True:
+            for i in range(1, len(self.file_as_list)):
+                timeraw.append(float(self.file_as_list[i][0]))
+        else:
+            for i in range(len(self.file_as_list)):
+                if len(self.file_as_list[i]) == 1:
+                    time.append(self.file_as_list[i])
+            for i in range(len(time)):
+                interim = time[i][0].split()
+                timeraw.append(float(interim[2]))
         return timeraw
 
     def convert_times(self, format_of_date):
+        """
+        convert time to desirable time e.g day, month, year
+        :param format_of_date: string of type 'day', 'month', 'year'
+        :return: a list of the time
+        """
         intermediate = self.get_times()
         firstusage = processor.Utilities()
         timeyear = firstusage.convert_times(intermediate, format_of_date)
@@ -47,10 +61,27 @@ class Tough3(object):
         self.read_file()
         indextime = []
         for index, value in enumerate(self.file_as_list):
-            if len(self.file_as_list[index]) ==1:
+            if len(self.file_as_list[index]) == 1:
                 indextime.append(index)
         indextime.append(len(self.file_as_list))
         return indextime
+
+    def getGenerationData(self, param):
+        self.read_file()
+        resultarray=[]
+        heading = []
+        heading_first = self.file_as_list[0]
+        heading_first_modify = []
+        for i in heading_first:
+            heading_first_modify.append(i.upper())
+        for i in range(len(heading_first_modify)):
+            heading.append(heading_first_modify[i].lstrip())
+        index_param = heading.index(param.upper())
+        print(heading)
+        print(index_param)
+        for i in range(1, len(self.file_as_list)):
+            resultarray.append(float(self.file_as_list[i][index_param]))
+        return resultarray
 
     def get_elements(self):
         self.read_file()
@@ -71,6 +102,7 @@ class Tough3(object):
             tempdict[i] = self.file_as_list[indextime[i] + 1:indextime[i + 1]]
         for i in range(len(timeraw)):
             resultdict[timeraw[i]] = tempdict[i]
+        print(resultdict)
         return resultdict
 
     def get_timeseries_data(self, param, gridblocknumber):
