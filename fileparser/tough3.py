@@ -30,7 +30,7 @@ class Tough3(object):
         time = []
         timeraw = []
         for i in range(len(self.file_as_list)):
-            if len(self.file_as_list[i]) < 25:
+            if len(self.file_as_list[i]) == 1:
                 time.append(self.file_as_list[i])
         for i in range(len(time)):
             interim = time[i][0].split()
@@ -47,7 +47,7 @@ class Tough3(object):
         self.read_file()
         indextime = []
         for index, value in enumerate(self.file_as_list):
-            if len(self.file_as_list[index]) < 25:
+            if len(self.file_as_list[index]) ==1:
                 indextime.append(index)
         indextime.append(len(self.file_as_list))
         return indextime
