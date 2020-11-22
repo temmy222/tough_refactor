@@ -30,7 +30,7 @@ class FileReadSingle(object):
     def getSimulatorType(self):
         return self.simulatortype
 
-    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=[], singlePlot=False, style='horizontal',
+    def plotTime(self, param, gridblocknumber, format_of_date='year', labels=None, singlePlot=False, style='horizontal',
                  width=12,
                  height=8):
         if isinstance(param, str):
@@ -54,7 +54,7 @@ class FileReadSingle(object):
                                       restart_files=self.full_args,
                                       experiment=self.expt)
             if self.full_args is None:
-                plottest.plotMultiParamSinglePlot(param, gridblocknumber)
+                plottest.plotMultiParamSinglePlot(param, gridblocknumber, format_of_date, labels)
 
     def plotParamWithParam(self, param1, param2, gridblocknumber):
         plottest = PlotTough(self.simulatortype, self.filelocation, self.filetitle)

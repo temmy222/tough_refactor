@@ -23,6 +23,9 @@ class Utilities(object):
         elif format_of_date.lower() == 'minute':
             for i in range(len(intermediate)):
                 timeyear.append(intermediate[i] / 60)
+        elif format_of_date.lower() == 'second':
+            for i in range(len(intermediate)):
+                timeyear.append(intermediate[i])
         else:
             raise ValueError("format can either be year, day, hour or minute")
         return timeyear

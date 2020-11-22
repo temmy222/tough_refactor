@@ -77,8 +77,6 @@ class Tough3(object):
         for i in range(len(heading_first_modify)):
             heading.append(heading_first_modify[i].lstrip())
         index_param = heading.index(param.upper())
-        print(heading)
-        print(index_param)
         for i in range(1, len(self.file_as_list)):
             resultarray.append(float(self.file_as_list[i][index_param]))
         return resultarray
@@ -102,7 +100,6 @@ class Tough3(object):
             tempdict[i] = self.file_as_list[indextime[i] + 1:indextime[i + 1]]
         for i in range(len(timeraw)):
             resultdict[timeraw[i]] = tempdict[i]
-        print(resultdict)
         return resultdict
 
     def get_timeseries_data(self, param, gridblocknumber):

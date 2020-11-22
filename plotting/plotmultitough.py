@@ -88,8 +88,6 @@ class PlotMultiTough(object):
             result_array = self.getRestartDataElement(parameter, gridblocknumber)
             parameters = processor.Utilities()
             time_year, result_array = parameters.removeRepetiting(time_year, result_array)
-            print(time_year)
-            print(result_array)
             axs[j].plot(time_year, result_array, marker='^',
                         label=self.modifier.param_label_full(parameter.upper()))
             axs[j].set_ylabel(self.modifier.param_label_full(parameter.upper()), fontsize=12)
@@ -272,8 +270,6 @@ class PlotMultiTough(object):
             result_array = self.getRestartDataElement(parameter, gridblocknumber)
             parameters = processor.Utilities()
             time_year, result_array = parameters.removeRepetiting(time_year, result_array)
-            print(time_year)
-            print(result_array)
             result_array_expt = expt_test.get_timeseries_data(parameter)
             axs[j].plot(time_year, result_array, marker='^',
                         label='simulation')
@@ -436,27 +432,30 @@ class PlotMultiTough(object):
                 fileNumber = fileNumber + 1
         return fileNames, dataStorage
 
-    def retrieve_multi_data_generation(self, param):
+    def retrieve_multi_data_generation(self, param, format_of_date):
         data_table = pd.DataFrame()
         fileReader = self.read_file()
         for i in range(len(param)):
             time_data_label = 'time' + str(i)
             result_data_label = 'result' + str(i)
-            time_data = fileReader.convert_times(format_of_date='day')
+            time_data = fileReader.convert_times(format_of_date=format_of_date)
             result_data = fileReader.getGenerationData(param[i])
             data_table[time_data_label] = pd.Series(time_data)
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
-    def plotMultiParamSinglePlot(self, param, gridblocknumber):
+    def plotMultiParamSinglePlot(self, param, gridblocknumber, format_of_date, labels=None):
         if self.generation is True:
             with plt.style.context('classic'):
                 fig, axs = plt.subplots(1, 1)
-                dataFile = self.retrieve_multi_data_generation(param)
+                dataFile = self.retrieve_multi_data_generation(param, format_of_date)
                 legend_index = 0
                 for i in range(0, len(dataFile.columns), 2):
-                    axs.plot(dataFile.iloc[:, i], dataFile.iloc[:, i + 1], label=param[legend_index])
-                    axs.set_xlabel('Time (day)', fontsize=14)
+                    if labels is None:
+                        axs.plot(dataFile.iloc[:, i], dataFile.iloc[:, i + 1], label=param[legend_index])
+                    else:
+                        axs.plot(dataFile.iloc[:, i], dataFile.iloc[:, i + 1], label=labels[legend_index])
+                    axs.set_xlabel('Time (' + format_of_date + ")", fontsize=14)
                     axs.set_ylabel('Mass Fraction', fontsize=14)
                     legend_index += 1
                 plt.setp(axs.get_xticklabels(), fontsize=14)
@@ -464,6 +463,27 @@ class PlotMultiTough(object):
                 plt.legend()
                 plt.tight_layout()
                 plt.show()
+                fig.savefig('multiple param  vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+        else:
+            with plt.style.context('classic'):
+                fig, axs = plt.subplots(1, 1)
+                fileReader = self.read_file()
+                time_year = fileReader.convert_times(format_of_date)
+                for i in range(0, len(param)):
+                    result_array = fileReader.get_timeseries_data(param[i], gridblocknumber)
+                    if labels is None:
+                        axs.plot(time_year, result_array, label=param[i])
+                    else:
+                        axs.plot(time_year, result_array, label=labels[i])
+                    axs.set_xlabel('Time (' + format_of_date + ")", fontsize=14)
+                    axs.set_ylabel('Mass Fraction', fontsize=14)
+                plt.setp(axs.get_xticklabels(), fontsize=14)
+                plt.setp(axs.get_yticklabels(), fontsize=14)
+                plt.legend()
+                plt.tight_layout()
+                plt.show()
+                plt.tick_params(axis='x', which='major', labelsize=3)
+                fig.savefig('multiple param OUTPUT vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, format_of_date='year', style='horizontal',
                                     width=12, height=8):
