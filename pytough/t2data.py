@@ -12,18 +12,22 @@ You should have received a copy of the GNU Lesser General Public License along w
 
 from __future__ import print_function
 import sys
-from fixed_format_file import *
-from t2grids import *
-from t2incons import *
+from pytough.fixed_format_file import *
+from pytough.t2grids import *
+from pytough.t2incons import *
 from math import ceil
 import struct
 from os.path import splitext
 
+
 def primary_to_region_we(primary):
     """Returns thermodynamic region deduced from primary variables for EOS we."""
-    from t2thermo import region
-    if primary[1] < 1.: return 4
-    else: return region(primary[1], primary[0])
+    from pytough.t2thermo import region
+    if primary[1] < 1.:
+        return 4
+    else:
+        return region(primary[1], primary[0])
+
 
 def primary_to_region_wge(primary):
     """Returns thermodynamic region deduced from primary variables for wge
@@ -31,9 +35,11 @@ def primary_to_region_wge(primary):
     pwater = primary[0] - primary[2]
     return primary_to_region_we([pwater, primary[1]])
 
+
 primary_to_region_funcs = {'w': primary_to_region_we, 'we': primary_to_region_we,
                            'wce': primary_to_region_wge, 'wae': primary_to_region_wge}
 waiwera_eos_num_primary = {'w': 1, 'we': 2, 'wce': 3, 'wae': 3}
+
 
 def trim_trailing_nones(vals):
     """Trim trailing None values from a list."""
@@ -41,116 +47,122 @@ def trim_trailing_nones(vals):
         vals.pop()
     return vals
 
+
 t2data_format_specification = {
     'title': [['title'], ['80s']],
     'simulator': [['simulator'], ['80s']],
     'rocks1': [['name', 'nad', 'density', 'porosity',
-               'k1', 'k2', 'k3', 'conductivity', 'specific_heat'], 
-              ['5s', '5d'] + ['10.4e'] * 7],
+                'k1', 'k2', 'k3', 'conductivity', 'specific_heat'],
+               ['5s', '5d'] + ['10.4e'] * 7],
     'rocks1.1': [['compressibility', 'expansivity', 'dry_conductivity',
-                 'tortuosity', 'klinkenberg', 'xkd3', 'xkd4'],
-                ['10.4e'] * 7],
+                  'tortuosity', 'klinkenberg', 'xkd3', 'xkd4'],
+                 ['10.4e'] * 7],
     'rocks1.2': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['10.3e'] * 7],
     'rocks1.3': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['10.3e'] * 7],
     'param1_autough2': [['max_iterations', 'print_level', 'max_timesteps',
-                        'max_duration', 'print_interval',
-                        '_option_str', 'diff0', 'texp', 'be'],
-                       ['2d'] * 2 + ['4d'] * 3 + ['24s'] + ['10.3e'] * 3],
+                         'max_duration', 'print_interval',
+                         '_option_str', 'diff0', 'texp', 'be'],
+                        ['2d'] * 2 + ['4d'] * 3 + ['24s'] + ['10.3e'] * 3],
     'param1': [['max_iterations', 'print_level', 'max_timesteps',
-               'max_duration', 'print_interval', '_option_str', 'texp', 'be'],
-              ['2d'] * 2 + ['4d'] * 3 + ['24s'] + ['10.3e'] * 2],
+                'max_duration', 'print_interval', '_option_str', 'texp', 'be'],
+               ['2d'] * 2 + ['4d'] * 3 + ['24s'] + ['10.3e'] * 2],
     'param2': [['tstart', 'tstop', 'const_timestep', 'max_timestep',
-               'print_block', '', 'gravity', 'timestep_reduction', 'scale'],
-              ['10.3e'] * 4 + ['5s', '5x'] + ['10.4e'] * 3],
+                'print_block', '', 'gravity', 'timestep_reduction', 'scale'],
+               ['10.3e'] * 4 + ['5s', '5x'] + ['10.4e'] * 3],
     'param3': [['relative_error', 'absolute_error', 'pivot', 'upstream_weight',
-               'newton_weight', 'derivative_increment'],
-              ['10.4e'] * 6],
+                'newton_weight', 'derivative_increment'],
+               ['10.4e'] * 6],
     '_more_option_str': [['_more_option_str'], ['21s']],
     'timestep': [['timestep'] * 8, ['10.4e'] * 8],
     'multi': [['num_components', 'num_equations', 'num_phases',
-               'num_secondary_parameters', 'num_inc'],  ['5d'] * 5],
+               'num_secondary_parameters', 'num_inc'], ['5d'] * 5],
     'multi_autough2': [['num_components', 'num_equations', 'num_phases',
-                        'num_secondary_parameters', 'eos'],  ['5d'] * 4 + ['4s']],
+                        'num_secondary_parameters', 'eos'], ['5d'] * 4 + ['4s']],
     'lineq': [['type', 'epsilon', 'max_iterations', 'gauss', 'num_orthog'],
-             ['2d', '10.4e', '4d', '1d', '4d']],
+              ['2d', '10.4e', '4d', '1d', '4d']],
     'default_incons': [['incon'] * 4, ['20.14e'] * 4],
     'output_times1': [['num_times_specified', 'num_times', 'max_timestep', 'time_increment'],
-                     ['5d'] * 2 + ['10.4e'] * 2],
+                      ['5d'] * 2 + ['10.4e'] * 2],
     'output_times2': [['time'] * 8, ['10.4e'] * 8],
     'relative_permeability': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['10.3e'] * 7],
-    'capillarity': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['10.3e'] * 7], 
+    'capillarity': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['10.3e'] * 7],
     'blocks': [['name', 'nseq', 'nadd', 'rocktype', 'volume',
-               'ahtx', 'pmx', 'x', 'y', 'z'],
-              ['5s', '5d', '5d', '5s'] + ['10.4e'] * 3 + ['10.3e'] * 3], 
+                'ahtx', 'pmx', 'x', 'y', 'z'],
+               ['5s', '5d', '5d', '5s'] + ['10.4e'] * 3 + ['10.3e'] * 3],
     'connections': [['block1', 'block2', 'nseq', 'nad1', 'nad2',
-                    'direction', 'distance1', 'distance2', 'area', 'dircos', 'sigma'],
-                   ['5s'] * 2 + ['5d'] * 4 + ['10.4e'] * 3 + ['10.7f', '10.3e']],
+                     'direction', 'distance1', 'distance2', 'area', 'dircos', 'sigma'],
+                    ['5s'] * 2 + ['5d'] * 4 + ['10.4e'] * 3 + ['10.7f', '10.3e']],
     'generator': [['block', 'name', 'nseq', 'nadd', 'nads', 'ltab',
-                  '', 'type', 'itab', 'gx', 'ex', 'hg', 'fg'],
-                 ['5s'] * 2 + ['5d'] * 3 + ['5d', '5x', '4s', '1s'] + ['10.3e'] * 4], 
-    'generation_times': [['time'] * 4, ['14.7e'] * 4], 
-    'generation_rates': [['rate'] * 4, ['14.7e'] * 4], 
+                   '', 'type', 'itab', 'gx', 'ex', 'hg', 'fg'],
+                  ['5s'] * 2 + ['5d'] * 3 + ['5d', '5x', '4s', '1s'] + ['10.3e'] * 4],
+    'generation_times': [['time'] * 4, ['14.7e'] * 4],
+    'generation_rates': [['rate'] * 4, ['14.7e'] * 4],
     'generation_enthalpy': [['enthalpy'] * 4, ['14.7e'] * 4],
     'short': [['', 'frequency'], ['5x', '2d']],
-    'incon1': [['block', 'nseq', 'nadd', 'porosity'], ['5s'] + ['5d'] * 2 + ['15.9e']], 
-    'incon2': [['incon'] * 4, ['20.14e'] * 4], 
+    'incon1': [['block', 'nseq', 'nadd', 'porosity'], ['5s'] + ['5d'] * 2 + ['15.9e']],
+    'incon2': [['incon'] * 4, ['20.14e'] * 4],
     'solver': [['type', '', 'z_precond', '', 'o_precond', 'relative_max_iterations', 'closure'],
-              ['1d', '2x', '2s', '3x', '2s'] + ['10.4e'] * 2], 
-    'indom2': [['indom'] * 4, ['20.13e'] * 4], 
-    'diffusion':  [['diff'] * 8, ['10.3e'] * 8],
+               ['1d', '2x', '2s', '3x', '2s'] + ['10.4e'] * 2],
+    'indom2': [['indom'] * 4, ['20.13e'] * 4],
+    'diffusion': [['diff'] * 8, ['10.3e'] * 8],
     'selec1': [['int_selec'] * 16, ['5d'] * 16],
-    'selec2': [['float_selec'] * 8, ['10.3e'] * 8], 
+    'selec2': [['float_selec'] * 8, ['10.3e'] * 8],
     'radii1': [['nrad'], ['5d']],
     'radii2': [['radius'] * 8, ['10.4e'] * 8],
-    'equid' : [['nequ', '', 'dr'], ['5d', '5x', '10.4e']],
-    'logar' : [['nlog', '', 'rlog', 'dr'], ['5d', '5x'] + ['10.4e'] * 2],
+    'equid': [['nequ', '', 'dr'], ['5d', '5x', '10.4e']],
+    'logar': [['nlog', '', 'rlog', 'dr'], ['5d', '5x'] + ['10.4e'] * 2],
     'layer1': [['nlay'], ['5d']],
     'layer2': [['layer'] * 8, ['10.4e'] * 8],
-    'xyz1'  : [['deg'], ['10.4e']],
-    'xyz2'  : [['ntype', '', 'no', 'del'], ['2s', '3x', '5d', '10.4e']],
-    'xyz3'  : [['deli'] * 8, ['10.4e'] * 8], 
-    'minc'  : [['part', 'type', '', 'dual'], ['5s'] * 2 + ['5x', '5s']],
-    'part1' : [['num_continua', 'nvol', 'where'] + ['spacing'] * 7,
-               ['3d'] * 2 + ['-4s'] + ['10.4e'] * 7],
-    'part2' : [['vol'] * 8, ['10.4e'] * 8]
-    }
+    'xyz1': [['deg'], ['10.4e']],
+    'xyz2': [['ntype', '', 'no', 'del'], ['2s', '3x', '5d', '10.4e']],
+    'xyz3': [['deli'] * 8, ['10.4e'] * 8],
+    'minc': [['part', 'type', '', 'dual'], ['5s'] * 2 + ['5x', '5s']],
+    'part1': [['num_continua', 'nvol', 'where'] + ['spacing'] * 7,
+              ['3d'] * 2 + ['-4s'] + ['10.4e'] * 7],
+    'part2': [['vol'] * 8, ['10.4e'] * 8]
+}
 
 t2data_extra_precision_format_specification = {
     'rocks1': [['name', 'nad', 'density', 'porosity', 'k1', 'k2', 'k3',
-               'conductivity', 'specific_heat'], 
-              ['5s', '5d'] + ['15.8e'] * 7], 
+                'conductivity', 'specific_heat'],
+               ['5s', '5d'] + ['15.8e'] * 7],
     'rocks1.1': [['compressibility', 'expansivity', 'dry_conductivity',
-                 'tortuosity', 'klinkenberg', 'xkd3', 'xkd4'],  ['15.8e'] * 7],
+                  'tortuosity', 'klinkenberg', 'xkd3', 'xkd4'], ['15.8e'] * 7],
     'rocks1.2': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['15.8e'] * 7],
     'rocks1.3': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['15.8e'] * 7],
     'blocks': [['name', 'nseq', 'nadd', 'rocktype', 'volume',
-               'ahtx', 'pmx', 'x', 'y', 'z'],
-              ['5s', '5d', '5d', '5s'] + ['15.8e'] * 3 + ['15.8e'] * 3],
+                'ahtx', 'pmx', 'x', 'y', 'z'],
+               ['5s', '5d', '5d', '5s'] + ['15.8e'] * 3 + ['15.8e'] * 3],
     'connections': [['block1', 'block2', 'nseq', 'nad1', 'nad2',
-                    'direction', 'distance1', 'distance2', 'area', 'dircos', 'sigma'],
-                   ['5s'] * 2 + ['5d'] * 4 + ['15.8e'] * 3 + ['15.8f', '15.8e']],
-    'relative_permeability': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['15.8e'] * 7], 
+                     'direction', 'distance1', 'distance2', 'area', 'dircos', 'sigma'],
+                    ['5s'] * 2 + ['5d'] * 4 + ['15.8e'] * 3 + ['15.8f', '15.8e']],
+    'relative_permeability': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['15.8e'] * 7],
     'capillarity': [['type', ''] + ['parameter'] * 7, ['5d', '5x'] + ['15.8e'] * 7],
     'generator': [['block', 'name', 'nseq', 'nadd', 'nads', 'ltab',
-                  '', 'type', 'itab', 'gx', 'ex', 'hg', 'fg'],
-                 ['5s'] * 2 + ['5d'] * 3 + ['5d', '5x', '4s', '1s'] + ['15.8e'] * 4], 
-    'generation_times': [['time'] * 4, ['15.8e'] * 4], 
-    'generation_rates': [['rate'] * 4, ['15.8e'] * 4], 
+                   '', 'type', 'itab', 'gx', 'ex', 'hg', 'fg'],
+                  ['5s'] * 2 + ['5d'] * 3 + ['5d', '5x', '4s', '1s'] + ['15.8e'] * 4],
+    'generation_times': [['time'] * 4, ['15.8e'] * 4],
+    'generation_rates': [['rate'] * 4, ['15.8e'] * 4],
     'generation_enthalpy': [['enthalpy'] * 4, ['15.8e'] * 4]}
+
 
 class t2data_parser(fixed_format_file):
     """Class for parsing TOUGH2 data file."""
-    def __init__(self, filename, mode, read_function = default_read_function):
-        super(t2data_parser,self).__init__(filename, mode,
-                                           t2data_format_specification, read_function)
+
+    def __init__(self, filename, mode, read_function=default_read_function):
+        super(t2data_parser, self).__init__(filename, mode,
+                                            t2data_format_specification, read_function)
+
 
 class t2_extra_precision_data_parser(fixed_format_file):
     """Class for parsing AUTOUGH2 extra-precision auxiliary data file."""
-    def __init__(self, filename, mode, read_function = default_read_function):
+
+    def __init__(self, filename, mode, read_function=default_read_function):
         super(t2_extra_precision_data_parser,
               self).__init__(filename, mode,
                              t2data_extra_precision_format_specification,
                              read_function)
+
 
 class fortran_unformatted_file(object):
     """Class for 'unformatted' binary file written by Fortran.  These are
@@ -173,20 +185,22 @@ class fortran_unformatted_file(object):
     def writerec(self, fmt, val):
         nb = struct.calcsize(fmt)
         if isinstance(val, (tuple, list, np.ndarray)):
-            packed = struct.pack(fmt,  *val)
-        else: packed = struct.pack(fmt, val)
+            packed = struct.pack(fmt, *val)
+        else:
+            packed = struct.pack(fmt, val)
         head = struct.pack('i', nb)
         self.file.write(head)
         self.file.write(packed)
         self.file.write(head)
 
+
 class t2generator(object):
     """TOUGH2 generator (source or sink)"""
 
-    def __init__(self, name = '     ', block = '     ',
-                 nseq = None, nadd = None, nads = None, type = 'MASS', 
-                 ltab = 0, itab = '', gx = 0.0, ex = 0.0, hg = 0.0, fg = 0.0,
-                 time = None, rate = None, enthalpy = None):
+    def __init__(self, name='     ', block='     ',
+                 nseq=None, nadd=None, nads=None, type='MASS',
+                 ltab=0, itab='', gx=0.0, ex=0.0, hg=0.0, fg=0.0,
+                 time=None, rate=None, enthalpy=None):
         if time is None: time = []
         if rate is None: rate = []
         if enthalpy is None: enthalpy = []
@@ -203,14 +217,17 @@ class t2generator(object):
         self.time = time
         self.rate = rate
         self.enthalpy = enthalpy
-    def __repr__(self): return self.block + ':' + self.name
+
+    def __repr__(self):
+        return self.block + ':' + self.name
+
 
 default_parameters = {
     'max_iterations': None,
     'print_level': None,
     'max_timesteps': None,
     'max_duration': None,
-    'print_interval': None, 
+    'print_interval': None,
     '_option_str': '0' * 24,
     'option': np.zeros(25, int8),
     'diff0': None,
@@ -240,10 +257,12 @@ t2data_sections = [
 
 t2_extra_precision_sections = ['ROCKS', 'ELEME', 'CONNE', 'RPCAP', 'GENER']
 
+
 class t2data(object):
     """Class for TOUGH2 data."""
-    def __init__(self, filename = '', meshfilename = '',
-                 read_function = default_read_function):
+
+    def __init__(self, filename='', meshfilename='',
+                 read_function=default_read_function):
         from copy import deepcopy
         self.filename = filename
         self.meshfilename = meshfilename
@@ -279,85 +298,94 @@ class t2data(object):
         self.read_function = read_function
         if self.filename: self.read(filename, meshfilename)
 
-    def get_extra_precision(self): return self._extra_precision
+    def get_extra_precision(self):
+        return self._extra_precision
+
     def set_extra_precision(self, value):
-        if value is False: value = []
-        elif value is True: value = t2_extra_precision_sections
-        elif isinstance(value, str): value = [value]
+        if value is False:
+            value = []
+        elif value is True:
+            value = t2_extra_precision_sections
+        elif isinstance(value, str):
+            value = [value]
         # check if removing any extra precision sections:
         for section in set(self._extra_precision) - set(value):
             self.insert_section(section)
         self._extra_precision = value
         self.update_read_write_functions()
+
     extra_precision = property(get_extra_precision, set_extra_precision)
 
-    def get_echo_extra_precision(self): return self._echo_extra_precision
+    def get_echo_extra_precision(self):
+        return self._echo_extra_precision
+
     def set_echo_extra_precision(self, value):
         if value != self._echo_extra_precision:
-            if value is False: # remove previously echoed sections from section list
+            if value is False:  # remove previously echoed sections from section list
                 for section in self._extra_precision:
                     self.delete_section(section)
-            else: # add sections previously not echoed to section list
+            else:  # add sections previously not echoed to section list
                 for section in self._extra_precision:
                     self.insert_section(section)
             self._echo_extra_precision = value
             self.update_read_write_functions()
+
     echo_extra_precision = property(get_echo_extra_precision, set_echo_extra_precision)
 
     def update_read_write_functions(self):
         """Updates functions for reading and writing sections of data file."""
 
         self.read_fn = dict(zip(
-                t2data_sections,
-                [self.read_simulator,
-                 self.read_rocktypes,
-                 self.read_parameters,
-                 self.read_more_options,
-                 self.read_start,
-                 self.read_noversion,
-                 self.read_rpcap,
-                 self.read_lineq,
-                 self.read_solver,
-                 self.read_multi,
-                 self.read_times,
-                 self.read_selection,
-                 self.read_diffusion,
-                 self.read_blocks,
-                 self.read_connections,
-                 self.read_meshmaker,
-                 self.read_generators,
-                 self.read_short_output,
-                 self.read_history_blocks,
-                 self.read_history_connections,
-                 self.read_history_generators,
-                 self.read_incons,
-                 self.read_indom]))
+            t2data_sections,
+            [self.read_simulator,
+             self.read_rocktypes,
+             self.read_parameters,
+             self.read_more_options,
+             self.read_start,
+             self.read_noversion,
+             self.read_rpcap,
+             self.read_lineq,
+             self.read_solver,
+             self.read_multi,
+             self.read_times,
+             self.read_selection,
+             self.read_diffusion,
+             self.read_blocks,
+             self.read_connections,
+             self.read_meshmaker,
+             self.read_generators,
+             self.read_short_output,
+             self.read_history_blocks,
+             self.read_history_connections,
+             self.read_history_generators,
+             self.read_incons,
+             self.read_indom]))
 
         self.write_fn = dict(zip(
-                t2data_sections,
-                [self.write_simulator,
-                 self.write_rocktypes,
-                 self.write_parameters,
-                 self.write_more_options,
-                 self.write_start,
-                 self.write_noversion,
-                 self.write_rpcap,
-                 self.write_lineq,
-                 self.write_solver,
-                 self.write_multi,
-                 self.write_times,
-                 self.write_selection,
-                 self.write_diffusion,
-                 self.write_blocks,
-                 self.write_connections,
-                 self.write_meshmaker,
-                 self.write_generators,
-                 self.write_short_output,
-                 self.write_history_blocks,
-                 self.write_history_connections,
-                 self.write_history_generators,
-                 self.write_incons,
-                 self.write_indom]))
+            t2data_sections,
+            [self.write_simulator,
+             self.write_rocktypes,
+             self.write_parameters,
+             self.write_more_options,
+             self.write_start,
+             self.write_noversion,
+             self.write_rpcap,
+             self.write_lineq,
+             self.write_solver,
+             self.write_multi,
+             self.write_times,
+             self.write_selection,
+             self.write_diffusion,
+             self.write_blocks,
+             self.write_connections,
+             self.write_meshmaker,
+             self.write_generators,
+             self.write_short_output,
+             self.write_history_blocks,
+             self.write_history_connections,
+             self.write_history_generators,
+             self.write_incons,
+             self.write_indom]))
 
         skip_fn = dict(zip(
             t2_extra_precision_sections,
@@ -399,6 +427,7 @@ class t2data(object):
              self.incon,
              self.indom]))
         return [keyword for keyword in t2data_sections if data_present[keyword]]
+
     present_sections = property(get_present_sections)
 
     def insert_section(self, section):
@@ -410,8 +439,10 @@ class t2data(object):
 
     def delete_section(self, section):
         """Deletes a section from the internal list of data file sections."""
-        try: self._sections.remove(section)
-        except ValueError: pass
+        try:
+            self._sections.remove(section)
+        except ValueError:
+            pass
 
     def section_insertion_index(self, section):
         """Determines an appropriate position to insert the specified section
@@ -419,7 +450,8 @@ class t2data(object):
         """
         try:
             listindex = t2data_sections.index(section)
-            if listindex == 0: return 0  # SIMUL section
+            if listindex == 0:
+                return 0  # SIMUL section
             else:
                 # first look for sections above the one specified,
                 # and put new one just after the last found:
@@ -427,16 +459,19 @@ class t2data(object):
                     try:
                         section_index = self._sections.index(t2data_sections[i])
                         return section_index + 1
-                    except ValueError: pass
+                    except ValueError:
+                        pass
                 # look for sections below the one specified,
                 # and put new one just before the first found:
                 for i in range(listindex, len(t2data_sections)):
                     try:
                         section_index = self._sections.index(t2data_sections[i])
                         return section_index
-                    except ValueError: pass
+                    except ValueError:
+                        pass
                 return len(self._sections)
-        except ValueError: return len(self._sections)
+        except ValueError:
+            return len(self._sections)
 
     def update_sections(self):
         """Updates internal section list, based on which properties are present."""
@@ -446,10 +481,11 @@ class t2data(object):
         extra = [keyword for keyword in self._sections if keyword not in present]
         for keyword in extra: self.delete_section(keyword)
 
-    def __repr__(self): return self.title
+    def __repr__(self):
+        return self.title
 
-    def run(self, save_filename = '', incon_filename = '', simulator = 'AUTOUGH2_2',
-            silent = False, output_filename = ''):
+    def run(self, save_filename='', incon_filename='', simulator='AUTOUGH2_2',
+            silent=False, output_filename=''):
         """Runs simulation using TOUGH2 or AUTOUGH2.  It's assumed that the
         data object has been written to file using write().  For
         AUTOUGH2, if the filenames for the save file or initial
@@ -472,27 +508,34 @@ class t2data(object):
                 open(runfilename, 'w').write('\n'.join([savebase, inconbase, datbase]))
                 infile = open(runfilename, 'r')
                 cmd = [simulator]
-                if silent: outfile = open(devnull, 'w')
-                else: outfile = None
+                if silent:
+                    outfile = open(devnull, 'w')
+                else:
+                    outfile = None
                 # run AUTOUGH2:
-                call(cmd, stdin = infile, stdout = outfile)
+                call(cmd, stdin=infile, stdout=outfile)
                 infile.close()
                 remove(runfilename)
-            else: # run TOUGH2 (need to specify simulator executable name)
+            else:  # run TOUGH2 (need to specify simulator executable name)
                 cmd = [simulator]
                 infile = open(self.filename, 'r')
-                if silent: outfile = None
+                if silent:
+                    outfile = None
                 else:
-                    if output_filename == '': outfilename = datbase + '.listing'
-                    else: outfilename = output_filename
+                    if output_filename == '':
+                        outfilename = datbase + '.listing'
+                    else:
+                        outfilename = output_filename
                     outfile = open(outfilename, 'w')
-                call(cmd, stdin = infile, stdout = outfile)
+                call(cmd, stdin=infile, stdout=outfile)
 
     def get_type(self):
         """Returns type (TOUGH2 or AUTOUGH2) based on whether the simulator
         has been set."""
-        if self.simulator: return 'AUTOUGH2'
-        else: return 'TOUGH2'
+        if self.simulator:
+            return 'AUTOUGH2'
+        else:
+            return 'TOUGH2'
 
     def set_type(self, value):
         """Sets type (TOUGH2 or AUTOUGH2), and runs conversion if needed (with
@@ -500,9 +543,12 @@ class t2data(object):
         if value in ['AUTOUGH2', 'TOUGH2']:
             oldtype = self.type
             if oldtype != value:
-                if oldtype == 'AUTOUGH2': self.convert_to_TOUGH2()
-                elif oldtype == 'TOUGH2': self.convert_to_AUTOUGH2()
-        else: raise Exception('Data file type ' + value + ' is not supported.')
+                if oldtype == 'AUTOUGH2':
+                    self.convert_to_TOUGH2()
+                elif oldtype == 'TOUGH2':
+                    self.convert_to_AUTOUGH2()
+        else:
+            raise Exception('Data file type ' + value + ' is not supported.')
 
     type = property(get_type, set_type)
 
@@ -511,13 +557,17 @@ class t2data(object):
         of the data file."""
         from os.path import splitext
         base, ext = splitext(self.filename)
-        if base[0].isupper(): pext = 'PDAT'
-        else: pext = 'pdat'
+        if base[0].isupper():
+            pext = 'PDAT'
+        else:
+            pext = 'pdat'
         return '.'.join((base, pext))
+
     extra_precision_filename = property(get_extra_precision_filename)
 
     def get_num_generators(self):
         return len(self.generatorlist)
+
     num_generators = property(get_num_generators)
 
     def generator_index(self, blocksourcenames):
@@ -525,9 +575,10 @@ class t2data(object):
         names."""
         if blocksourcenames in self.generator:
             return self.generatorlist.index(self.generator[blocksourcenames])
-        else: return None
+        else:
+            return None
 
-    def total_generation(self, type = 'MASS', name = ''):
+    def total_generation(self, type='MASS', name=''):
         """Returns array containing total generation in each block of the
         specified generator type and name.  The name parameter
         specifies a regular expression to be matched.
@@ -538,7 +589,7 @@ class t2data(object):
         for g in gens: tg[self.grid.block_index(g.block)] += g.gx
         return tg
 
-    def specific_generation(self, type = 'MASS', name = ''):
+    def specific_generation(self, type='MASS', name=''):
         """Returns array containing total specific generation (i.e. generation
         per unit volume) in each block of the specified generator type
         and name.  The name parameter specifies a regular expression
@@ -586,9 +637,9 @@ class t2data(object):
                                             [k1, k2, k3],
                                             conductivity, specific_heat))
             if nad is None: nad = 0
-            if nad >= 1: # additional lines:
+            if nad >= 1:  # additional lines:
                 infile.read_value_line(self.grid.rocktype[name].__dict__, 'rocks1.1')
-                if nad >=2 :
+                if nad >= 2:
                     vals = infile.read_values('rocks1.2')
                     self.grid.rocktype[name].relative_permeability['type'] = vals[0]
                     self.grid.rocktype[name].relative_permeability['parameters'] = vals[2: -1]
@@ -626,7 +677,7 @@ class t2data(object):
         self.parameter['option'] = np.array([0] + [int(mop) for mop in mops], int8)
         infile.read_value_line(self.parameter, 'param2')
         if (self.parameter['print_block'] is not None) and \
-           (self.parameter['print_block'].strip() == ''):
+                (self.parameter['print_block'].strip() == ''):
             self.parameter['print_block'] = None
         self.read_timesteps(infile)
         infile.read_value_line(self.parameter, 'param3')
@@ -639,12 +690,14 @@ class t2data(object):
             line = padstring(infile.readline())
             if line.strip():
                 section = any([line.startswith(keyword) for keyword in t2data_sections])
-                if section: more = False
+                if section:
+                    more = False
                 else:
                     more_incons = infile.parse_string(line, 'default_incons')
                     more_incons = trim_trailing_nones(more_incons)
                     self.parameter['default_incons'] += more_incons
-            else: more, line = False, None
+            else:
+                more, line = False, None
         return line
 
     def write_parameters(self, outfile):
@@ -667,20 +720,21 @@ class t2data(object):
                 vals = list(self.parameter['default_incons'][i1: i2])
                 if len(vals) < 4: vals += [None] * (4 - len(vals))
                 outfile.write_values(vals, 'default_incons')
-        else: outfile.write('\n')
+        else:
+            outfile.write('\n')
 
     def read_more_options(self, infile):
         """Reads additional parameter options"""
         infile.read_value_line(self.__dict__, '_more_option_str')
         momops = self._more_option_str.rstrip().ljust(21).replace(' ', '0')
         self.more_option = np.array([0] + [int(mop) for mop in momops], int8)
-        
+
     def write_more_options(self, outfile):
         """Writes additional parameter options"""
         outfile.write('MOMOP\n')
         self._more_option_str = ''.join([str(m) for m in self.more_option[1:]])
         outfile.write_value_line(self.__dict__, '_more_option_str')
-        
+
     def read_timesteps(self, infile):
         """Reads time step sizes from file"""
         if self.parameter['const_timestep'] >= 0.0:
@@ -726,7 +780,7 @@ class t2data(object):
         self.relative_permeability['type'] = vals[0]
         self.relative_permeability['parameters'] = vals[2:]
         vals = infile.read_values('capillarity')
-        self.capillarity['type']= vals[0]
+        self.capillarity['type'] = vals[0]
         self.capillarity['parameters'] = vals[2:]
 
     def skip_rpcap(self, infile):
@@ -772,21 +826,22 @@ class t2data(object):
             if rockname in self.grid.rocktype:
                 rocktype = self.grid.rocktype[rockname]
             elif rockname.strip() == '' and self.grid.num_rocktypes > 0:
-                rocktype = self.grid.rocktypelist[0] # default
+                rocktype = self.grid.rocktypelist[0]  # default
             else:
-                try: # check if rocktype index specified:
+                try:  # check if rocktype index specified:
                     rockindex = int(rockname) - 1
                     rocktype = self.grid.rocktypelist[rockindex]
                 except:
                     raise RuntimeError("Unknown rocktype " + rockname + " in block " + name)
             if (x is not None) and (y is not None) and (z is not None):
                 centre = np.array([x, y, z])
-            else: centre = None
+            else:
+                centre = None
             if nseq == 0: nseq = None
             if nadd == 0: nadd = None
             self.grid.add_block(t2block(name, volume, rocktype,
-                                        centre = centre, ahtx = ahtx,
-                                        pmx = pmx, nseq = nseq, nadd = nadd))
+                                        centre=centre, ahtx=ahtx,
+                                        pmx=pmx, nseq=nseq, nadd=nadd))
             line = padstring(infile.readline())
 
     def skip_blocks(self, infile):
@@ -800,7 +855,8 @@ class t2data(object):
             for blk in self.grid.blocklist:
                 blkw = copy(blk.__dict__)
                 blkw['name'] = unfix_blockname(blkw['name'])
-                if blk.centre is None: outfile.write_value_line(blkw, 'blocks')
+                if blk.centre is None:
+                    outfile.write_value_line(blkw, 'blocks')
                 else:
                     vals = [blkw['name'], blk.nseq, blk.nadd,
                             blk.rocktype.name, blk.volume,
@@ -837,11 +893,11 @@ class t2data(object):
                 vals = [unfix_blockname(con.block[0].name),
                         unfix_blockname(con.block[1].name),
                         con.nseq, con.nad1, con.nad2, con.direction] + \
-                    con.distance + [con.area, con.dircos, con.sigma]
+                       con.distance + [con.area, con.dircos, con.sigma]
                 outfile.write_values(vals, 'connections')
         outfile.write('\n')
 
-    def add_generator(self, generator = None):
+    def add_generator(self, generator=None):
         """Adds a generator."""
         if generator is None: generator = t2generator()
         self.generatorlist.append(generator)
@@ -893,20 +949,22 @@ class t2data(object):
                     for i in range(nlines):
                         for val in infile.read_values('generation_enthalpy'):
                             if val is not None: enthalpy.append(val)
-        return t2generator(name = name, block = block,
-                           nseq = nseq, nadd = nadd, nads = nads,
-                           type = gentype, ltab = ltab, itab = itab,
-                           gx = gx, ex = ex, hg = hg, fg = fg,
-                           time = time, rate = rate, enthalpy = enthalpy)
+        return t2generator(name=name, block=block,
+                           nseq=nseq, nadd=nadd, nads=nads,
+                           type=gentype, ltab=ltab, itab=itab,
+                           gx=gx, ex=ex, hg=hg, fg=fg,
+                           time=time, rate=rate, enthalpy=enthalpy)
 
     def write_generator(self, gen, outfile):
         from copy import copy
         genw = copy(gen.__dict__)
-        genw['name']  = unfix_blockname(genw['name'])
+        genw['name'] = unfix_blockname(genw['name'])
         genw['block'] = unfix_blockname(genw['block'])
         outfile.write_value_line(genw, 'generator')
-        if gen.ltab and gen.type != 'DELV': ntimes = abs(gen.ltab)
-        else: ntimes = 1
+        if gen.ltab and gen.type != 'DELV':
+            ntimes = abs(gen.ltab)
+        else:
+            ntimes = 1
         if ntimes > 1:
             nlines = int(ceil(ntimes / 4.))
             for i in range(nlines):
@@ -969,8 +1027,8 @@ class t2data(object):
         """Reads initial conditions from file"""
         line = infile.readline()
         while line.strip():
-            [blockname,  nseq,  nadd,
-             porosity] = infile.parse_string(line,  'incon1')
+            [blockname, nseq, nadd,
+             porosity] = infile.parse_string(line, 'incon1')
             blockname = fix_blockname(blockname)
             variables = infile.read_values('incon2')
             variables = trim_trailing_nones(variables)
@@ -991,8 +1049,10 @@ class t2data(object):
                     inc = self.incon[blkname]
                 except:
                     continue
-                if len(inc) >= 4: nseq, nadd = inc[2], inc[3]
-                else: nseq, nadd = None, None
+                if len(inc) >= 4:
+                    nseq, nadd = inc[2], inc[3]
+                else:
+                    nseq, nadd = None, None
                 vals = [unfix_blockname(blkname), nseq, nadd, inc[0]]
                 outfile.write_values(vals, 'incon1')
                 outfile.write_values(inc[1], 'incon2')
@@ -1006,13 +1066,16 @@ class t2data(object):
         while more:
             line = infile.readline()
             if line.strip():
-                if line[0: 5] in ['ELEME', 'CONNE', 'GENER']: more = False
+                if line[0: 5] in ['ELEME', 'CONNE', 'GENER']:
+                    more = False
                 else:
                     blockname = fix_blockname(line[0: 5])
                     if blockname in self.grid.block:
                         self.short_output['block'].append(self.grid.block[blockname])
-                    else: badblocks.append(blockname)
-            else: more = False
+                    else:
+                        badblocks.append(blockname)
+            else:
+                more = False
         if len(badblocks) > 0:
             print('Short output blocks', badblocks, 'do not exist and will be ignored.')
         return line
@@ -1031,8 +1094,10 @@ class t2data(object):
                     blknames = (fix_blockname(line[0: 5]), fix_blockname(line[5: 10]))
                     if blknames in self.grid.connection:
                         self.short_output['connection'].append(self.grid.connection[blknames])
-                    else: badcons.append(blknames)
-            else: more = False
+                    else:
+                        badcons.append(blknames)
+            else:
+                more = False
         if len(badcons) > 0:
             print('Short output connections', badcons, 'do not exist and will be ignored.')
         return line
@@ -1051,8 +1116,10 @@ class t2data(object):
                     blksourcenames = (fix_blockname(line[0: 5]), fix_blockname(line[5: 10]))
                     if blksourcenames in self.generator:
                         self.short_output['generator'].append(self.generator[blksourcenames])
-                    else: badgens.append(blksourcenames)
-            else: more = False
+                    else:
+                        badgens.append(blksourcenames)
+            else:
+                more = False
         if len(badgens) > 0:
             print('Short output generators', badgens, 'do not exist and will be ignored.')
         return line
@@ -1072,7 +1139,8 @@ class t2data(object):
             if line.strip():
                 keyword = line[0: 5]
                 line = read_fn[keyword](infile)
-            else: more = False
+            else:
+                more = False
 
     def write_short_output(self, outfile):
         if self.short_output:
@@ -1088,7 +1156,7 @@ class t2data(object):
             if 'connection' in self.short_output:
                 outfile.write('CONNE\n')
                 for con in self.short_output['connection']:
-                    outfile.write(unfix_blockname(con.block[0].name) + 
+                    outfile.write(unfix_blockname(con.block[0].name) +
                                   unfix_blockname(con.block[1].name) + '\n')
             if 'generator' in self.short_output:
                 outfile.write('GENER\n')
@@ -1107,7 +1175,8 @@ class t2data(object):
                 blockname = fix_blockname(line[0: 5])
                 if blockname in self.grid.block:
                     self.history_block.append(self.grid.block[blockname])
-                else: badblocks.append(blockname)
+                else:
+                    badblocks.append(blockname)
                 line = infile.readline()
             if len(badblocks) > 0:
                 print('History blocks', badblocks, 'do not exist and will be ignored.')
@@ -1128,11 +1197,12 @@ class t2data(object):
                 blknames = (fix_blockname(line[0: 5]), fix_blockname(line[5: 10]))
                 if blknames in self.grid.connection:
                     self.history_connection.append(self.grid.connection[blknames])
-                else: badcons.append(blknames)
+                else:
+                    badcons.append(blknames)
                 line = infile.readline()
             if len(badcons) > 0:
                 print('History connections', badcons, 'do not exist and will be ignored.')
-        else: # no grid
+        else:  # no grid
             while line.strip():
                 blknames = (fix_blockname(line[0: 5]), fix_blockname(line[5: 10]))
                 self.history_connection.append(blknames)
@@ -1148,11 +1218,12 @@ class t2data(object):
                 blockname = fix_blockname(line[0: 5])
                 if blockname in self.grid.block:
                     self.history_generator.append(self.grid.block[blockname])
-                else: badgens.append(blockname)
+                else:
+                    badgens.append(blockname)
                 line = infile.readline()
             if len(badgens) > 0:
                 print('History generator blocks', badgens, 'do not exist and will be ignored.')
-        else: # no grid
+        else:  # no grid
             while line.strip():
                 blockname = fix_blockname(line[0: 5])
                 self.history_generator.append(blockname)
@@ -1162,8 +1233,10 @@ class t2data(object):
         if self.history_block:
             outfile.write('FOFT\n')
             for blk in self.history_block:
-                if isinstance(blk, str): blkname = blk
-                else: blkname = blk.name
+                if isinstance(blk, str):
+                    blkname = blk
+                else:
+                    blkname = blk.name
                 outfile.write(unfix_blockname(blkname) + '\n')
             outfile.write('\n')
 
@@ -1171,8 +1244,10 @@ class t2data(object):
         if self.history_connection:
             outfile.write('COFT\n')
             for con in self.history_connection:
-                if isinstance(con, tuple): cname = con
-                else: cname = tuple([blk.name for blk in con.block])
+                if isinstance(con, tuple):
+                    cname = con
+                else:
+                    cname = tuple([blk.name for blk in con.block])
                 outfile.write(unfix_blockname(cname[0]) + unfix_blockname(cname[1]) + '\n')
             outfile.write('\n')
 
@@ -1180,8 +1255,10 @@ class t2data(object):
         if self.history_generator:
             outfile.write('GOFT\n')
             for blk in self.history_generator:
-                if isinstance(blk, str): blkname = blk
-                else: blkname = blk.name
+                if isinstance(blk, str):
+                    blkname = blk
+                else:
+                    blkname = blk.name
                 outfile.write(unfix_blockname(blkname) + '\n')
             outfile.write('\n')
 
@@ -1216,7 +1293,8 @@ class t2data(object):
             for comp in range(self.multi['num_components']):
                 diffs = infile.read_values('diffusion')[0: self.multi['num_phases']]
                 self.diffusion.append(diffs)
-        else: print('Unable to read DIFFU block: no MULTI block specified.')
+        else:
+            print('Unable to read DIFFU block: no MULTI block specified.')
 
     def write_diffusion(self, outfile):
         if self.diffusion:
@@ -1255,7 +1333,8 @@ class t2data(object):
             if line.strip():
                 keyword = line[0: 5].strip()
                 if keyword in read_fn: read_fn[keyword](infile)
-            else: more = False
+            else:
+                more = False
 
     def write_meshmaker(self, outfile):
         if self.meshmaker:
@@ -1283,15 +1362,17 @@ class t2data(object):
                 for i in range(nlines):
                     for val in infile.read_values('radii2'):
                         if val is not None: subsection['radii'].append(val)
-            elif keyword == 'EQUID': infile.read_value_line(subsection, 'equid')
-            elif keyword == 'LOGAR': infile.read_value_line(subsection, 'logar')
+            elif keyword == 'EQUID':
+                infile.read_value_line(subsection, 'equid')
+            elif keyword == 'LOGAR':
+                infile.read_value_line(subsection, 'logar')
             elif keyword == 'LAYER':
                 nlayers = infile.read_values('layer1')[0]
                 nlines = int(ceil(nlayers / 8.))
                 layer = []
                 for i in range(nlines): layer += infile.read_values('layer2')
                 subsection['layer'] = layer[0: nlayers]
-                more = False # LAYER indicates end of RZ2D
+                more = False  # LAYER indicates end of RZ2D
             if subsection: section[1].append((keyword.lower(), subsection))
         self.meshmaker.append(section)
 
@@ -1308,8 +1389,10 @@ class t2data(object):
                     vals = subsection['radii'][i1: i2]
                     if len(vals) < 8: vals += [None] * (8 - len(vals))
                     outfile.write_values(vals, 'radii2')
-            elif stype == 'equid': outfile.write_value_line(subsection, 'equid')
-            elif stype == 'logar': outfile.write_value_line(subsection, 'logar')
+            elif stype == 'equid':
+                outfile.write_value_line(subsection, 'equid')
+            elif stype == 'logar':
+                outfile.write_value_line(subsection, 'logar')
             elif stype == 'layer':
                 nlayers = len(subsection['layer'])
                 outfile.write_values([nlayers], 'layer1')
@@ -1338,7 +1421,8 @@ class t2data(object):
                         deli += infile.read_values('xyz3')
                     subsection['deli'] = deli[0: subsection['no']]
                 section[1].append(subsection)
-            else: more = False
+            else:
+                more = False
         self.meshmaker.append(section)
 
     def write_meshmaker_xyz(self, section, outfile):
@@ -1366,8 +1450,8 @@ class t2data(object):
              dummy, subsection['dual']] = infile.parse_string(line, 'minc')
             vals = infile.read_values('part1')
             subsection['num_continua'], nvol, \
-                subsection['where'], subsection['spacing'] = vals[0], vals[1], \
-                                                             vals[2], vals[3:]
+            subsection['where'], subsection['spacing'] = vals[0], vals[1], \
+                                                         vals[2], vals[3:]
             nlines = int(ceil(nvol / 8.))
             vol = []
             for i in range(nlines): vol += infile.read_values('part2')
@@ -1400,7 +1484,8 @@ class t2data(object):
                 if keyword in mesh_sections:
                     read_fn[keyword](infile)
                     self._sections.append(keyword)
-            else: more = False
+            else:
+                more = False
 
     def read_binary_meshfiles(self):
         """Reads grid from auxiliary binary mesh files (e.g. TOUGH2_MP
@@ -1414,15 +1499,16 @@ class t2data(object):
             # replaced by indices
             nelb = -nelb
             rocktype_indices = True
-        else: rocktype_indices = False
+        else:
+            rocktype_indices = False
         if nel == nelb:
             # read MESHA file:
             evol, aht, pmx = (np.array(fa.readrec('%dd' % nel)) for i in range(3))
             gcoord = [np.array(fa.readrec('%dd' % nel)) for i in range(3)]
             gcoord = np.transpose(np.vstack([gc for gc in gcoord]))
             del1, del2, \
-                area, beta, sig = (np.array(fa.readrec('%dd' % ncon)) for
-                                   i in range(5))
+            area, beta, sig = (np.array(fa.readrec('%dd' % ncon)) for
+                               i in range(5))
             isox = np.array(fa.readrec('%di' % ncon))
             # read MESHB file:
             elem = [s.decode() for s in fb.readrec('8s' * nel)]
@@ -1438,8 +1524,8 @@ class t2data(object):
             for i in range(nel):
                 name = fix_blockname(elem[i][0: 5])
                 self.grid.add_block(t2block(name, evol[i], rtype[i],
-                                            centre = gcoord[i, :],
-                                            ahtx = aht[i], pmx = pmx[i]))
+                                            centre=gcoord[i, :],
+                                            ahtx=aht[i], pmx=pmx[i]))
             del evol, aht, pmx, gcoord, elem
             self.grid.connectionlist, self.grid.connection = [], {}
             for i in range(ncon):
@@ -1451,7 +1537,8 @@ class t2data(object):
         else:
             print('Files', self.meshfilename[0], 'and', self.meshfilename[1],
                   'do not contain the same number of blocks (', nel, 'vs.', nelb, ').')
-        fa.close(); fb.close()
+        fa.close();
+        fb.close()
 
     def write_binary_meshfiles(self):
         """Writes grid to auxiliary binary mesh files."""
@@ -1466,7 +1553,7 @@ class t2data(object):
             ('index', 'i4'),
             ('name', '|S8'),
             ('name8', '|S8'),
-            ('rockindex', 'i4'), 
+            ('rockindex', 'i4'),
             ('volume', 'f8'),
             ('ahtx', 'f8'),
             ('pmx', 'f8'),
@@ -1477,7 +1564,7 @@ class t2data(object):
                              rockdict[blk.rocktype.name],
                              blk.volume, blk.ahtx, blk.pmx, blk.centre[0],
                              blk.centre[1], blk.centre[2])
-                            for i, blk in enumerate(self.grid.blocklist)], dtype = block_dt)
+                            for i, blk in enumerate(self.grid.blocklist)], dtype=block_dt)
         for var in ['ahtx', 'pmx', 'cx', 'cy', 'cz']:
             # replace nan values with zero:
             blkdata[:][var] = np.nan_to_num(blkdata[:][var])
@@ -1499,7 +1586,7 @@ class t2data(object):
                              blkdict[con.block[1].name.encode()],
                              con.distance[0], con.distance[1],
                              con.direction, con.area, con.dircos, con.sigma)
-                            for con in self.grid.connectionlist], dtype = con_dt)
+                            for con in self.grid.connectionlist], dtype=con_dt)
         condata[:]['sigma'] = np.nan_to_num(condata[:]['sigma'])
         # write MESHA file:
         for var in ['volume', 'ahtx', 'pmx', 'cx', 'cy', 'cz']:
@@ -1526,7 +1613,7 @@ class t2data(object):
         if exists(filename):
             mode = 'r' if sys.version_info > (3,) else 'rU'
             xpfile = t2_extra_precision_data_parser(self.extra_precision_filename, mode,
-                                                    read_function = self.read_function)
+                                                    read_function=self.read_function)
             read_fn = dict(zip(t2_extra_precision_sections,
                                [self.read_rocktypes, self.read_blocks, self.read_connections,
                                 self.read_rpcap, self.read_generators]))
@@ -1535,19 +1622,22 @@ class t2data(object):
                 line = xpfile.readline()
                 if line:
                     keyword = line[0: 5].strip()
-                    if keyword in ['ENDCY', 'ENDFI']: more = False
+                    if keyword in ['ENDCY', 'ENDFI']:
+                        more = False
                     elif keyword in read_fn:
                         self.extra_precision.append(keyword)
                         read_fn[keyword](xpfile)
-                else: more = False
+                else:
+                    more = False
             xpfile.close()
             if self.extra_precision:
                 self.update_read_write_functions()
                 self.echo_extra_precision = any([section in self._sections for
                                                  section in self.extra_precision])
-            else: self.echo_extra_precision = False
+            else:
+                self.echo_extra_precision = False
 
-    def write_extra_precision(self, extra_precision = None, echo_extra_precision = None):
+    def write_extra_precision(self, extra_precision=None, echo_extra_precision=None):
         """Writes AUTOUGH2 extra precision data to auxiliary file."""
         if extra_precision is not None:
             self.extra_precision = extra_precision
@@ -1564,21 +1654,23 @@ class t2data(object):
                     self._sections.remove(section)
             xpfile.close()
 
-    def read(self, filename = '', meshfilename = ''):
+    def read(self, filename='', meshfilename=''):
         """Reads data from file.  Mesh data can optionally be read from an
         auxiliary file.  Extra precision data will also be read from
         an associated '.pdat' file, if it exists.
         """
         if filename: self.filename = filename
         mode = 'r' if sys.version_info > (3,) else 'rU'
-        infile = t2data_parser(self.filename, mode, read_function = self.read_function)
+        infile = t2data_parser(self.filename, mode, read_function=self.read_function)
         self.read_title(infile)
         self._sections = []
         more = True
         next_line = None
         while more:
-            if next_line: line = next_line
-            else: line = infile.readline()
+            if next_line:
+                line = next_line
+            else:
+                line = infile.readline()
             if line:
                 keyword = line[0: 5].strip()
                 if keyword in ['ENDCY', 'ENDFI']:
@@ -1587,26 +1679,31 @@ class t2data(object):
                 elif keyword in t2data_sections:
                     fn = self.read_fn[keyword]
                     next_line = None
-                    if keyword == 'SHORT': fn(infile, line)
-                    elif keyword == 'PARAM': next_line = fn(infile)
-                    else: fn(infile)
+                    if keyword == 'SHORT':
+                        fn(infile, line)
+                    elif keyword == 'PARAM':
+                        next_line = fn(infile)
+                    else:
+                        fn(infile)
                     self._sections.append(keyword)
-            else: more = False
+            else:
+                more = False
         infile.close()
         if meshfilename and (self.grid.num_blocks == 0):
             self.meshfilename = meshfilename
             if isinstance(meshfilename, str):
                 mode = 'r' if sys.version_info > (3,) else 'rU'
-                meshfile = t2data_parser(self.meshfilename, mode, read_function = self.read_function)
+                meshfile = t2data_parser(self.meshfilename, mode, read_function=self.read_function)
                 self.read_meshfile(meshfile)
                 meshfile.close()
             elif isinstance(meshfilename, (list, tuple)):
                 if len(meshfilename) == 2: self.read_binary_meshfiles()
-            else: print('Mesh filename must be either a string or a two-element tuple or list.')
+            else:
+                print('Mesh filename must be either a string or a two-element tuple or list.')
         return self
 
-    def write(self, filename = '', meshfilename = '',
-              extra_precision = None, echo_extra_precision = None):
+    def write(self, filename='', meshfilename='',
+              extra_precision=None, echo_extra_precision=None):
         """Writes data to file.  Mesh data can optionally be written to an
         auxiliary file.  For AUTOUGH2, if extra_precision is True or a
         list of section names, the corresponding data sections will be
@@ -1617,7 +1714,7 @@ class t2data(object):
         will also be written to the main data file.
         """
         if filename: self.filename = filename
-        if self.filename =='': self.filename = 't2data.dat'
+        if self.filename == '': self.filename = 't2data.dat'
         self.update_sections()
         mesh_sections = []
         if meshfilename: self.meshfilename = meshfilename
@@ -1633,14 +1730,14 @@ class t2data(object):
                     self.write_binary_meshfiles()
                     mesh_sections = ['ELEME', 'CONNE']
         if self.type == 'AUTOUGH2':
-            self.write_extra_precision(extra_precision,  echo_extra_precision)
+            self.write_extra_precision(extra_precision, echo_extra_precision)
         outfile = t2data_parser(self.filename, 'w')
         self.write_title(outfile)
         for keyword in self._sections:
             if (keyword not in mesh_sections) and \
                     ((keyword not in self.extra_precision) or
                      (keyword in self.extra_precision and self.echo_extra_precision)):
-                    self.write_fn[keyword](outfile)
+                self.write_fn[keyword](outfile)
         outfile.write(self.end_keyword + '\n')
         outfile.close()
 
@@ -1654,9 +1751,9 @@ class t2data(object):
             blk.rocktype = self.grid.rocktype[source.grid.block[mapping[blk.name]].rocktype.name]
 
     def transfer_generators_from(self, source, sourcegeo, geo,
-                                 top_generator = [], bottom_generator = [],
-                                 mapping = {}, colmapping = {},
-                                 rename = False, preserve_totals = False):
+                                 top_generator=[], bottom_generator=[],
+                                 mapping={}, colmapping={},
+                                 rename=False, preserve_totals=False):
         """Transfers generators from another t2data object, using the
         specified top and bottom generator lists and optional block
         and column mappings.  If the rename parameter is False,
@@ -1675,7 +1772,7 @@ class t2data(object):
         bbox = sourcegeo.bounds
         qt = quadtree(bbox, sourcegeo.columnlist)
         incols = [col for col in geo.columnlist if
-                  sourcegeo.column_containing_point(col.centre, qtree = qt) is not None]
+                  sourcegeo.column_containing_point(col.centre, qtree=qt) is not None]
         self.clear_generators()
         col_generator = top_generator + bottom_generator
         for sourcegen in source.generatorlist:
@@ -1684,13 +1781,17 @@ class t2data(object):
             if sourcecategory in col_generator:
                 mappedcols = [col for col in incols if
                               colmapping[col.name] == sourcecolname]
-                if preserve_totals: area = sum([col.area for col in mappedcols])
-                else: area = sourcegeo.column[sourcecolname].area
+                if preserve_totals:
+                    area = sum([col.area for col in mappedcols])
+                else:
+                    area = sourcegeo.column[sourcecolname].area
                 for col in mappedcols:
                     gen = deepcopy(sourcegen)
                     area_ratio = col.area / area
-                    if gen.ltab: ntimes = abs(gen.ltab)
-                    else: ntimes = 1
+                    if gen.ltab:
+                        ntimes = abs(gen.ltab)
+                    else:
+                        ntimes = 1
                     if gen.type in tablegens:
                         if gen.gx: gen.gx *= area_ratio
                         if ntimes > 1: gen.rate = [rate * area_ratio for rate in gen.rate]
@@ -1702,35 +1803,42 @@ class t2data(object):
                     gen.name = geo.block_name(category, col.name)
                     if sourcecategory in top_generator:
                         layername = geo.layerlist[geo.num_layers - col.num_layers].name
-                    elif sourcecategory in bottom_generator: layername = geo.layerlist[-1].name
+                    elif sourcecategory in bottom_generator:
+                        layername = geo.layerlist[-1].name
                     gen.block = geo.block_name(layername, col.name)
                     self.add_generator(gen)
-            else: # other generators, do block by block:
+            else:  # other generators, do block by block:
                 sourceblock = source.grid.block[sourcegen.block]
                 mappedblocks = [blk for blk in self.grid.blocklist if
                                 mapping[blk.name] == sourceblock.name]
-                if preserve_totals: vol = sum([blk.volume for blk in mappedblocks])
-                else: vol = sourceblock.volume
+                if preserve_totals:
+                    vol = sum([blk.volume for blk in mappedblocks])
+                else:
+                    vol = sourceblock.volume
                 for blk in mappedblocks:
                     gen = deepcopy(sourcegen)
-                    if gen.ltab: ntimes = abs(gen.ltab)
-                    else: ntimes = 1
+                    if gen.ltab:
+                        ntimes = abs(gen.ltab)
+                    else:
+                        ntimes = 1
                     vol_ratio = blk.volume / vol
                     if gen.type in tablegens:
                         if gen.gx: gen.gx *= vol_ratio
                         if ntimes > 1: gen.rate = [rate * vol_ratio for rate in gen.rate]
                     if rename:
-                        if geo.convention == sourcegeo.convention: category = sourcecategory
-                        else: category = [' 0', sourcecategory, sourcecategory][geo.convention]
+                        if geo.convention == sourcegeo.convention:
+                            category = sourcecategory
+                        else:
+                            category = [' 0', sourcecategory, sourcecategory][geo.convention]
                         colname = geo.column_name(blk.name)
                         gen.name = geo.block_name(category, colname)
                     gen.block = blk.name
                     self.add_generator(gen)
 
     def transfer_from(self, source, sourcegeo, geo,
-                      top_generator = [], bottom_generator = [],
-                      sourceinconfilename = '', inconfilename = '',
-                      rename_generators = False, preserve_generation_totals = False):
+                      top_generator=[], bottom_generator=[],
+                      sourceinconfilename='', inconfilename='',
+                      rename_generators=False, preserve_generation_totals=False):
         """Copies parameters, rock types and assignments, generators and
         initial conditions from another t2data object (without
         altering the grid structure).  The top_generator and
@@ -1758,8 +1866,10 @@ class t2data(object):
         if self.parameter['print_block'] is not None:
             mappedblocks = [blk for blk in self.grid.blocklist if
                             mapping[blk.name] == self.parameter['print_block']]
-            if len(mappedblocks) > 0: self.parameter['print_block'] = mappedblocks[0].name
-            else: self.parameter['print_block'] = None
+            if len(mappedblocks) > 0:
+                self.parameter['print_block'] = mappedblocks[0].name
+            else:
+                self.parameter['print_block'] = None
         self.multi = copy(source.multi)
         self.start = source.start
         self.noversion = source.noversion
@@ -1807,7 +1917,7 @@ class t2data(object):
         for rt in self.grid.rocktypelist:
             rt.conductivity *= (1. - rt.porosity)
 
-    def convert_AUTOUGH2_parameters_to_TOUGH2(self, warn = True, MP = False):
+    def convert_AUTOUGH2_parameters_to_TOUGH2(self, warn=True, MP=False):
         """Converts AUTOUGH2 parameters to TOUGH2 parameters, with optional
         warnings about options that aren't supported in TOUGH2.  If MP
         is True, convert to a file suitable for TOUGH2_MP.
@@ -1818,9 +1928,12 @@ class t2data(object):
             self.multi['num_inc'] = None
         # Convert LINEQ into corresponding MOP(21) option:
         if self.lineq:
-            if self.lineq['type'] <= 1: solver_type = 4
-            else: solver_type = 5
-        else: solver_type = 4
+            if self.lineq['type'] <= 1:
+                solver_type = 4
+            else:
+                solver_type = 5
+        else:
+            solver_type = 4
         self.lineq = {}
         self.delete_section('LINEQ')
         # Convert MOPs:
@@ -1849,7 +1962,7 @@ class t2data(object):
         if self.parameter['option'][24] > 0:
             self.parameter['option'][24] = 0
             warnings.append('MOP(24)>0: initial printout of tables')
-        if MP: # these MOPs mean different things in TOUGH2_MP:
+        if MP:  # these MOPs mean different things in TOUGH2_MP:
             if self.parameter['option'][14] > 0:
                 self.parameter['option'][14] = 0
                 warnings.append('MOP(14)>0: Pivot failure handling')
@@ -1864,7 +1977,7 @@ class t2data(object):
             print('The following options are not supported in TOUGH2:')
             for warning in warnings: print(warning)
 
-    def convert_TOUGH2_parameters_to_AUTOUGH2(self, warn = True, MP = False):
+    def convert_TOUGH2_parameters_to_AUTOUGH2(self, warn=True, MP=False):
         """Converts TOUGH2 parameters to AUTOUGH2 parameters, with optional
         warnings about options that aren't supported in AUTOUGH2.  If
         MP is True, treat the file as a TOUGH2_MP data file.
@@ -1872,10 +1985,13 @@ class t2data(object):
         # modify MULTI:
         if self.multi: self.multi['num_inc'] = None
         # set up LINEQ:
-        if MP: solver_type = 2
+        if MP:
+            solver_type = 2
         else:
-            if 'type' in self.solver: solver_type = self.solver['type']
-            else: solver_type = self.parameter['option'][21]
+            if 'type' in self.solver:
+                solver_type = self.solver['type']
+            else:
+                solver_type = self.parameter['option'][21]
         self.lineq = {'type': [2, 1, 2, 2, 1, 2, 1][solver_type], 'epsilon': None,
                       'max_iterations': None, 'gauss': None, 'num_orthog': None}
         self.insert_section('LINEQ')
@@ -1894,7 +2010,7 @@ class t2data(object):
         if self.parameter['option'][24] > 0:
             warnings.append('MOP(24)>0:  handling of multiphase diffusive fluxes at interfaces')
         self.parameter['option'][24] = 0
-        if MP: # these MOPs mean different things in TOUGH2_MP:
+        if MP:  # these MOPs mean different things in TOUGH2_MP:
             if self.parameter['option'][14] > 0:
                 self.parameter['option'][14] = 0
                 warnings.append('MOP(14)>0: 8-character element names')
@@ -1906,21 +2022,22 @@ class t2data(object):
                 warnings.append('MOP(20)>0: long format for CONNE and GENER indices')
             if self.parameter['option'][21] > 0:
                 warnings.append('MOP(21)>0: perform extra Newton iteration after convergence')
-        self.parameter['option'][21] = 0 # not used in AUTOUGH2
+        self.parameter['option'][21] = 0  # not used in AUTOUGH2
         if warn and len(warnings) > 0:
             print('The following options are not supported in AUTOUGH2:')
             for warning in warnings: print(warning)
 
-    def convert_AUTOUGH2_generators_to_TOUGH2(self, warn = True):
+    def convert_AUTOUGH2_generators_to_TOUGH2(self, warn=True):
         """Convert AUTOUGH2 generators to TOUGH2 generators, with optional
         warnings about generator types that aren't supported in TOUGH2
         (and will be deleted).
         """
         allowed = ['HEAT', 'WATE', 'AIR ', 'MASS', 'DELV']
-        convert = {'CO2 ':'COM2'}
+        convert = {'CO2 ': 'COM2'}
         delgens = []
         for gen in self.generatorlist:
-            if gen.type in convert: gen.type = convert[gen.type]
+            if gen.type in convert:
+                gen.type = convert[gen.type]
             elif not ((gen.type in allowed) or gen.type.startswith('COM')):
                 delgens.append((gen.block, gen.name))
         if warn and len(delgens) > 0:
@@ -1957,7 +2074,7 @@ class t2data(object):
         self.history_connection = []
         self.history_generator = []
 
-    def convert_to_TOUGH2(self, warn = True, MP = False):
+    def convert_to_TOUGH2(self, warn=True, MP=False):
         """Converts an AUTOUGH2 data file to a TOUGH2 data file.  Various MOP
         parameters are changed to try to make them the TOUGH2
         simulation give similar results to AUTOUGH2 where possible.
@@ -1973,20 +2090,22 @@ class t2data(object):
         self.convert_AUTOUGH2_generators_to_TOUGH2(warn)
         self.convert_short_to_history()
 
-    def convert_to_AUTOUGH2(self, warn = True, MP = False,
-                            simulator = 'AUTOUGH2.2', eos = 'EW'):
+    def convert_to_AUTOUGH2(self, warn=True, MP=False,
+                            simulator='AUTOUGH2.2', eos='EW'):
         """Converts a TOUGH2 data file to an AUTOUGH2 data file."""
         if self.filename:
             if not self.filename.lower().endswith('.dat'):
-                if self.filename[0].isupper(): self.filename += '.DAT'
-                else: self.filename += '.dat'
+                if self.filename[0].isupper():
+                    self.filename += '.DAT'
+                else:
+                    self.filename += '.dat'
         self.simulator = simulator.ljust(10) + eos
         self.insert_section('SIMUL')
         if self.multi: self.multi['eos'] = eos
         self.convert_TOUGH2_parameters_to_AUTOUGH2(warn, MP)
         self.convert_history_to_short()
 
-    def rename_blocks(self, blockmap = {}, invert = False, fix_blocknames = True):
+    def rename_blocks(self, blockmap={}, invert=False, fix_blocknames=True):
         """Rename blocks in TOUGH2 data file according to specified block
         mapping. The mapping is applied to block names in the grid,
         initial conditions and generators, print block and history
@@ -1994,13 +2113,13 @@ class t2data(object):
         specified block mapping is applied.
         """
 
-        if invert: blockmap = {v:k for k,v in blockmap.items()}
+        if invert: blockmap = {v: k for k, v in blockmap.items()}
         if fix_blocknames: fix_block_mapping(blockmap)
 
-        self.grid.rename_blocks(blockmap, fix_blocknames = False)
+        self.grid.rename_blocks(blockmap, fix_blocknames=False)
 
         if self.incon:
-            for k,v in blockmap.items():
+            for k, v in blockmap.items():
                 if k in self.incon:
                     inc = self.incon[k]
                     del self.incon[k]
@@ -2026,7 +2145,7 @@ class t2data(object):
             if not isinstance(con, t2connection):
                 if any([name in blockmap for name in con]):
                     mapped_con = tuple([blockmap[name] if name in blockmap else name
-                                          for name in con])
+                                        for name in con])
                     self.history_connection[i] = mapped_con
 
         for i, gen in enumerate(self.history_generator):
@@ -2034,7 +2153,7 @@ class t2data(object):
                 if gen in blockmap:
                     self.history_generator[i] = blockmap[gen]
 
-    def effective_incons(self, incons = None):
+    def effective_incons(self, incons=None):
         """Returns effective initial conditions, based on combination of specified incons,
         default initial conditions and INCON and INDOM data blocks in the t2data object.
         If default initial conditions from PARAM are used everywhere, the function returns
@@ -2077,7 +2196,7 @@ class t2data(object):
             blkindices = [geo.block_name_index[blkname] -
                           geo.num_atmosphere_blocks for blkname in blknames]
             laynames = [geo.layer_name(blkname) for blkname in blknames]
-            if laynames[0] != laynames[1]: # vertical connection
+            if laynames[0] != laynames[1]:  # vertical connection
                 underground = all([blkindex >= 0 for blkindex in blkindices])
                 if underground and con.direction != 3:
                     face_directions.append({
@@ -2112,16 +2231,17 @@ class t2data(object):
             if isinstance(eos, int):
                 eos_from_index = {1: 'EW', 2: 'EWC', 3: 'EWA', 4: 'EWAV'}
                 if eos in eos_from_index: aut2eosname = eos_from_index[eos]
-            else: aut2eosname = eos
+            else:
+                aut2eosname = eos
         if aut2eosname:
             if aut2eosname in supported_eos:
                 jsondata['eos'] = {'name': supported_eos[aut2eosname]}
                 if jsondata['eos']['name'] == 'w':
                     jsondata['eos']['temperature'] = self.parameter['default_incons'][1]
             else:
-                raise Exception ('EOS not supported:' + aut2eosname)
+                raise Exception('EOS not supported:' + aut2eosname)
         else:
-            raise Exception ('EOS not detected.')
+            raise Exception('EOS not detected.')
         return jsondata
 
     def timestepping_json(self):
@@ -2142,12 +2262,12 @@ class t2data(object):
             {'maximum': {'size': self.parameter['max_timestep']},
              'method': 'beuler',
              'solver': {'nonlinear': {'tolerance': {'function':
-                                          {'absolute': abstol, 'relative': reltol}},
+                                                        {'absolute': abstol, 'relative': reltol}},
                                       'maximum': {'iterations': maxit}}}}
         if self.parameter['max_timesteps'] is not None and \
-           self.parameter['max_timesteps'] >= 0:
+                self.parameter['max_timesteps'] >= 0:
             jsondata['time']['step']['maximum']['number'] = self.parameter['max_timesteps']
-        if self.parameter['const_timestep'] < 0. :
+        if self.parameter['const_timestep'] < 0.:
             jsondata['time']['step'].update({'size': self.parameter['timestep'],
                                              'adapt': {'on': False}})
         else:
@@ -2170,15 +2290,19 @@ class t2data(object):
         jsondata = {}
         jsondata['rock'] = {'types': []}
         ir, rock_index = 0, {}
-        if mesh_coords == 'xyz': perm_size = 3
-        else: perm_size = 2
+        if mesh_coords == 'xyz':
+            perm_size = 3
+        else:
+            perm_size = 2
         for rt in self.grid.rocktypelist:
             rtdata = {'name': rt.name, 'density': rt.density, 'porosity': rt.porosity,
                       'permeability': list(rt.permeability[:perm_size]),
                       'wet_conductivity': rt.conductivity, 'specific_heat': rt.specific_heat}
             dry_cond = rt.dry_conductivity
-            if dry_cond is not None and dry_cond > 0.0: rtdata['dry_conductivity'] = dry_cond
-            else: rtdata['dry_conductivity'] = rt.conductivity
+            if dry_cond is not None and dry_cond > 0.0:
+                rtdata['dry_conductivity'] = dry_cond
+            else:
+                rtdata['dry_conductivity'] = rt.conductivity
             rtdata['cells'] = []
             jsondata['rock']['types'].append(rtdata)
             rock_index[rt.name] = ir
@@ -2218,7 +2342,8 @@ class t2data(object):
                     if pars[3] > stol:
                         rp['sum_unity'] = False
                         rp['ssr'] = pars[3]
-                    else: rp['sum_unity'] = True
+                    else:
+                        rp['sum_unity'] = True
                 jsondata['relative_permeability'] = rp
             elif self.type == 'AUTOUGH2' and itype == 19:
                 # tri-linear: convert to table
@@ -2226,11 +2351,12 @@ class t2data(object):
                 rp['liquid'] = [[0, 0], [pars[0], pars[4]],
                                 [pars[2], pars[6]], [1, 1]]
                 rp['vapour'] = [[0, 0], [pars[1], 0],
-                                [pars[3], pars[5]], [1,1]]
+                                [pars[3], pars[5]], [1, 1]]
                 jsondata['relative_permeability'] = rp
             else:
-                raise Exception ('Unhandled relative permeability type: %d' % itype)
-        else: jsondata['relative_permeability'] = {'type': 'fully mobile'}
+                raise Exception('Unhandled relative permeability type: %d' % itype)
+        else:
+            jsondata['relative_permeability'] = {'type': 'fully mobile'}
         return jsondata
 
     def capillary_pressure_json(self):
@@ -2257,8 +2383,9 @@ class t2data(object):
                     cp = None
                 jsondata['capillary_pressure'] = cp
             else:
-                raise Exception ('Unhandled capillary pressure type: %d' % itype)
-        else: jsondata['capillary_pressure'] = None
+                raise Exception('Unhandled capillary pressure type: %d' % itype)
+        else:
+            jsondata['capillary_pressure'] = None
         return jsondata
 
     def initial_json(self, geo, incons, eos):
@@ -2275,7 +2402,8 @@ class t2data(object):
                     primary_to_region = primary_to_region_funcs[eos]
                     jsondata['initial']['region'] = primary_to_region(incons)
                 else:
-                    raise Exception("Finding thermodynamic region from primary variables not yet supported for EOS:" + eos)
+                    raise Exception(
+                        "Finding thermodynamic region from primary variables not yet supported for EOS:" + eos)
         elif isinstance(incons, t2incon):
             num_primary = waiwera_eos_num_primary[eos]
             if eos in primary_to_region_funcs:
@@ -2286,7 +2414,7 @@ class t2data(object):
                     jsondata['initial']['primary'].append(primary[:num_primary])
                     jsondata['initial']['region'].append(primary_to_region(primary))
                 if np.isclose(jsondata['initial']['primary'],
-                              jsondata['initial']['primary'][0], rtol = 1.e-8).all():
+                              jsondata['initial']['primary'][0], rtol=1.e-8).all():
                     jsondata['initial']['primary'] = jsondata['initial']['primary'][0]
                 if len(set(jsondata['initial']['region'])) == 1:
                     jsondata['initial']['region'] = jsondata['initial']['region'][0]
@@ -2345,7 +2473,7 @@ class t2data(object):
                                         elif gen.fg < 0.:
                                             raise Exception('Two-stage flash separator not supported.')
                             elif gen.hg < 0. and gen.type == 'DELG':
-                                g['rate'] = gen.hg # initial rate for computing productivity index
+                                g['rate'] = gen.hg  # initial rate for computing productivity index
                                 del g['deliverability']['productivity']
                         if gen.type == 'DELS': g['production_component'] = 2
                         g['direction'] = 'production'
@@ -2360,10 +2488,14 @@ class t2data(object):
                             rech = {}
                             g['direction'] = "both"
                             if gen.fg is not None:
-                                if gen.fg < 0.: g['direction'] = "out"
-                                elif gen.fg > 0.: g['direction'] = "in"
-                            if gen.hg > 0.: rech['pressure'] = gen.hg
-                            else: rech['pressure'] = 'initial'
+                                if gen.fg < 0.:
+                                    g['direction'] = "out"
+                                elif gen.fg > 0.:
+                                    g['direction'] = "in"
+                            if gen.hg > 0.:
+                                rech['pressure'] = gen.hg
+                            else:
+                                rech['pressure'] = 'initial'
                             rech['coefficient'] = gen.gx
                             g['recharge'] = rech
                         else:
@@ -2423,14 +2555,16 @@ class t2data(object):
                         if mesh_coords != 'xyz':
                             if vertical_connection:
                                 if mesh_coords in ['xz', 'yz', 'rz']:
-                                    normal = normal[[0,2]]
-                                elif mesh_coords == 'xy': normal = None
-                            else: normal = normal[[0,1]]
+                                    normal = normal[[0, 2]]
+                                elif mesh_coords == 'xy':
+                                    normal = None
+                            else:
+                                normal = normal[[0, 1]]
                         if normal is not None:
                             bc['faces'].append({"cells": [cell_index],
                                                 "normal": list(normal)})
                     normals = np.array([spec['normal'] for spec in bc['faces']])
-                    if np.isclose(normals, normals[0], rtol = 1.e-8).all():
+                    if np.isclose(normals, normals[0], rtol=1.e-8).all():
                         allcells = []
                         for spec in bc['faces']:
                             allcells += spec['cells']
@@ -2438,13 +2572,13 @@ class t2data(object):
                                        "normal": bc['faces'][0]["normal"]}
                     if bc['faces']:
                         if isinstance(bc['faces'], list) and \
-                           len(bc['faces']) == 1: bc['faces'] = bc['faces'][0]
+                                len(bc['faces']) == 1: bc['faces'] = bc['faces'][0]
                         jsondata['boundaries'].append(bc)
 
             if jsondata['boundaries']:
                 # collapse down to one boundary if possible:
                 primaries = np.array([bc['primary'] for bc in jsondata['boundaries']])
-                if np.isclose(primaries, primaries[0], rtol = 1.e-8).all():
+                if np.isclose(primaries, primaries[0], rtol=1.e-8).all():
                     regions = np.array([bc['region'] for bc in jsondata['boundaries']])
                     if np.isclose(regions, regions[0]).all():
                         normals = []
@@ -2455,7 +2589,7 @@ class t2data(object):
                                 for face in bc['faces']:
                                     normals.append(face['normal'])
                         normals = np.array(normals)
-                        if np.isclose(normals, normals[0], rtol = 1.e-8).all():
+                        if np.isclose(normals, normals[0], rtol=1.e-8).all():
                             allcells = []
                             for bc in jsondata['boundaries']:
                                 if isinstance(bc['faces'], dict):
@@ -2464,7 +2598,7 @@ class t2data(object):
                                     for face in bc['faces']:
                                         allcells += face['cells']
                             normal = list(normals[0, :])
-                            primary = list(primaries[0,:])
+                            primary = list(primaries[0, :])
                             region = int(regions[0])
                             jsondata['boundaries'] = [{"primary": primary, "region": region,
                                                        "faces": {"normal": normal,
@@ -2478,8 +2612,8 @@ class t2data(object):
         datbase, ext = splitext(self.filename)
         jsondata = {}
         if self.parameter['print_interval'] is not None and \
-           self.parameter['max_timesteps'] is not None and \
-           self.parameter['print_interval'] >= self.parameter['max_timesteps']:
+                self.parameter['max_timesteps'] is not None and \
+                self.parameter['print_interval'] >= self.parameter['max_timesteps']:
             print_interval = 0
         else:
             print_interval = self.parameter['print_interval']
@@ -2509,20 +2643,22 @@ class t2data(object):
                         for i in range(num_times - num_times_specified):
                             times.append(times[-1] + dt)
                 checkpoint['time'] = times
-            else: # time steps
+            else:  # time steps
                 steps = self.output_times['time']
                 if 'time_increment' in self.output_times:
                     dt = self.output_times['time_increment']
                     for i in range(num_times - abs(num_times_specified)):
                         steps.append(dt)
                 checkpoint['step'] = steps
-            if self.type == 'AUTOUGH2': checkpoint['tolerance'] = 0.1
-            else: checkpoint['tolerance'] = 0.
+            if self.type == 'AUTOUGH2':
+                checkpoint['tolerance'] = 0.1
+            else:
+                checkpoint['tolerance'] = 0.
             jsondata['output']['checkpoint'] = checkpoint
         return jsondata
 
-    def json(self, geo, mesh_filename, atmos_volume = 1.e25, incons = None,
-                    eos = None, bdy_incons = None, mesh_coords = 'xyz'):
+    def json(self, geo, mesh_filename, atmos_volume=1.e25, incons=None,
+             eos=None, bdy_incons=None, mesh_coords='xyz'):
         """Returns a Waiwera JSON dictionary representing the t2data object
         (with associated mulgrid geometry)."""
 
