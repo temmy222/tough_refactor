@@ -89,9 +89,11 @@ class PlotMultiFiles(object):
             value = value.capitalize()
         if 'C3fh6' in value:
             value = 'C3FH6'
+        if self.simulator_type =='tmvoc':
+            value = value.upper()
         return value
 
-    def plotRawMultiFile(self, data, legend):
+    def plotRawMultiFile(self, data, legend, format_of_date):
         fig = plt.figure(figsize=(10, 10))
         plot_counter = 1
         start_point = 0
@@ -106,7 +108,7 @@ class PlotMultiFiles(object):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
                 axs.plot(x_data, y_data, marker=markers[legend_index], label=legend[legend_index])
-                axs.set_xlabel('Time (year)', fontsize=14)
+                axs.set_xlabel('Time ' + '(' + format_of_date + ')', fontsize=14)
                 axs.set_ylabel(self.setToughYLabel(self.props[prop_index]), fontsize=14)
                 axs.ticklabel_format(useOffset=False)
                 legend_index = legend_index + 1
@@ -203,22 +205,22 @@ class PlotMultiFiles(object):
             with plt.style.context('classic'):
                 self.plotRawMulti(data, legend)
 
-    def plotMultiElementMultiFilePerProp(self, grid_block_number, legend):
+    def plotMultiElementMultiFilePerProp(self, grid_block_number, legend, format_of_date):
         multi_tough = self.validateInput()
-        data = multi_tough.getMultiElementData(grid_block_number)
+        data = multi_tough.getMultiElementData(grid_block_number, format_of_date)
         print('Each plot shows results per parameter')
         try:
             with plt.style.context('mystyle'):
-                self.plotRawMultiFile(data, legend)
+                self.plotRawMultiFile(data, legend, format_of_date)
         except:
             with plt.style.context('classic'):
-                self.plotRawMultiFile(data, legend)
+                self.plotRawMultiFile(data, legend, format_of_date)
 
-    def plotMultiElementMultiFile(self, grid_block_number, legend, plot_kind='property'):
+    def plotMultiElementMultiFile(self, grid_block_number, legend, format_of_date, plot_kind='property'):
         if plot_kind.lower() == 'property':
-            self.plotMultiElementMultiFilePerProp(grid_block_number, legend)
+            self.plotMultiElementMultiFilePerProp(grid_block_number, legend, format_of_date)
         elif plot_kind.lower() == 'file':
-            self.plotMultiElementMultiFilePerFile(grid_block_number, legend)
+            self.plotMultiElementMultiFilePerFile(grid_block_number, legend, format_of_date)
         else:
             print('Plot kind can either be property or file')
 

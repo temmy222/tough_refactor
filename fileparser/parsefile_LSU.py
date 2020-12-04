@@ -6,30 +6,24 @@ from plotting.plotmultitough import PlotMultiTough
 from plotting.plottough import PlotTough
 import os
 
-#dirname = os.path.dirname(__file__)
-#print(dirname)
-root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation"
+# dirname = os.path.dirname(__file__)
+# print(dirname)
+root_dir = r"C:\Users\tajayi3ayi3\OneDrive - Louisiana State University\Validation"
 print(os.path.join(root_dir, "Cement-Anhydrite"))
 
-file = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
-file_toughreact = r"C:\Users\AJ\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
-file_toughreact2 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca " \
+file = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
+file_toughreact = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
+file_toughreact2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca " \
                    r"Onshore flux with Ca offshore "
-file_toughreact3 = r"C:\Users\AJ\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of " \
+file_toughreact3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of " \
                    r"Mexico Shale Cement Flow - Ca injected brine Offshore "
-file_tmvoc = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one component\biodegradation"
-file_tmvoc2 = r"C:\Users\AJ\Desktop\My Desktop\LSU\LSU-Corona\tmvoc\mymodels\paper work\one component\no biodegradation"
 
-all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
+all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3,file_toughreact3]
 
-filetype_tmvoc = 'OUTPUT_ELEME.csv'
 filetype_toughreact = 'kdd_conc.tec'
 filetype_toughreact_min = 'kdd_min.tec'
-all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact]
-all_tmvoc_filetypes = [filetype_tmvoc, filetype_tmvoc]
+all_toughreact_filetypes = [filetype_toughreact, filetype_toughreact, filetype_toughreact, filetype_toughreact]
 
-params_tmvoc = ['DEN_L', 'sat_N']
-params_tmvoc_multi = ['DEN_L', 'sat_N', 'X_Toluen_L', 'X_AIR_L']
 params2 = ['pH', 't_na+', 't_cl-', 't_ca+2']
 params2 = ['pH', 't_h2o', 't_h+', 't_na+']
 params3 = ['pH', 't_h2o']
@@ -40,6 +34,8 @@ testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, a
 testcodetoughreact = FileReadSingle("toughreact", file_toughreact, filetype_toughreact)
 testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_toughreact_min)
 
-testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
+# testcodetoughreact_min.plot2D('x', 'z', 'calcite', 2.592e+15, 'grid')
 # testcodetoughreact.plotTime('pH', 85, format_of_date='day')
 # testcodetoughreact_min.plotTime(param_min, 85, format_of_date='day')
+
+testcodemultitoughreact.plotTime(0, params2)

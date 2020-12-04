@@ -316,8 +316,10 @@ class MultiTough3(object):
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
-    def getMultiElementData(self, grid_block_number, format_of_date='year'):
+    def getMultiElementData(self, grid_block_number, format_of_date):
         data_table = pd.DataFrame()
+        pd.set_option('float_format',  lambda x: '%.9f' % x)
+        # pd.set_option('display.chop_threshold', 0.00000001)
         for i in range(0, len(self.file_location)):
             for j in range(0, len(self.prop)):
                 os.chdir(self.file_location[i])
@@ -328,4 +330,5 @@ class MultiTough3(object):
                 result_data_label = self.prop[j] + 'result' + str(i) + str(j)
                 data_table[time_data_label] = pd.Series(time_data)
                 data_table[result_data_label] = pd.Series(result_data)
+        print(data_table.iloc[15][result_data_label])
         return data_table

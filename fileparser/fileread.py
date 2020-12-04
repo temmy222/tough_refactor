@@ -99,13 +99,14 @@ class FileReadMultiple(object):
         self.per_file = kwargs.get('per_file')
         self.title = kwargs.get('title')
 
-    def plotTime(self, grid_block_number, legend, plot_kind='property'):
+    def plotTime(self, grid_block_number, legend, plot_kind='property', format_of_date='day'):
         # TODO write code to slice x axis
         # TODO write code to slice through domain
 
         """
 
-        :param grid_block_number:
+        :param format_of_date:
+        :param grid_block_number: grid block number in mesh
         :type grid_block_number: int
         :param legend:
         :type legend: list
@@ -117,7 +118,7 @@ class FileReadMultiple(object):
         if len(self.props) == 1:
             plottest.multiFileSinglePlot(grid_block_number, legend)
         else:
-            plottest.plotMultiElementMultiFile(grid_block_number, legend, plot_kind)
+            plottest.plotMultiElementMultiFile(grid_block_number, legend, format_of_date, plot_kind)
 
     def plotParamWithLayer(self, directionX, directionY, layer_num, time, legend):
         plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props,
