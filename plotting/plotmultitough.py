@@ -20,6 +20,7 @@ class PlotMultiTough(object):
         self.generation = kwargs.get('generation')
         self.args = kwargs.get('restart_files')
         self.expt = kwargs.get('experiment')
+        self.x_slice_value = kwargs.get('x_slice_value')
 
     def read_file(self):
         os.chdir(self.filelocations)
