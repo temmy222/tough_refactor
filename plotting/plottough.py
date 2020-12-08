@@ -11,14 +11,14 @@ from random import randrange
 import random
 from scipy import interpolate
 from scipy.interpolate import griddata
-import fileparser.fileread as input
-import utils.utilities as processor
-import fileparser.fileread as fileDetails
-import fileparser.tough3 as tough3
-import fileparser.toughreact as toughreact
+import tough_refactor.fileparser.fileread as input
+import tough_refactor.utils.utilities as processor
+import tough_refactor.fileparser.fileread as fileDetails
+import tough_refactor.fileparser.tough3 as tough3
+import tough_refactor.fileparser.toughreact as toughreact
 import pandas as pd
 
-from fileparser.experiment import Experiment
+from tough_refactor.fileparser.experiment import Experiment
 
 
 class PlotTough(object):

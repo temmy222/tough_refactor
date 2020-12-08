@@ -1,14 +1,14 @@
 import itertools
 
-import utils.utilities as processor
+import tough_refactor.utils.utilities as processor
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from fileparser import tough3, toughreact
-from fileparser.toughreact import MultiToughReact
-from fileparser.experiment import Experiment
+from tough_refactor.fileparser import tough3, toughreact
+from tough_refactor.fileparser.toughreact import MultiToughReact
+from tough_refactor.fileparser.experiment import Experiment
 
 
 class PlotMultiTough(object):
