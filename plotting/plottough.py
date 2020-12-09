@@ -11,9 +11,7 @@ from random import randrange
 import random
 from scipy import interpolate
 from scipy.interpolate import griddata
-import tough_refactor.fileparser.fileread as input
 import tough_refactor.utils.utilities as processor
-import tough_refactor.fileparser.fileread as fileDetails
 import tough_refactor.fileparser.tough3 as tough3
 import tough_refactor.fileparser.toughreact as toughreact
 import pandas as pd
