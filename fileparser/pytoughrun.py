@@ -55,9 +55,6 @@ dat.write('horiz1D.dat')
 
 # dat.run(simulator='t2eos1')
 
-infile = open('INFILE', 'r')
-outfile = open('outfile.csv', 'w')
-call(['tmvoc'], stdin=infile, stdout=outfile)
 
 # --- post-process the output ---------------------------
 

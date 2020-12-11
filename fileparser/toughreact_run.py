@@ -6,19 +6,14 @@ from plotting.plotmultitough import PlotMultiTough
 from plotting.plottough import PlotTough
 import os
 
-# dirname = os.path.dirname(__file__)
-# print(dirname)
-root_dir = r"C:\Users\tajayi3ayi3\OneDrive - Louisiana State University\Validation"
-print(os.path.join(root_dir, "Cement-Anhydrite"))
+root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University"
 
-file = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
-file_toughreact = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation\Cement-Anhydrite"
-file_toughreact2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\GOM Ca " \
-                   r"Onshore flux with Ca offshore "
-file_toughreact3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\GOM Shale Cement flow with Batch\Gulf of " \
-                   r"Mexico Shale Cement Flow - Ca injected brine Offshore "
-
-all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3,file_toughreact3]
+file = os.path.join(root_dir, "Validation\Cement-Anhydrite")
+file_toughreact = os.path.join(root_dir, "Validation\Cement-Anhydrite")
+file_toughreact2 = os.path.join(root_dir, "GOM Shale Cement flow with Batch\GOM Ca Onshore flux with Ca offshore ")
+file_toughreact3 = os.path.join(root_dir, "GOM Shale Cement flow with Batch\Gulf of Mexico Shale Cement Flow - Ca "
+                                          "injected brine Offshore")
+all_toughreact_files = [file_toughreact, file_toughreact2, file_toughreact3]
 
 filetype_toughreact = 'kdd_conc.tec'
 filetype_toughreact_min = 'kdd_min.tec'

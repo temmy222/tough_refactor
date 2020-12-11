@@ -1,18 +1,23 @@
+import os
+
 from fileparser.fileread import FileReadSingle, FileReadMultiple
 
-file = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\batch biodg"
-file2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\batch biodg " \
-        r"- two biomass "
-file3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\batch no biodg"
-file4 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\biodegradation"
-file4a = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\Example 1 in manual\C-04"
-file5 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\no " \
-        r"biodegradation "
-file6 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\biodegradation"
-file7 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component\no " \
-        r"biodegradation "
-file8 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\one component"
-file9 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\paper work\all components_new"
+root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University"
+
+file = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\batch biodg")
+file2 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\batch biodg "
+                               r"- two biomass ")
+file3 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\batch no biodg")
+file4 = os.path.join(root_dir, r"mymodels\paper work\one component\biodegradation")
+file4a = os.path.join(root_dir, r"tmvoc\mymodels\Example 1 in manual\C-04")
+file5 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\no "
+                               r"biodegradation ")
+file6 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\biodegradation")
+file7 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component\no biodegradation ")
+file8 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\one component")
+file9 = os.path.join(root_dir, r"tmvoc\mymodels\paper work\all components_new")
+
+
 filetype_tmvoc = "OUTPUT_ELEME.csv"
 second_filetype = "FOFT_A___1.csv"
 
