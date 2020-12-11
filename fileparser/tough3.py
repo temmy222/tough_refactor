@@ -1,8 +1,8 @@
 import csv
 import os
-import tough_refactor.utils.utilities as processor
+import utils.utilities as processor
 import pandas as pd
-import tough_refactor.plotting.plottough as plot
+import plotting.plottough as plot
 
 
 class Tough3(object):

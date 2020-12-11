@@ -1,11 +1,11 @@
 import math
 import os
 
-from tough_refactor.fileparser.tough3 import MultiTough3
-from tough_refactor.fileparser.toughreact import MultiToughReact
+from fileparser.tough3 import MultiTough3
+from fileparser.toughreact import MultiToughReact
 import matplotlib.pyplot as plt
 
-from tough_refactor.utils.utilities import Utilities
+from utils.utilities import Utilities
 
 
 class PlotMultiFiles(object):
