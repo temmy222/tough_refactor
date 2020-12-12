@@ -45,9 +45,12 @@ class PlotStatistics(object):
         fileReader = self.read_file()
         all_elements = fileReader.getParameters()
         index = self.getIndex(all_elements, values)
+        print(all_elements)
         for i in range(len(all_elements)):
             if i in index:
                 if self.simulatortype.lower() == 'toughreact':
+                    result_data = fileReader.get_timeseries_data(all_elements[i], gridblocknumber)
+                else:
                     result_data = fileReader.get_timeseries_data(all_elements[i], gridblocknumber)
                 data_table[all_elements[i]] = pd.Series(result_data)
         data_table.columns = map(lambda x: str(x).capitalize(), data_table.columns)
@@ -127,6 +130,7 @@ class PlotStatistics(object):
                 g.map_offdiag(sns.regplot)
         else:
             g.map(sns.regplot)
+        plt.tight_layout()
         plt.show()
 
     def plotScatter(self, index, gridblocknumber, **kwargs):
@@ -142,16 +146,6 @@ class PlotStatistics(object):
                 g.map_offdiag(sns.scatterplot)
         else:
             g.map(sns.scatterplot)
+        plt.tight_layout()
         plt.show()
 
-    def retrieve_multi_data_generation(self, param, format_of_date):
-        data_table = pd.DataFrame()
-        fileReader = self.read_file()
-        for i in range(len(param)):
-            time_data_label = 'time' + str(i)
-            result_data_label = 'result' + str(i)
-            time_data = fileReader.convert_times(format_of_date=format_of_date)
-            result_data = fileReader.getGenerationData(param[i])
-            data_table[time_data_label] = pd.Series(time_data)
-            data_table[result_data_label] = pd.Series(result_data)
-        return data_table

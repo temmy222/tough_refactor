@@ -90,6 +90,13 @@ class Tough3(object):
             elements.append(temp_file[i][0])
         return elements
 
+    def getParameters(self):
+        self.read_file()
+        full_list = self.file_as_list[0]
+        for i in range(len(full_list)):
+            full_list[i] = full_list[i].replace(" ", "")
+        return full_list
+
     def resultdict(self):
         self.read_file()
         resultdict = {}
