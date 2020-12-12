@@ -19,6 +19,9 @@ class ToughReact(object):
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
 
+    def getParameters(self):
+        return self.data.element.column_name
+
     def get_elements(self):
         tre1 = fileprocessor.UtilitiesToughreact(self.filelocation, 'CONNE')
         tre1.findword()
