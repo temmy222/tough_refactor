@@ -19,7 +19,7 @@ class FileReadSingle(object):
         self.generation = kwargs.get('generation')
         self.full_args = kwargs.get('restart_files')
         self.expt = kwargs.get('experiment')
-        self.x_slice_value= kwargs.get('x_slice_value')
+        self.x_slice_value = kwargs.get('x_slice_value')
 
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
@@ -54,7 +54,7 @@ class FileReadSingle(object):
             plottest = PlotMultiTough(self.simulatortype, self.filelocation, self.filetitle, generation=self.generation,
                                       restart_files=self.full_args,
                                       experiment=self.expt,
-                                      x_slice_value = self.x_slice_value)
+                                      x_slice_value=self.x_slice_value)
             if self.full_args is None:
                 plottest.plotMultiParamSinglePlot(param, gridblocknumber, format_of_date, labels)
 
