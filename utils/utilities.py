@@ -27,7 +27,7 @@ class Utilities(object):
             for i in range(len(intermediate)):
                 timeyear.append(intermediate[i])
         else:
-            raise ValueError("format can either be year, day, hour or minute")
+            raise ValueError("format can either be year, day, hour, minute or second")
         return timeyear
 
     def choplist(self, liste, number=3):
