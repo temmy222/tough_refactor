@@ -148,4 +148,11 @@ class PlotStatistics(object):
             g.map(sns.scatterplot)
         plt.tight_layout()
         plt.show()
+        
+class PlotMultiStatistics(object):
+    def __init__(self, simulatortype, filelocations, filetitles):
+        self.filetitles = filetitles
+        self.filelocations = filelocations
+        self.simulatortype = simulatortype
+
 
