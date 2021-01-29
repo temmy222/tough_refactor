@@ -27,14 +27,13 @@ file_equil4 = os.path.join(root_dir, r"restart right\run with equilibirum\restar
 #                                      r"grid2")
 
 expt = os.path.join(root_dir, r"experiment")
-file1 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\post-submision minor review\Gulf of " \
-        r"Mexico Sandstone Cement Flow - NaCl brine - 2m - 10E-7 "
-file2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\post-submision minor review\Gulf of " \
-        r"Mexico Sandstone Cement Flow - NaCl brine - 2m - 10E-8 "
+file1 = r"C:\Users\tajayi3\Desktop\my Folders\write_to_TOUGH\RunScripts\Validate with Case4 - timestoptest"
+file2 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\Gulf of Mexico Cement Flow - Ca " \
+        r"injected sand equil brine Offshore - longer time "
 file3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\Crack investigation\crack run\Gulf " \
         r"of Mexico Sandstone Cement Flow - NaCl brine - 2m - 10E-9 - runagain "
 
-all_toughreact_files = [file1, file2, file3]
+all_toughreact_files = [file1, file2]
 # all_toughreact_files = [grid_sens1, grid_sens2, grid_sens3]
 legend = ['10E-7', '10E-8', '10E-9']
 # all_tmvoc_files = [file_tmvoc, file_tmvoc]
