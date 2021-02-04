@@ -1,10 +1,10 @@
 import csv
 import os
 import pytough.t2listing as toughreact
-import tough_refactor.utils.utilitiestoughreact as fileprocessor
-import tough_refactor.utils.utilities as processor
+import utils.utilitiestoughreact as fileprocessor
+import utils.utilities as processor
 import pandas as pd
-import tough_refactor.plotting.plottough as plot
+import plotting.plottough as plot
 from collections import OrderedDict
 
 
@@ -18,6 +18,9 @@ class ToughReact(object):
 
     def __repr__(self):
         return 'Results from ' + self.filelocation + ' in ' + self.filetitle + ' for ' + self.simulatortype
+
+    def getParameters(self):
+        return self.data.element.column_name
 
     def get_elements(self):
         tre1 = fileprocessor.UtilitiesToughreact(self.filelocation, 'CONNE')
@@ -173,6 +176,7 @@ class ToughReact(object):
         else:
             print("coordinates can either be X, Y or Z")
         return value
+
 
 
 class MultiToughReact(object):

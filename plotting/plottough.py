@@ -11,12 +11,12 @@ from random import randrange
 import random
 from scipy import interpolate
 from scipy.interpolate import griddata
-import tough_refactor.utils.utilities as processor
-import tough_refactor.fileparser.tough3 as tough3
-import tough_refactor.fileparser.toughreact as toughreact
+import utils.utilities as processor
+import fileparser.tough3 as tough3
+import fileparser.toughreact as toughreact
 import pandas as pd
 
-from tough_refactor.fileparser.experiment import Experiment
+from fileparser.experiment import Experiment
 
 
 class PlotTough(object):
@@ -279,7 +279,6 @@ class PlotTough(object):
 
     def plot2D_withgrid(self, direction1, direction2, param, timer):
         fileReader = self.read_file()
-        fig, ax = plt.subplots(1, 1)
         X = fileReader.get_coord_data(direction1, timer)
         Z = fileReader.get_coord_data(direction2, timer)
         # param = tre.element[self.parameters[paramNum]]
@@ -292,13 +291,31 @@ class PlotTough(object):
         orig_data = fileReader.get_element_data(timer, param)
         data = np.asarray(orig_data)
         data = data.reshape(Ztotal, Xtotal)
+        if Ztotal > 5:
+            height = 10
+        else:
+            height = 4
+        fig, ax = plt.subplots(1, 1, figsize=(10, height))
         data1 = griddata((X, Z), orig_data, (xi, yi), method='nearest')
         extent = [min(X), max(X), min(Z), max(Z)]
-        cs2 = plt.imshow(np.reshape(data, newshape=(Ztotal, Xtotal)), cmap='coolwarm', interpolation='none')
+        cs2 = plt.imshow(np.reshape(data, newshape=(Ztotal, Xtotal)), cmap='coolwarm', interpolation='none',
+                         aspect='auto')
         ax = plt.gca()
         # Major ticks
-        x_tick = np.arange(0, Xtotal, 1)
-        z_tick = np.arange(0, Ztotal, 1)
+        slicer_X = len(Xvalues)
+        slicer_Z = len(Zvalues)
+        if slicer_Z < 10:
+            slicer_Z = 1
+        if slicer_X < 10:
+            slicer_X = 1
+        while slicer_X > 10 or slicer_Z > 10:
+            if slicer_X > 10:
+                slicer_X = np.round(slicer_X / 2)
+            if slicer_Z > 10:
+                slicer_Z = np.round(slicer_Z / 2)
+
+        x_tick = np.arange(0, Xtotal, slicer_X)
+        z_tick = np.arange(0, Ztotal, slicer_Z)
         Z_array = np.asarray(Z)
         Z_array = np.abs(Z_array)
         ax.set_xticks(x_tick)
@@ -308,8 +325,12 @@ class PlotTough(object):
         # Labels for major ticks
         tick_x = max(X) - min(X)
         tick_z = max(Z) - min(Z)
+        x_tick = x_tick.astype(int)
         if max(X) < 1 or max(Z) < 1:
-            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 4), fontsize=8)
+            magoosh = [Xvalues[i] for i in x_tick]
+            magoosh = np.asarray(magoosh)
+            # ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 4), fontsize=8)
+            ax.set_xticklabels(magoosh, fontsize=8)
             ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 4),
                                fontsize=8)
         else:
@@ -321,7 +342,7 @@ class PlotTough(object):
         ax.set_yticks(np.arange(-.5, Ztotal, 1), minor=True)
         # Gridlines based on minor ticks
         ax.grid(which='minor', color='k', linestyle='-', linewidth=1)
-        cbar = fig.colorbar(cs2, ax=ax, pad=0.2, orientation="horizontal")
+        cbar = fig.colorbar(cs2, ax=ax, pad=0.3, orientation="horizontal")
         # cbar.ax.set_ylabel(param,fontsize=8)
         cbar.ax.set_title(param, fontsize=12)
         cbar.ax.tick_params(labelsize=12)

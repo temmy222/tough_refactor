@@ -1,11 +1,11 @@
 import math
 import os
 
-from tough_refactor.fileparser.tough3 import MultiTough3
-from tough_refactor.fileparser.toughreact import MultiToughReact
+from fileparser.tough3 import MultiTough3
+from fileparser.toughreact import MultiToughReact
 import matplotlib.pyplot as plt
 
-from tough_refactor.utils.utilities import Utilities
+from utils.utilities import Utilities
 
 
 class PlotMultiFiles(object):
@@ -157,27 +157,32 @@ class PlotMultiFiles(object):
                 x_data = data.iloc[:, i]
                 y_data = data.iloc[:, i + 1]
                 if "Porosity" in data.columns[i]:
-                    ax2s = axs.twinx()
-                    ax2s.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]), color='k')
-                    ax2s.set_xlabel('Distance (m)', fontsize=14)
-                    ax2s.set_ylabel("Porosity", fontsize=14)
-                    ax2s.set_ylim(0.2, 0.45)
+                    # ax2s = axs.twinx()
+                    # ax2s.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]), color='k')
+                    # ax2s.set_xlabel('Time (year)', fontsize=14)
+                    # ax2s.set_ylabel("Porosity", fontsize=14)
+                    # ax2s.set_ylim(0.2, 0.45)
+                    axs.plot(x_data, y_data, marker=markers[legend_index],
+                             label=self.setToughYLabel(legend[legend_index]))
+                    axs.set_xlabel('Time (year)', fontsize=14)
+                    axs.set_ylabel("Change in volume fraction", fontsize=14)
                 else:
                     axs.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]))
-                    axs.set_xlabel('Distance (m)', fontsize=14)
+                    axs.set_xlabel('Time (year)', fontsize=14)
                     axs.set_ylabel("Change in volume fraction", fontsize=14)
                 axs.ticklabel_format(useOffset=False)
                 plt.setp(axs.get_xticklabels(), fontsize=14)
                 plt.setp(axs.get_yticklabels(), fontsize=14)
                 legend_index = legend_index + 1
-            axs.set_title(self.title[prop_index], fontsize='14')
+            # axs.set_title(self.title[prop_index], fontsize='14')
+            axs.set_title(self.props[prop_index], fontsize='14')
             plot_counter = plot_counter + 1
             start_point = start_point + 2
             prop_index = prop_index + 1
         handles, labels = axs.get_legend_handles_labels()
-        handles2, labels2 = ax2s.get_legend_handles_labels()
-        handles.append(handles2[0])
-        labels.append(labels2[0])
+        # handles2, labels2 = ax2s.get_legend_handles_labels()
+        # handles.append(handles2[0])
+        # labels.append(labels2[0])
         plt.figlegend(handles, labels, loc='lower center', ncol=4, labelspacing=0.)
         fig.tight_layout()
         plt.show()
@@ -194,16 +199,16 @@ class PlotMultiFiles(object):
             with plt.style.context('classic'):
                 self.plotRawSingle(data, legend)
 
-    def plotMultiElementMultiFilePerFile(self, grid_block_number, legend):
+    def plotMultiElementMultiFilePerFile(self, grid_block_number, legend, format_of_date):
         multi_tough = self.validateInput()
         data = multi_tough.getMultiElementData(grid_block_number)
         print('Each plot shows results from a file')
         try:
             with plt.style.context('mystyle'):
-                self.plotRawMulti(data, legend)
+                self.plotRawMultiFilePerFile(data, legend)
         except:
             with plt.style.context('classic'):
-                self.plotRawMulti(data, legend)
+                self.plotRawMultiFilePerFile(data, legend)
 
     def plotMultiElementMultiFilePerProp(self, grid_block_number, legend, format_of_date):
         multi_tough = self.validateInput()

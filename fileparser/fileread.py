@@ -1,8 +1,8 @@
 import os
 
-from tough_refactor.plotting.plotmultifiles import PlotMultiFiles
-from tough_refactor.plotting.plotmultitough import PlotMultiTough
-from tough_refactor.plotting.plottough import PlotTough
+from plotting.plotmultifiles import PlotMultiFiles
+from plotting.plotmultitough import PlotMultiTough
+from plotting.plottough import PlotTough
 
 
 class FileReadSingle(object):
