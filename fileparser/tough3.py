@@ -1,5 +1,7 @@
 import csv
 import os
+from collections import defaultdict
+
 import utils.utilities as processor
 import pandas as pd
 import plotting.plottough as plot
@@ -44,6 +46,7 @@ class Tough3(object):
             for i in range(len(time)):
                 interim = time[i][0].split()
                 timeraw.append(float(interim[2]))
+        # timeraw = list(dict.fromkeys(timeraw))
         return timeraw
 
     def convert_times(self, format_of_date):
@@ -100,6 +103,7 @@ class Tough3(object):
     def resultdict(self):
         self.read_file()
         resultdict = {}
+        data_dict = defaultdict(list)
         tempdict = {}
         indextime = self.get_time_index()
         timeraw = self.get_times()
@@ -107,7 +111,8 @@ class Tough3(object):
             tempdict[i] = self.file_as_list[indextime[i] + 1:indextime[i + 1]]
         for i in range(len(timeraw)):
             resultdict[timeraw[i]] = tempdict[i]
-        return resultdict
+            data_dict[timeraw[i]].append(tempdict[i])
+        return tempdict
 
     def get_timeseries_data(self, param, gridblocknumber):
         self.read_file()
