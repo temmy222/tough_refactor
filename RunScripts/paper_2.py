@@ -16,11 +16,15 @@ testcodetoughreact = FileReadSingle("toughreact", loca2, filetype_toughreact)
 
 
 loca3 = r"C:\Users\tajayi3\Desktop\Research\Coding Practice\write_to_TOUGH\RunScripts"
+loca3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\tmvoc\mymodels\Auto Simulations\AllComponents"
 filetype_tmvoc = "OUTPUT_ELEME.csv"
 
 fileReader = tough3.Tough3('tmvoc', loca3, filetype_tmvoc)
 
 time_year = fileReader.convert_times('day')
 result_array = fileReader.get_timeseries_data('X_Toluen_L', 0)
+manny = fileReader.list_duplicates(time_year)
+for dup in sorted(manny):
+    print(dup)
 print('yes')
 

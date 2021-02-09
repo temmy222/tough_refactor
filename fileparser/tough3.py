@@ -100,6 +100,15 @@ class Tough3(object):
             full_list[i] = full_list[i].replace(" ", "")
         return full_list
 
+    def list_duplicates(self, seq):
+        tally = defaultdict(list)
+        for i, item in enumerate(seq):
+            tally[item].append(i)
+        return ((key, locs) for key, locs in tally.items()
+                if len(locs) > 1)
+
+
+
     def resultdict(self):
         self.read_file()
         resultdict = {}
@@ -109,9 +118,9 @@ class Tough3(object):
         timeraw = self.get_times()
         for i in range(len(indextime) - 1):
             tempdict[i] = self.file_as_list[indextime[i] + 1:indextime[i + 1]]
-        for i in range(len(timeraw)):
-            resultdict[timeraw[i]] = tempdict[i]
-            data_dict[timeraw[i]].append(tempdict[i])
+        # for i in range(len(timeraw)):
+        #     resultdict[timeraw[i]] = tempdict[i]
+        #     data_dict[timeraw[i]].append(tempdict[i])
         return tempdict
 
     def get_timeseries_data(self, param, gridblocknumber):
