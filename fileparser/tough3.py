@@ -1,6 +1,9 @@
+import collections
 import csv
+import itertools
 import os
 from collections import defaultdict
+import numpy as np
 
 import utils.utilities as processor
 import pandas as pd
@@ -100,14 +103,35 @@ class Tough3(object):
             full_list[i] = full_list[i].replace(" ", "")
         return full_list
 
-    def list_duplicates(self, seq):
-        tally = defaultdict(list)
-        for i, item in enumerate(seq):
-            tally[item].append(i)
-        return ((key, locs) for key, locs in tally.items()
-                if len(locs) > 1)
+    def check_strictly_increasing(self, sequence):
+        dx = np.diff(sequence)
+        return np.all(dx > 0)
 
+    def del_index(self, my_list, indexes):
+        for index in sorted(indexes, reverse=True):
+            del my_list[index]
+        return my_list
 
+    def duplicate_index(self, sequence):
+        dicta = {}
+        indexes = []
+        dups = collections.defaultdict(list)
+        for i, e in enumerate(sequence):
+            dups[e].append(i)
+        for k, v in sorted(dups.items()):
+            if len(v) >= 2:
+                dicta[k] = v
+        for k, v in dicta.items():
+            indexes.append(v[1:])
+        return list(itertools.chain.from_iterable(indexes))
+
+    def remove_non_increasing(self,seqA, seqB):
+        monotone = self.check_strictly_increasing(seqA)
+        if not monotone:
+            index = self.duplicate_index(seqA)
+            seqA = self.del_index(seqA, index)
+            seqB = self.del_index(seqB, index)
+        return seqA, seqB
 
     def resultdict(self):
         self.read_file()
