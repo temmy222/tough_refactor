@@ -1,10 +1,10 @@
 import csv
 import os
 import pytough.t2listing as toughreact
-import utils.utilitiestoughreact as fileprocessor
-import utils.utilities as processor
+import tough_refactor.utils.utilitiestoughreact as fileprocessor
+import tough_refactor.utils.utilities as processor
 import pandas as pd
-import plotting.plottough as plot
+import tough_refactor.plotting.plottough as plot
 from collections import OrderedDict
 
 
