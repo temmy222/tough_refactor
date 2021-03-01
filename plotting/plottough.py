@@ -306,7 +306,7 @@ class PlotTough(object):
         slicer_Z = len(Zvalues)
         if slicer_Z < 10:
             slicer_Z = 1
-        if slicer_X < 10:
+        if slicer_X <= 10:
             slicer_X = 1
         while slicer_X > 10 or slicer_Z > 10:
             if slicer_X > 10:
