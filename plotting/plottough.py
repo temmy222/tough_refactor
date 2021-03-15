@@ -330,13 +330,13 @@ class PlotTough(object):
             magoosh = [Xvalues[i] for i in x_tick]
             magoosh = np.asarray(magoosh)
             # ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 4), fontsize=8)
-            ax.set_xticklabels(magoosh, fontsize=8)
+            ax.set_xticklabels(magoosh, fontsize=12)
             ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 4),
-                               fontsize=8)
+                               fontsize=12)
         else:
-            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 2), fontsize=8)
+            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 2), fontsize=12)
             ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 2),
-                               fontsize=8)
+                               fontsize=12)
         # Minor ticks
         ax.set_xticks(np.arange(-.5, Xtotal, 1), minor=True)
         ax.set_yticks(np.arange(-.5, Ztotal, 1), minor=True)

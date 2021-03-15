@@ -497,13 +497,14 @@ class PlotMultiTough(object):
                         axs.plot(time_year, result_array, label=labels[i], marker=markers[i])
                     axs.set_xlabel('Time (' + format_of_date + ")", fontsize=14)
                     axs.set_ylabel('Mass Fraction', fontsize=14)
+                    axs.ticklabel_format(useOffset=False, style='plain', axis='both')
                 plt.setp(axs.get_xticklabels(), fontsize=14)
                 plt.setp(axs.get_yticklabels(), fontsize=14)
                 plt.legend(loc='best')
                 plt.tight_layout()
                 plt.show()
                 plt.tick_params(axis='x', which='major', labelsize=3)
-                fig.savefig('multiple param OUTPUT vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                fig.savefig(param[0] + 'multiple param OUTPUT vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, format_of_date='year', style='horizontal',
                                     width=12, height=8):
