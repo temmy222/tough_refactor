@@ -11,12 +11,12 @@ from random import randrange
 import random
 from scipy import interpolate
 from scipy.interpolate import griddata
-import utils.utilities as processor
-import fileparser.tough3 as tough3
-import fileparser.toughreact as toughreact
+import tough_refactor.utils.utilities as processor
+import tough_refactor.fileparser.tough3 as tough3
+import tough_refactor.fileparser.toughreact as toughreact
 import pandas as pd
 
-from fileparser.experiment import Experiment
+from tough_refactor.fileparser.experiment import Experiment
 
 
 class PlotTough(object):
@@ -306,7 +306,7 @@ class PlotTough(object):
         slicer_Z = len(Zvalues)
         if slicer_Z < 10:
             slicer_Z = 1
-        if slicer_X < 10:
+        if slicer_X <= 10:
             slicer_X = 1
         while slicer_X > 10 or slicer_Z > 10:
             if slicer_X > 10:
@@ -330,13 +330,13 @@ class PlotTough(object):
             magoosh = [Xvalues[i] for i in x_tick]
             magoosh = np.asarray(magoosh)
             # ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 4), fontsize=8)
-            ax.set_xticklabels(magoosh, fontsize=8)
+            ax.set_xticklabels(magoosh, fontsize=12)
             ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 4),
-                               fontsize=8)
+                               fontsize=12)
         else:
-            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 2), fontsize=8)
+            ax.set_xticklabels(np.round(self.modifier.crange(min(X), max(X), tick_x / (num_tick_x - 1)), 2), fontsize=12)
             ax.set_yticklabels(np.round(self.modifier.crange(min(Z_array), max(Z_array), tick_z / (num_tick_z - 1)), 2),
-                               fontsize=8)
+                               fontsize=12)
         # Minor ticks
         ax.set_xticks(np.arange(-.5, Xtotal, 1), minor=True)
         ax.set_yticks(np.arange(-.5, Ztotal, 1), minor=True)

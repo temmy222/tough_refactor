@@ -1,8 +1,11 @@
+import collections
 import csv
+import itertools
 import os
-import utils.utilities as processor
+import tough_refactor.utils.utilities as processor
 import pandas as pd
-import plotting.plottough as plot
+import numpy as np
+import tough_refactor.plotting.plottough as plot
 
 
 class Tough3(object):
@@ -68,7 +71,7 @@ class Tough3(object):
 
     def getGenerationData(self, param):
         self.read_file()
-        resultarray=[]
+        resultarray = []
         heading = []
         heading_first = self.file_as_list[0]
         heading_first_modify = []
@@ -269,6 +272,40 @@ class Tough3(object):
             print("coordinates can either be X, Y or Z")
         return value
 
+    def remove_non_increasing(self, seqA, seqB):
+        monotone = self.check_strictly_increasing(seqA)
+        if not monotone:
+            index = self.duplicate_index(seqA)
+            if len(index) > 0:
+                seqA = self.del_index(seqA, index)
+            indexes1 = self.duplicate_index(seqB)
+            if len(seqA) != len(seqB):
+                if len(indexes1) > 0:
+                    seqB = self.del_index(seqB, indexes1)
+        return seqA, seqB
+
+    def check_strictly_increasing(self, sequence):
+        dx = np.diff(sequence)
+        return np.all(dx > 0)
+
+    def del_index(self, my_list, indexes):
+        for index in sorted(indexes, reverse=True):
+            del my_list[index]
+        return my_list
+
+    def duplicate_index(self, sequence):
+        dicta = {}
+        indexes = []
+        dups = collections.defaultdict(list)
+        for i, e in enumerate(sequence):
+            dups[e].append(i)
+        for k, v in sorted(dups.items()):
+            if len(v) >= 2:
+                dicta[k] = v
+        for k, v in dicta.items():
+            indexes.append(v[1:])
+        return list(itertools.chain.from_iterable(indexes))
+
 
 class MultiTough3(object):
     def __init__(self, simulator_type, file_location, file_title, prop):
@@ -325,7 +362,7 @@ class MultiTough3(object):
 
     def getMultiElementData(self, grid_block_number, format_of_date):
         data_table = pd.DataFrame()
-        pd.set_option('float_format',  lambda x: '%.9f' % x)
+        pd.set_option('float_format', lambda x: '%.9f' % x)
         # pd.set_option('display.chop_threshold', 0.00000001)
         for i in range(0, len(self.file_location)):
             for j in range(0, len(self.prop)):

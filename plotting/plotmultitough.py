@@ -1,14 +1,14 @@
 import itertools
 
-import utils.utilities as processor
+import tough_refactor.utils.utilities as processor
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from fileparser import tough3, toughreact
-from fileparser.toughreact import MultiToughReact
-from fileparser.experiment import Experiment
+from tough_refactor.fileparser import tough3, toughreact
+from tough_refactor.fileparser.toughreact import MultiToughReact
+from tough_refactor.fileparser.experiment import Experiment
 
 
 class PlotMultiTough(object):
@@ -445,6 +445,21 @@ class PlotMultiTough(object):
             data_table[result_data_label] = pd.Series(result_data)
         return data_table
 
+    def slice_value(self, time, result):
+        first_time = time[0]
+        first_result = result[0]
+        last_time = time[-1]
+        last_result = result[-1]
+        time_array = np.array(time)
+        result_array = np.array(result)
+        time_array = time_array[0:len(time_array) + 8:10]
+        result_array = result_array[0:len(result_array) + 8:10]
+        if len(time_array) > 10:
+            return self.slice_value(time_array, result_array)
+        time_array = np.append(time_array, last_time)
+        result_array = np.append(result_array, last_result)
+        return time_array, result_array
+
     def plotMultiParamSinglePlot(self, param, gridblocknumber, format_of_date, labels=None):
         if self.generation is True:
             with plt.style.context('classic'):
@@ -468,23 +483,28 @@ class PlotMultiTough(object):
         else:
             with plt.style.context('classic'):
                 fig, axs = plt.subplots(1, 1)
+                markers = [".", "v", "^", "<", ">", "8", "s", "p", "P", "*", "h"]
                 fileReader = self.read_file()
-                time_year = fileReader.convert_times(format_of_date)
+
                 for i in range(0, len(param)):
+                    time_year = fileReader.convert_times(format_of_date)
                     result_array = fileReader.get_timeseries_data(param[i], gridblocknumber)
+                    if len(time_year) > 50:
+                        time_year, result_array = self.slice_value(time_year, result_array)
                     if labels is None:
-                        axs.plot(time_year, result_array, label=param[i])
+                        axs.plot(time_year, result_array, label=param[i], marker=markers[i])
                     else:
-                        axs.plot(time_year, result_array, label=labels[i])
+                        axs.plot(time_year, result_array, label=labels[i], marker=markers[i])
                     axs.set_xlabel('Time (' + format_of_date + ")", fontsize=14)
                     axs.set_ylabel('Mass Fraction', fontsize=14)
+                    axs.ticklabel_format(useOffset=False, style='plain', axis='both')
                 plt.setp(axs.get_xticklabels(), fontsize=14)
                 plt.setp(axs.get_yticklabels(), fontsize=14)
-                plt.legend()
+                plt.legend(loc='best')
                 plt.tight_layout()
                 plt.show()
                 plt.tick_params(axis='x', which='major', labelsize=3)
-                fig.savefig('multiple param OUTPUT vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
+                fig.savefig(param[0] + 'multiple param OUTPUT vs ' + 'time' + '.png', bbox_inches='tight', dpi=600)
 
     def multi_param_multi_file_plot(self, param, gridblocknumber, labels, format_of_date='year', style='horizontal',
                                     width=12, height=8):

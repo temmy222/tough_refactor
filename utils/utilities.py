@@ -27,7 +27,7 @@ class Utilities(object):
             for i in range(len(intermediate)):
                 timeyear.append(intermediate[i])
         else:
-            raise ValueError("format can either be year, day, hour or minute")
+            raise ValueError("format can either be year, day, hour, minute or second")
         return timeyear
 
     def choplist(self, liste, number=3):
@@ -95,7 +95,8 @@ class Utilities(object):
                       'T_H+': 'Concentration of Hydrogen',
                       'CALCITE': 'Calcite', 'PORTLANDITE': 'Portlandite', 'GYPSUM': 'Gypsum',
                       'POROSITY': 'Porosity', 'ETTRINGITE': 'Ettringite',
-                      'X3_L_TOLUENE': 'Mass Fraction of Toluene', 'X2_L_O2': 'Mass Fraction Oxygen'
+                      'X3_L_TOLUENE': 'Mass Fraction of Toluene', 'X2_L_O2': 'Mass Fraction Oxygen',
+                      'X_P-XYLE_L': 'Mass Fraction of p-Xylene'
                       }
         return dict_param[param]
 
