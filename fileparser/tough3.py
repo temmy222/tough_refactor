@@ -339,3 +339,19 @@ class MultiTough3(object):
                 data_table[result_data_label] = pd.Series(result_data)
         print(data_table.iloc[15][result_data_label])
         return data_table
+
+    def getMultiElementDataPerPanel(self, grid_block_number, panels, format_of_date):
+        data_table = pd.DataFrame()
+        pd.set_option('float_format', lambda x: '%.9f' % x)
+        for i in range(0, len(panels)):
+            properties = list(panels[i].values())[0][0]
+            os.chdir(self.file_location[i])
+            tough_data = Tough3(self.simulator_type, self.file_location[i], self.file_title[i])
+            time_data = tough_data.convert_times(format_of_date)
+            time_data_label = properties[0] + 'time' + str(i) + str(0)
+            data_table[time_data_label] = pd.Series(time_data)
+            for j in range(0, len(properties)):
+                result_data = tough_data.get_timeseries_data(properties[j], grid_block_number)
+                result_data_label = properties[j] + 'result' + str(i) + str(j)
+                data_table[result_data_label] = pd.Series(result_data)
+        return data_table

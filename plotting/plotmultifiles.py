@@ -144,6 +144,60 @@ class PlotMultiFiles(object):
         os.chdir(self.file_locations[0])
         fig.savefig(self.props[0] + ' for different files ' + '.png', bbox_inches='tight', dpi=600)
 
+    def plotRawMultiFilePanel(self, data, panels, format_of_date):
+        fig = plt.figure(figsize=(10, 8))
+        start_point = 0
+        markers = ['^', 'o', 's', 'x', 'd']
+        fig, axs = plt.subplots(2, 2)
+        number = 0
+        length_of_prop = len(list(panels[number].values())[0][0])
+        for i in range(0, len(panels)):
+            x_data = data.iloc[:, start_point]
+            y_data = data.iloc[:, start_point + 1:start_point + length_of_prop + 1]
+            number += 1
+            start_point = start_point + length_of_prop + 1
+            try:
+                length_of_prop = len(list(panels[number].values())[0][0])
+            except IndexError:
+                pass
+            if i == 0:
+                import itertools
+                marker = itertools.cycle((',', '+', '.', 'o', '*'))
+                axsa = axs[0, 0]
+                axsa.plot(x_data, y_data)
+                yLabel = list(panels[0].values())[0][2][0]
+                axsa.set_xlabel('Time (year)', fontsize=12)
+                axsa.set_ylabel(yLabel, fontsize=12)
+                axsa.ticklabel_format(useOffset=False)
+                axsa.legend(list(panels[0].values())[0][1], fontsize=12, loc='best',shadow=True, fancybox=True)
+            elif i == 1:
+                axsa = axs[0, 1]
+                axsa.plot(x_data, y_data)
+                yLabel = list(panels[1].values())[0][2][0]
+                axsa.set_xlabel('Time (year)', fontsize=12)
+                axsa.set_ylabel(yLabel, fontsize=12)
+                axsa.ticklabel_format(useOffset=False)
+                axsa.legend(list(panels[1].values())[0][1], fontsize=12, loc='best',shadow=True, fancybox=True)
+            elif i == 2:
+                axsa = axs[1, 0]
+                axsa.plot(x_data, y_data)
+                yLabel = list(panels[2].values())[0][2][0]
+                axsa.set_xlabel('Time (year)', fontsize=12)
+                axsa.set_ylabel(yLabel, fontsize=12)
+                axsa.ticklabel_format(useOffset=False)
+                axsa.legend(list(panels[2].values())[0][1], fontsize=12, loc='best',shadow=True, fancybox=True)
+            elif i == 3:
+                axsa = axs[1, 1]
+                axsa.plot(x_data, y_data)
+                yLabel = list(panels[3].values())[0][2][0]
+                axsa.set_xlabel('Time (year)', fontsize=12)
+                axsa.set_ylabel(yLabel, fontsize=12)
+                axsa.ticklabel_format(useOffset=False)
+                axsa.legend(list(panels[3].values())[0][1], fontsize=10, loc='best',shadow=True, fancybox=True)
+        fig.tight_layout()
+        plt.show()
+        fig.savefig(list(panels[1].values())[0][1][0] + ' Multi_Plot_Per_Panel' + '.png', bbox_inches='tight', dpi=600)
+
     def plotRawMultiFilePerFile(self, data, legend):
         fig = plt.figure(figsize=(10, 8))
         plot_counter = 1
@@ -165,11 +219,19 @@ class PlotMultiFiles(object):
                     axs.plot(x_data, y_data, marker=markers[legend_index],
                              label=self.setToughYLabel(legend[legend_index]))
                     axs.set_xlabel('Time (year)', fontsize=14)
-                    axs.set_ylabel("Change in volume fraction", fontsize=14)
+                    if self.simulator_type.lower() == 'tmvoc':
+                        axs.set_ylabel(self.modifier.param_label_full(self.props[prop_index]), fontsize=14)
+                    else:
+                        axs.set_ylabel("Change in volume fraction", fontsize=14)
                 else:
-                    axs.plot(x_data, y_data, marker=markers[legend_index], label=self.setToughYLabel(legend[legend_index]))
+                    axs.plot(x_data, y_data, marker=markers[legend_index],
+                             label=self.setToughYLabel(legend[legend_index]))
                     axs.set_xlabel('Time (year)', fontsize=14)
-                    axs.set_ylabel("Change in volume fraction", fontsize=14)
+                    if self.simulator_type.lower() == 'tmvoc':
+                        param_value = self.modifier.param_label_full(self.props[prop_index].upper())
+                        axs.set_ylabel(param_value, fontsize=14)
+                    else:
+                        axs.set_ylabel("Change in volume fraction", fontsize=14)
                 axs.ticklabel_format(useOffset=False)
                 plt.setp(axs.get_xticklabels(), fontsize=14)
                 plt.setp(axs.get_yticklabels(), fontsize=14)
