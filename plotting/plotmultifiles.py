@@ -1,11 +1,11 @@
 import math
 import os
 
-from tough_refactor.fileparser.tough3 import MultiTough3
-from tough_refactor.fileparser.toughreact import MultiToughReact
+from ..fileparser.tough3 import MultiTough3
+from ..fileparser.toughreact import MultiToughReact
 import matplotlib.pyplot as plt
 
-from tough_refactor.utils.utilities import Utilities
+from ..utils.utilities import Utilities
 
 
 class PlotMultiFiles(object):
@@ -308,3 +308,13 @@ class PlotMultiFiles(object):
             except:
                 with plt.style.context('classic'):
                     self.plotRawMultiFile(data, legend)
+
+    def plotMultiPerPanel(self, grid_block_number, panels, format_of_date='day'):
+        multi_tough = self.validateInput()
+        data = multi_tough.getMultiElementDataPerPanel(grid_block_number, panels, format_of_date)
+        try:
+            with plt.style.context('mystyle'):
+                self.plotRawMultiFilePanel(data, panels, format_of_date)
+        except:
+            with plt.style.context('classic'):
+                self.plotRawMultiFilePanel(data, panels, format_of_date)
