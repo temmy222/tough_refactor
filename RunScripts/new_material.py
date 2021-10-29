@@ -1,7 +1,6 @@
 from fileparser.fileread import FileReadMultiple
 
-file1 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Increased depth\Gulf of Mexico Cement Flow - Ca " \
-        r"injected sand equil brine Offshore - longer time "
+file1 = r"D:\Working Folder - Ajayi\my TOUGHREACT$TOUGH Simulations\Moving Forward\Paper Flow\For paper\GOM Sandstone Cement flow with Batch\Increased depth\Gulf of Mexico Sandstone Cement Flow - Ca injected brine Offshore"
 file2 = r"D:\Working Folder - Ajayi\One Drive - LSU\OneDrive - Louisiana State University\Second numerical paper\Python Run\new material\Gulf of Mexico Cement Flow - Ca injected sand equil brine Offshore - longer time"
 
 all_toughreact_files = [file1, file2]

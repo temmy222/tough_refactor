@@ -2,10 +2,10 @@ import collections
 import csv
 import itertools
 import os
-import tough_refactor.utils.utilities as processor
+import utils.utilities as processor
 import pandas as pd
 import numpy as np
-import tough_refactor.plotting.plottough as plot
+import plotting.plottough as plot
 
 
 class Tough3(object):

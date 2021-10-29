@@ -1,8 +1,8 @@
 import os
 
-from ..plotting.plotmultifiles import PlotMultiFiles
-from ..plotting.plotmultitough import PlotMultiTough
-from ..plotting.plottough import PlotTough
+from plotting.plotmultifiles import PlotMultiFiles
+from plotting.plotmultitough import PlotMultiTough
+from plotting.plottough import PlotTough
 
 
 class FileReadSingle(object):
