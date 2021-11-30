@@ -134,3 +134,10 @@ class FileReadMultiple(object):
             pass
         else:
             plottest.plotMultiFileDistance(directionX, directionY, time, layer_num, legend)
+
+    def plotTimePerPanelSingle(self, grid_block_number, panels,legend, format_of_date='day'):
+        plottest = PlotMultiFiles(self.simulator_type, self.file_locations, self.file_titles, self.props,
+                                  x_slice_value=self.x_slice_value, per_file=self.per_file, title=self.title)
+        plottest.plotMultiPerPanelSingle(grid_block_number, panels,legend, format_of_date)
+
+        pass

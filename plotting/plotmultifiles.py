@@ -318,3 +318,37 @@ class PlotMultiFiles(object):
         except:
             with plt.style.context('classic'):
                 self.plotRawMultiFilePanel(data, panels, format_of_date)
+
+    def plotMultiPerPanelSingle(self, grid_block_number, panels,legend, format_of_date):
+        multi_tough = self.validateInput()
+        fig = plt.figure(figsize=(10, 8))
+        fig, axs = plt.subplots(2, 2)
+        graph_list = [(0,0), (0,1), (1,0), (1,1)]
+        markers = ['^', 'o', 's', 'x', 'd']
+        colors = ["#1f78b4", "#e41a1c", "#b2df8a"]
+        i = 0
+        for panel in panels:
+            data = multi_tough.getDataPerPanelSingle(grid_block_number, panel, panels[panel], format_of_date)
+            df = data[0]
+            df1 = data[1]
+            axs[graph_list[i]].plot(df[df.columns[0]], df[df.columns[1]],marker=markers[0],markersize=5,linewidth=1, label =legend[0])
+            axs[graph_list[i]].plot(df1[df1.columns[0]], df1[df1.columns[1]],marker=markers[1],markersize=5, linewidth=1,label =legend[1])
+            axs[graph_list[i]].set_xlabel('Time (' + format_of_date + ')', fontsize=12)
+            if panel.capitalize() != 'Porosity':
+                axs[graph_list[i]].set_ylabel('change in volume fraction', fontsize=12)
+            axs[graph_list[i]].set_title(panel.capitalize(), fontsize=12)
+            axs[graph_list[i]].ticklabel_format(useOffset=False)
+            # plt.legend(['yes', 'no'])
+            # axs[graph_list[i]].legend(['yes', 'no'])
+            #axs[graph_list[i]].legend(list(panels[0].values())[0][1], fontsize=12, loc='best', shadow=True, fancybox=True)
+            i +=1
+
+        handles, labels = axs[graph_list[2]].get_legend_handles_labels()
+        # fig.legend(handles, labels, loc='lower center')
+        # plt.figlegend(handles, labels, loc='center left',bbox_to_anchor=(1, 0.5), ncol=4, labelspacing=0.)
+        #plt.figlegend(handles, labels,bbox_to_anchor=(1,0),bbox_transform=fig.transFigure,loc='lower right', ncol=4, labelspacing=0.)
+        # plt.subplots_adjust(top=0.2)
+        fig.legend(handles, labels, loc=(0.3, 0), ncol=4)
+        fig.tight_layout(rect=[0,0.05,1,1])
+        plt.show()
+        fig.savefig("output.png", bbox_inches="tight")

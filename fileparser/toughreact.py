@@ -284,3 +284,27 @@ class MultiToughReact(object):
                 data_table[time_data_label] = pd.Series(time_data)
                 data_table[result_data_label] = pd.Series(result_data)
         return data_table
+
+    def getDataPerPanelSingle(self, grid_block_number, panel, filetype, format_of_date):
+        all_data = []
+        for i in range(len(self.file_location)):
+            data_table = pd.DataFrame()
+            os.chdir(self.file_location[i])
+            tough_data = ToughReact(self.simulator_type, self.file_location[i], filetype)
+            result_data = tough_data.get_timeseries_data(panel, grid_block_number)
+            time_data = tough_data.convert_times(format_of_date='year')
+            if self.x_slice_value is not None:
+                inter = processor.Utilities()
+                time_data, result_data = inter.cutdata(time_data, result_data, self.x_slice_value)
+            time_data_label = panel + 'time' + str(i)
+            result_data_label = panel + 'result' + str(i)
+            data_table[time_data_label] = pd.Series(time_data)
+            data_table[result_data_label] = pd.Series(result_data)
+            all_data.append(data_table)
+        # all_data[0].merge(all_data[1])
+        # return data_table
+        # all_data[0]['tmp'] = 1
+        # all_data[1]['tmp'] = 1
+        # df = pd.merge(all_data[0], all_data[1], on=['tmp'])
+        # df = df.drop('tmp', axis=1)
+        return all_data
