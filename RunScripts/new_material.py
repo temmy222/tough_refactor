@@ -41,7 +41,7 @@ joint = dict(zip(param_min, all_toughreact_filetypes))
 
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files, all_toughreact_filetypes, param_min, x_slice_value=500)
 # testcodemultitoughreact.plotTimePerPanelSingle(0,joint,legend,format_of_date='year')
-testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files2, all_toughreact_filetypes, param_min , x_slice_value=150)
+testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files4, all_toughreact_filetypes, param_min , x_slice_value=1000)
 testcodemultitoughreact.plotTimePerPanelSingle(0,joint,legend,format_of_date='year')
 # testcodemultitoughreact = FileReadMultiple("toughreact", all_toughreact_files3, all_toughreact_filetypes, param_min)
 # testcodemultitoughreact.plotTimePerPanelSingle(0,joint,legend,format_of_date='year')
