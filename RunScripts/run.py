@@ -118,7 +118,7 @@ testcodetoughreact_min = FileReadSingle("toughreact", loca114, filetype_toughrea
 
 # testcodetoughreact.plot2D('x', 'z', 'pH', 2.592e+2, 'grid')
 # testcodemultitoughreact.plotTime(106, legend)
-# testcodetoughreact_min.plotTime(param3, 106, format_of_date='year')
+testcodetoughreact_min.plotTime(param3, 106, format_of_date='year')
 testcodetoughreact_min.plotParamWithLayer('x', 'z', params_min, 4, 20000000)
 
 # testcodemultitoughreact_min.plotParamWithLayer('X', 'Z', 4, 2.592e+15, legend)

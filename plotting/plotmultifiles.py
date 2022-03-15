@@ -350,5 +350,7 @@ class PlotMultiFiles(object):
         # plt.subplots_adjust(top=0.2)
         fig.legend(handles, labels, loc=(0.3, 0), ncol=4)
         fig.tight_layout(rect=[0,0.05,1,1])
-        plt.show()
+        os.chdir(self.file_locations[0])
         fig.savefig("output.png", bbox_inches="tight")
+        plt.show()
+
