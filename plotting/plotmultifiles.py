@@ -333,10 +333,10 @@ class PlotMultiFiles(object):
             df1 = data[1]
             axs[graph_list[i]].plot(df[df.columns[0]], df[df.columns[1]],marker=markers[0],markersize=5,linewidth=1, label =legend[0])
             axs[graph_list[i]].plot(df1[df1.columns[0]], df1[df1.columns[1]],marker=markers[1],markersize=5, linewidth=1,label =legend[1])
-            axs[graph_list[i]].set_xlabel('Time (' + format_of_date + ')', fontsize=12)
+            axs[graph_list[i]].set_xlabel('Time (' + format_of_date + ')', fontsize=14)
             if panel.capitalize() != 'Porosity':
-                axs[graph_list[i]].set_ylabel('change in volume fraction', fontsize=12)
-            axs[graph_list[i]].set_title(panel.capitalize(), fontsize=12)
+                axs[graph_list[i]].set_ylabel(r'$\Delta$ in volume fraction', fontsize=14)
+            axs[graph_list[i]].set_title(panel.capitalize(), fontsize=14)
             axs[graph_list[i]].ticklabel_format(useOffset=False)
             # plt.legend(['yes', 'no'])
             # axs[graph_list[i]].legend(['yes', 'no'])

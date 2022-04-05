@@ -1,7 +1,8 @@
 from fileparser.fileread import FileReadSingle, FileReadMultiple
 import os
 
-root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2"
+# root_dir = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2"
+root_dir = r"D:\Working Folder - Ajayi\One Drive - LSU\OneDrive - Louisiana State University\Validation2"
 # root_dir2 = r"C:\Users\tajayi3\Desktop\Valivation Restart"
 root_dir3 = r"C:\Users\tajayi3\OneDrive - Louisiana State University\Validation2"
 
@@ -77,13 +78,13 @@ testcodetoughreact_min = FileReadSingle("toughreact", file_toughreact, filetype_
 # testcodetoughreact_min.plot2D('x', 'z', 'calcite', 0, 'grid')
 # testcodetoughreact.plotTime('pH', 106, format_of_date='day')
 # testcodetoughreact.plot2D('x', 'z', 'pH', 0, 'grid')
-# testcodetoughreact_min.plotTime(param_min, 106, format_of_date='day')
+testcodetoughreact_min.plotTime('portlandite', 106, format_of_date='day')
 #
 # test_equil.plotTime('pH', 106, format_of_date='day')
 # test_equil_min.plotTime(param_min, 106, format_of_date='day')
 
 
-testcodemultitoughreact.plotTime(83, legend, plot_kind='file')
+# testcodemultitoughreact.plotTime(83, legend, plot_kind='file')
 # testcodetoughreact_min.plotParamWithLayer('X', 'Z', param_min[0], 1, 500)
 
 
